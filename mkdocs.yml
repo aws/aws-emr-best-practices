@@ -1,0 +1,19 @@
+site_name: EMR Best Practices Guides
+repo_name: "aws/aws-emr-best-practices"
+repo_url: "https://github.com/aws/aws-emr-best-practices"
+docs_dir: "content"
+theme: 
+  name: material
+  features: 
+    - tabs
+nav:
+  - Guides: 
+    - Introduction: 'index.md'
+  - Security:
+  - Cost Optimization: 
+  - Reliability:
+markdown_extensions:
+    - toc:
+        permalink: true
+    - admonition
+    - codehilite
