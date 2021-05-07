@@ -7,11 +7,22 @@ theme:
   features: 
     - tabs
 nav:
-  - Guides: 
+  - Guides:
     - Introduction: 'index.md'
   - Security:
-  - Cost Optimization: 
+    - Introduction: 'index.md'
+  - Cost Optimization:
+    - Introduction: 'index.md'
+  - Operational Excellence:
+    - Introduction: 'index.md'
+  - Performance:
+    - Introduction: 'index.md'
   - Reliability:
+    - Introduction: 'index.md'
+  - Applications:
+    - Spark: 'index.md' 
+    - Hive: 'index.md'
+    - Hbase: 'index.md'
 markdown_extensions:
     - toc:
         permalink: true
