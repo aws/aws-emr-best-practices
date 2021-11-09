@@ -1,4 +1,4 @@
-AWS EMR Cost Optimization includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your very first proof of concept to the ongoing operation of production workloads, adopting the practices in this document can enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
+EMR Cost Optimization best practices focus on the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your very first proof of concept to the ongoing operation of production workloads, adopting the practices in this document can enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
 
 A cost-optimized workload is one that
 
@@ -6,7 +6,7 @@ A cost-optimized workload is one that
 2. Fully utilizes all cluster resources and
 3. Achieves an outcome at the lowest possible price point
 
-To best understand this, let’s take a look at an example. Let’s assume we have an ETL job that needs to be completed within 8 hours. 
+To better understand this, let’s look at an example. Let’s assume we have an ETL job that needs to be completed within 8 hours. 
 
 ![Sample EMR Job - 1](images/intro-1.png)
 

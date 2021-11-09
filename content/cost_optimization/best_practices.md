@@ -1,14 +1,14 @@
 
 # ** 1 - Cost Optimizations **
 
-
+A series of Best Practices (BP) for running cost optimized workloads on EMR. 
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
 As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is $275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
 
 Using Amazon S3 as your persistent data store allows you to grow your storage infinitely, independent of your compute.  With on premise Hadoop systems, you would have to add nodes just to house your data which may not be helping your compute and only increase cost.  In addition, Amazon S3 also has different storage tiers for less frequently accessed data providing opportunity for additional cost savings.
 
-Amazon EMR makes using Amazon S3 simple with EMR File System (EMRFS). EMRFS is an implementation of HDFS that all Amazon EMR clusters use for accessing data in Amazon S3. 
+EMR makes using Amazon S3 simple with EMR File System (EMRFS). EMRFS is an implementation of HDFS that all EMR clusters use for accessing data in Amazon S3. 
 
 **Note:** HDFS is still available on the cluster if you need it and can be more performant compared to Amazon S3. HDFS on EMR uses EBS local block store which is faster than Amazon S3 object store. Some amounts of HDFS/EBS may be still be required. You may benefit from using HDFS for intermediate storage or need it to store application jars. However, HDFS is not recommended for persistent storage. Once a cluster is terminated, all HDFS data is lost. 
 
@@ -66,6 +66,8 @@ Most Amazon EMR clusters can run on general-purpose EC2 instance types/families 
 
 The master node does not have large computational requirements. For most clusters of 50 or fewer nodes, you can use a general-purpose instance type such as m5. However, the master node is responsible for running key services such as Resource manager, Namenode, Hiveserver2 as such, it’s recommended to use a larger instance such as 8xlarge+. With single node EMR cluster, the master node is a single point of failure. 
 
+![BP - 9](images/bp-9.png)
+
 ## ** BP 1.5 Use instances with instance store for jobs that require high disk IOPS **
 
 Use dense SSD storage instances for data-intensive workloads such as I3en or d3en. These instances provide Non-Volatile Memory Express (NVMe) SSD-backed instance storage optimized for low latency, very high random I/O performance, high sequential read throughput and provide high IOPS at a low cost. EMR workloads that spend heavily use HDFS  or spend a lot of time writing spark shuffle data can benefit from these instances and see improved performance which reduces overall cost. 
@@ -75,12 +77,17 @@ Use dense SSD storage instances for data-intensive workloads such as I3en or d3e
 Amazon EMR supports Amazon EC2 graviton instances with EMR Versions 6.1.0, 5.31.0 and later. These instances are powered by AWS Graviton2 processors that are custom designed by AWS utilizing 64-bit ArmNeoverse cores to deliver the best price performance for cloud workloads running in Amazon EC2. On Graviton2 instances, Amazon EMR runtime for Apache Spark provides an additional cost savings of up to 30%, and improved performance of up to 15% relative to equivalent previous generation instances. 
 
 For example, when you compare m5.4xlarge vs m6g.4xlarge. The total cost (EC2+EMR) / hour is 
-m5.4xlarge: $0.960
-m6g.4xlarge: $0.770
+
+|Instance Type | EC2 + EMR Cost | 
+|--------------|---------------:|
+|m5.4xlarge:   | $0.960 		|
+|m6g.4xlarge:  | $0.770			| 
 
 This is a 19.8% reduction in cost for the same amount of compute - 16vCPU and 64Gib Memory
 
-For more information, see: <https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances>
+For more information, see: 
+
+<https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances>
 
 ## ** BP 1.7 Select the appropriate pricing model for your use case and node type **
 
@@ -95,11 +102,15 @@ The following table is general  guideline for purchasing options depending on yo
 
 For clusters where you need a minimum compute at all times - e.g spark streaming, ad hoc clusters. Using reserved instances or saving plans is recommended. 
 
-For more information, see: <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html>
+For more information, see: 
 
-## ** BP 1.8 Using spot instances **
+<https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html>
+
+## ** BP 1.8 Use spot instances **
 
 Spot instances are unused EC2 Capacity that is offered at up to a 90% discount (vs On-Demand pricing) and should be used when applicable. While EC2 can reclaim Spot capacity with a two-minute warning, less than 5% of workloads are interrupted. Due to the fault-tolerant nature of big data workloads on EMR, they can continue processing, even when interrupted. Running EMR on Spot Instances drastically reduces the cost of big data, allows for significantly higher compute capacity, and reduces the time to process big data sets. 
+
+![BP - 11](images/bp-11.png)
 
 Below are the considerations and best practices when using Spot Instances on your EMR cluster. 
 
@@ -111,9 +122,13 @@ Below are the considerations and best practices when using Spot Instances on you
 
 
 For more information, see:
-AWS Big Data Blog: Best practices for running Apache Spark applications using Amazon EC2 Spot Instances with Amazon EMR <https://aws.amazon.com/blogs/big-data/best-practices-for-running-apache-spark-applications-using-amazon-ec2-spot-instances-with-amazon-emr/>
+AWS Big Data Blog: Best practices for running Apache Spark applications using Amazon EC2 Spot Instances with Amazon EMR 
 
-Amazon EMR Cluster configuration guidelines and best practices <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html#emr-plan-spot-instances>
+<https://aws.amazon.com/blogs/big-data/best-practices-for-running-apache-spark-applications-using-amazon-ec2-spot-instances-with-amazon-emr/>
+
+Amazon EMR Cluster configuration guidelines and best practices 
+
+<https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html#emr-plan-spot-instances>
 
 ## ** BP 1.9 Mix on-Demand and spot instances **
 
@@ -140,6 +155,9 @@ Cost = 1.0 * 10 * 7 = $70 = 0.5 * 10 * 7 = $35 Total $105
 
 50 % less run-time ( 14→ 7) 25% less cost (140→ 105)
 ```
+
+![BP - 10](images/bp-10.png)
+
 One consideration when mixing on demand and spot is if spot nodes are reclaimed, tasks or shuffle data that were on those spot nodes may have to be re executed on the remaining nodes. This reprocessing would increase the total run time of the job compared to running on only on demand. 
 
 ## ** BP 1.10 Use EMR managed scaling **
@@ -179,7 +197,9 @@ spark.executor.cores 4
 Spark will be able to allocate 4 executors on each node resulting in only 57,344-52,800(13,200 * 4) = 4,544 of unallocated resources and 92.0% memory utilization
 
 For more information on Spark and YARN right sizing see: 
+
 <https://aws.amazon.com/blogs/big-data/best-practices-for-successfully-managing-memory-for-apache-spark-applications-on-amazon-emr/>
+
 <https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html>
 
 ## ** BP 1.12 Monitor cluster utilization **
@@ -199,19 +219,26 @@ For example, If looking at Ganglia shows that either CPU or memory is 100% but t
 These recommendations are more applicable towards job scoped pipelines or transient clusters where the workload pattern is known or constant. If the cluster is long running or the workload pattern is not predictable, using managed scaling should be considered since it will attempt to rightsize the cluster automatically. 
 
 For more information on which cloudwatch metrics are available, see:
+
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html>
 
-For more information on the Grafana and Prometheus solution, see: <https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/>
+For more information on the Grafana and Prometheus solution, see:
+
+<https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/>
 
 ## ** BP 1.13 Monitor and decommission idle EMR cluster **
 
 Decommission Amazon EMR clusters that are no longer required to lower cost.  This can be achieved in two ways. You can use EMR’s “automatic termination policy”  starting 5.30.0 and 6.1.0 or, by monitoring the “isIdle” metric in cloudwatch and terminating yourself. 
 
-With EMR’s automatic termination policy feature, EMR continuously samples key metrics associated with the workloads running on the clusters, and auto-terminates when the cluster is idle. For more information on when a cluster is considered idle and considerations, see <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html>
+With EMR’s automatic termination policy feature, EMR continuously samples key metrics associated with the workloads running on the clusters, and auto-terminates when the cluster is idle. For more information on when a cluster is considered idle and considerations, see 
+
+<https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html>
 
 With EMR’s “isIdle” cloudwatch metric, EMR will emit 1 if no tasks are running and no jobs are running, and emit 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.  You can set an alarm to fire when the cluster has been idle for a given period of time, such as thirty minutes.  Non-YARN based applications such as Presto, Trino, or HBase are not considered with the “IsIdle” Metrics 
 
-For a sample solution of this approach, see <https://aws.amazon.com/blogs/big-data/optimize-amazon-emr-costs-with-idle-checks-and-automatic-resource-termination-using-advanced-amazon-cloudwatch-metrics-and-aws-lambda/>
+For a sample solution of this approach, see 
+
+<https://aws.amazon.com/blogs/big-data/optimize-amazon-emr-costs-with-idle-checks-and-automatic-resource-termination-using-advanced-amazon-cloudwatch-metrics-and-aws-lambda/>
 
 ## ** BP 1.14 Use the latest Amazon EMR version ** 
 

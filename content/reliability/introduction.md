@@ -1,10 +1,6 @@
 # Introduction
-Welcome to the EMR Best Practices Guides.  The primary goal of this project is to offer a set of best practices for day 2 operations for Amazon EMR. We elected to publish this guidance to GitHub so we could interate quickly, provide timely and effective recommendations for variety of concerns, and easily incorporate suggestions from the broader community.  
+EMR Reliability best practices includes the ability of a workload to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, imprve availability of resources when required and mitigate disruptions such as misconfiguration or transient network issues. It also includes the ability to understand the full travel path and change history of the data and keep the data safe when storage failure occurs.
 
-We currently have published guides for the following topics: Cost Optimizations
-
-
-In the future we will be publishing best practices guidance for performance, cost optimization, and operational excellence. 
 
 ## Contributing
 We encourage you to contribute to these guides. If you have implemented a practice that has proven to be effective, please share it with us by opening an issue or a pull request. Similarly, if you discover an error or flaw in the guidance we've already published, please submit a PR to correct it.
