@@ -1,7 +1,8 @@
 
 # ** 1 - Cost Optimizations **
 
-A series of Best Practices (BP) for running cost optimized workloads on EMR. 
+ Best Practices (BP) for running cost optimized workloads on EMR.
+
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
 As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is $275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
@@ -167,12 +168,12 @@ With Amazon EMR versions 5.30.0 and later (except for Amazon EMR 6.0.0), you can
 
 This helps you reduce costs by running your EMR clusters with just the correct of amount of resources that your application needs. This feature is also useful for use cases where you have spikes in cluster utilization (i.e. a user submitting a job) and you want the cluster to automatically scale based on the requirements for that application. 
 
-Here’s an example of cluster without autoscaling. Since the size of the cluster is static, there are resources you are paying for but your job does not actually need. 
+Here’s an example of cluster without auto scaling. Since the size of the cluster is static, there are resources you are paying for but your job does not actually need. 
 
 ![BP - 5](images/bp-5.png)
 
 
-Here’s an example of cluster with autoscaling. The cluster capacity (blue dotted line) adjusts to the job demand reducing unused resources and cost. 
+Here’s an example of cluster with auto scaling. The cluster capacity (blue dotted line) adjusts to the job demand reducing unused resources and cost. 
 ![BP - 6](images/bp-6.png)
 ## ** BP 1.11 Right size application containers **
 
@@ -253,7 +254,7 @@ For more information, see EMR Release Guide <https://docs.aws.amazon.com/emr/lat
 Amazon EMR supports both transient clusters and long running clusters and both should be considered depending on your use case and job type.
 ![BP - 8](images/bp-8.png)
 
-In general, transient clusters are good for job scoped pipelines. Clusters can be right-sized to meet the exact needs of your job. Using transient clusters reduces the blast radius across other jobs and makes it easier to upgrade clusters and restart jobs. Since transient clusters are shutdown after the job is run, you don’t need to worry about idle resources and managing many aspects of cluster lifecycle, including replacing failed nodes, upgrades, patching, etc. 
+In general, transient clusters are good for job scoped pipelines. Clusters can be right-sized to meet the exact needs of your job. Using transient clusters reduces the blast radius across other jobs and makes it easier to upgrade clusters and restart jobs. Since transient clusters are shutdown after the job is run, you don’t need to worry about idle resources and managing many aspects of cluster life cycle, including replacing failed nodes, upgrades, patching, etc. 
 
 In general, long running clusters are good for short-running jobs, ad hoc queries and streaming applications. Long running clusters can also be considered to save costs and operations for multi tenanted data science and engineering jobs. 
 

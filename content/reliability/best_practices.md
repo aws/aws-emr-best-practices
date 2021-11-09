@@ -1,16 +1,16 @@
-# ** 3 - Reliability **
+# ** 2 - Reliability **
 
-A series of Best Practices (BP) for running cost optimized workloads on EMR. 
+Best Practices (BP) for running reliable workloads on EMR. 
 
-## ** BP 3.1 Treat all clusters as transient resources ** 
+## ** BP 2.1 Treat all clusters as transient resources ** 
 
 Whether you use your EMR cluster as a long or short running cluster, treat them as transient resources. This means you have the automation in place to re-provision clusters on demand and have standard templates to ensure cluster startup consistency. Even if you are using a long running clusters, it’s recommended to recreate the cluster during some periodical interval.
 
-Services integrated with clusters also need to be decoupled from the cluster. For example any persistent data,  metadata, scripts, and job/work orchestrators (e.g oozie and airflow) should be stored off cluster. Decoupling the cluster from these services minimizes blast radius in the event of a cluster failure and non impacted clusters can continue using these off-cluster services. 
+Services integrated with clusters also need to be decoupled from the cluster. For example any persistent data,  meta data, scripts, and job/work orchestrator's (e.g oozie and airflow) should be stored off cluster. Decoupling the cluster from these services minimizes blast radius in the event of a cluster failure and non impacted clusters can continue using these off-cluster services. 
 
-There are several benefits to this approach. It makes upgrading, patching, rotating ami’s or making any other infrastructure changes easier. It allows you to quickly recover from failures and it removes the operational overhead of managing a long running cluster.  You may also see an improvement in cost since clusters will only run for the duration of your job or use case. 
+There are several benefits to this approach. It makes upgrading, patching, rotating AMI’s or making any other infrastructure changes easier. It allows you to quickly recover from failures and it removes the operational overhead of managing a long running cluster.  You may also see an improvement in cost since clusters will only run for the duration of your job or use case. 
 
-If you need to store state on cluster, ensure the state is backed up and sync’ed. 
+If you need to store state on cluster, ensure the state is backed up and synced. 
 
 ![BP - 1](images/bp-1.png)
 
@@ -34,7 +34,7 @@ For more information on external catalog, see:
 
 <https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-metastore-external-hive.html>
 
-## ** BP 3.2 Decouple storage and compute **
+## ** BP 2.2 Decouple storage and compute **
 
 Store persistent data in Amazon S3 and use the EMR File System (EMRFS) for reading and writing data from Amazon EMR. EMRFS is an implementation of HDFS that all Amazon EMR clusters use for accessing data in Amazon S3. Applications such as Apache Hive and Apache Spark work with Amazon S3 by mapping the HDFS APIs to Amazon S3 APIs (like EMRFS available with Amazon EMR).  You specify which file system to use by the prefix of the URI used to access the data. For example, s3://DOC-EXAMPLE-BUCKET1/path references an Amazon S3 bucket using EMRFS. 
 
@@ -47,7 +47,7 @@ HDFS is still available on Amazon EMR clusters and is a good option for temporar
 ![BP - 2](images/bp-2.png)
 
 
-## ** BP 3.3 Use the latest AMI and EMR version available **
+## ** BP 2.3 Use the latest AMI and EMR version available **
 
 In the Cost Optimization section, we talked about the benefits of using the latest EMR version. Equally important is using the latest AMI available. This ensures your up to date with the latest bug fixes, features and security updates. EMR allows has 2 AMI options available - default EMR AMI and Custom AMI. 
 
@@ -59,7 +59,7 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-default-ami.html>
 
-## ** BP 3.4 Spread clusters across availability zones/subnets and time of provisioning **
+## ** BP 2.4 Spread clusters across availability zones/subnets and time of provisioning **
 
 Spread clusters across multiple Availability Zones (AZ) to provide resiliency against AZ failures. An added benefit is that it can help reduce insufficient capacity errors (ICE) since your EC2 requests are now across multiple EC2 pools. Instances of a single cluster can only be provisioned in a single AZ.
 
@@ -75,13 +75,13 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html>
 
-## ** BP 3.6 Use on demand for core nodes and spot for task **
+## ** BP 2.6 Use on demand for core nodes and spot for task **
 
-Core nodes run the Data Node daemon to coordinate data storage as part of the Hadoop Distributed File System (HDFS). If a core node is running on spot and the spot node is reclaimed, Hadoop has to rebalance the data in HDFS to the remaining core nodes. If there are no core nodes remaining, you run the risk of losing HDFS data and the name node going into safe mode making the cluster unhealthy and usable. 
+Core nodes run the Data Node daemon to coordinate data storage as part of the Hadoop Distributed File System (HDFS). If a core node is running on spot and the spot node is reclaimed, Hadoop has to re balance the data in HDFS to the remaining core nodes. If there are no core nodes remaining, you run the risk of losing HDFS data and the name node going into safe mode making the cluster unhealthy and usable. 
 
 ![BP - 3](images/bp-3.png)
 
-## ** BP 3.6 Use instance fleet with allocation strategy **
+## ** BP 2.7 Use instance fleet with allocation strategy **
 
 The instance fleet configuration for Amazon EMR clusters lets you select a wide variety of provisioning options for Amazon EC2 instances, and helps you develop a flexible and elastic resourcing strategy for each node type in your cluster.
 
@@ -97,19 +97,19 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html#emr-instance-fleet-allocation-strategy>
 
-## ** BP 3.7 With instance fleet, diversify with instances in the same family and across generations first **
+## ** BP 2.7 With instance fleet, diversify with instances in the same family and across generations first **
 
 When deciding which instances to include in your instance fleet, it is recommend to first diversify across the same family. For example, if you are using m5.4xlarge, you should first add m5.8xlarge and then m5.12xlarge. Instances within the same family are identical and your job should perform consistent across the different instances. Ensure your application container (spark executors, tez container) is not larger than the smallest instance in your fleet.  Next, you should diversify across generations, for example, including m6.4xlarge and m4.8xlarge. 
 
 Diversifying your instance fleet across families should be considered last e.g r5 and m5 due to difference in core to memory ratios resulting in potential underutilization depending on your application container sizes. 
 
-## ** BP 3.8 If optimizing for availability, avoid exotic instance types **
+## ** BP 2.8 If optimizing for availability, avoid exotic instance types **
 
 Exotic instances are designed for specific use cases such as “zn”, “dn“, and “ad" as well as large instance types like 24xlarge. Exotic instance types have smaller EC2 capacity pools which increase the likelihood of Insufficient Capacity Errors and spot reclamation. It is recommended to avoid these types of instances if  your use case does not have requirements for these types of instances and you want higher guarantees of instance availability. 
 
-## ** BP 3.9 When using autoscaling, keep core nodes constant and scale with only task nodes **
+## ** BP 2.9 When using auto scaling, keep core nodes constant and scale with only task nodes **
 
-Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need rebalance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS rebalance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. 
+Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need re balance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS re balance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. 
 
 In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the hdfs replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that a minimum, you keep 2 core nodes and set dfs.replication=2. 
 
@@ -117,7 +117,7 @@ Below is a managed scaling configuration example where the cluster will scale on
 
 ![BP - 4](images/bp-4.png)
 
-## ** BP 3.10 Avoid S3 503 slow downs **
+## ** BP 2.10 Handling S3 503 slow downs **
 
 When you have an increased request rate to your S3 bucket, S3 might return 503 Slow Down errors while scaling to support the request rate. The default request rate is 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket. There are a number of ways to handle S3 503 slow downs. 
 
@@ -126,7 +126,7 @@ When you have an increased request rate to your S3 bucket, S3 might return 503 S
 
 EMRFS provides 2 ways to improve the success rate of your S3 requests. You can adjust your retry strategy by configuring properties in your emrfs-site configuration.
 
-- Increase the maximum retry limit for the default exponential backoff retry strategy. By default, the EMRFS retry limit is set to 4. You can increase the retry limit on a new cluster, on a running cluster, or at application runtime. (for example try 20-50 by setting fs.s3.maxRetries in emrfs-site.xml)
+- Increase the maximum retry limit for the default exponential back-off retry strategy. By default, the EMRFS retry limit is set to 4. You can increase the retry limit on a new cluster, on a running cluster, or at application runtime. (for example try 20-50 by setting fs.s3.maxRetries in emrfs-site.xml)
 
 - Enable and configure the additive-increase/multiplicative-decrease (AIMD) retry strategy. AIMD is supported for Amazon EMR versions 6.4.0 and later.
 
@@ -169,13 +169,13 @@ s3://<bucket2>/product=1/dt=2021-11-01
     s3://<bucket2>/product=2/dt=2021-11-01
 ```
 
-It is also important that your S3 data layout is structured in a way that allows for partition pruning. With partition pruning, your applications will only scan the objets it needs and skip over the other prefixes reducing the number of requests to S3.
+It is also important that your S3 data layout is structured in a way that allows for partition pruning. With partition pruning, your applications will only scan the objects it needs and skip over the other prefixes reducing the number of requests to S3.
 
 For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic>
 
-## ** BP 3.11 Audit and update  EMR and EC2 limits to avoid throttling **
+## ** BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling **
 
 Amazon EMR throttles API calls to maintain system stability. EMR has two types of limits:
 
@@ -194,13 +194,13 @@ To prevent throttling errors, we recommend:
 
 * Reduce the frequency of the API calls. For example, if you’re using the DescribeStep API and you don’t need to know the status of the job right away, you can reduce the frequency of the call to 1min+ 
 * Stagger the intervals of the API calls so that they don't all run at the same time.
-* Implement exponential backoff (<https://docs.aws.amazon.com/general/latest/gr/api-retries.html>) when making API calls.
+* Implement exponential back-off (<https://docs.aws.amazon.com/general/latest/gr/api-retries.html>) when making API calls.
 
 For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html>
 
-## ** BP 3.12 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
+## ** BP 2.12 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
 
 dfs.replication is the number of copies of each block to store for durability in HDFS. if dfs.replication is set to 1, and a Core node is lost due to spot reclamation or hardware failure, you risk losing HDFS data. Depending on the hdfs block that was lost, you may not be able to perform certain EMR actions. e.g submit hive job if core tez library in HDFS is missing
 
@@ -216,7 +216,7 @@ Few other considerations:
 * Increasing dfs.replication will require additional EBS volume 
 
 
-## ** BP 3.13 Right size your EBS volumes to avoid UNHEALTHY nodes **
+## ** BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes **
 
 When disk usage on a core or task node disk (for example, /mnt or /mnt1) exceeds 90%, the disk is marked as unhealthy. If fewer than 25% of a node's disks are healthy, the NodeManager marks the whole node as unhealthy and communicates this to the ResourceManager, which then stops assigning containers to the node.
 

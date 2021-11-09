@@ -1,5 +1,5 @@
 # Introduction
-EMR Reliability best practices includes the ability of a workload to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, imprve availability of resources when required and mitigate disruptions such as misconfiguration or transient network issues. It also includes the ability to understand the full travel path and change history of the data and keep the data safe when storage failure occurs.
+EMR Reliability best practices covers the ability for workloads to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, imprve availability of resources when required and mitigate disruptions such as misconfiguration or transient network issues. It also includes the ability to understand the full travel path and change history of the data and keep the data safe when storage failure occurs.
 
 
 ## Contributing
