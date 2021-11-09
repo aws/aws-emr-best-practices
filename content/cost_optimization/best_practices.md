@@ -4,7 +4,7 @@
 
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
-As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is about $275 per TB/year which is a much lower cost than what you can achieve compared to 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
+As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is $275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
 
 Using Amazon S3 as your persistent data store allows you to grow your storage infinitely, independent of your compute.  With on premise Hadoop systems, you would have to add nodes just to house your data which may not be helping your compute and only increase cost.  In addition, Amazon S3 also has different storage tiers for less frequently accessed data providing opportunity for additional cost savings.
 
