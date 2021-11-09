@@ -9,20 +9,22 @@ theme:
 nav:
   - Guides:
     - Introduction: 'index.md'
-  - Security:
-    - Introduction: 'index.md'
-  - Cost Optimization:
-    - Introduction: 'index.md'
-  - Operational Excellence:
-    - Introduction: 'index.md'
-  - Performance:
-    - Introduction: 'index.md'
-  - Reliability:
-    - Introduction: 'index.md'
-  - Applications:
-    - Spark: 'index.md' 
-    - Hive: 'index.md'
-    - Hbase: 'index.md'
+  # - Security:
+  #   - Introduction: 'index.md'
+  - 1 - Cost Optimizations:
+    - Introduction: 'cost_optimization/introduction.md'
+    - Best Practices: 'cost_optimization/best_practices.md'
+  - 2 - Reliability:
+    - Home: 'reliability/introduction.md'
+    # - Introduction: 'index.md'
+  # - Performance:
+  #   - Introduction: 'index.md'
+  # - Reliability:
+  #   - Introduction: 'index.md'
+  # - Applications:
+  #   - Spark: 'index.md' 
+  #   - Hive: 'index.md'
+  #   - Hbase: 'index.md'
 markdown_extensions:
     - toc:
         permalink: true
