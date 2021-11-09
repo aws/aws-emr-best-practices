@@ -1,0 +1,772 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.4">
+    
+    
+      
+        <title>Best Practices - EMR Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bde7dde4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ef6f36e2.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#3-reliability" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="EMR Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Best Practices
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/aws/aws-emr-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="EMR Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EMR Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws/aws-emr-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        1 - Cost Optimizations
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="1 - Cost Optimizations" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1 - Cost Optimizations
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost_optimization/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost_optimization/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3">
+        2 - Reliability
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="2 - Reliability" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2 - Reliability
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Best Practices
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Best Practices
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bp-31-treat-all-clusters-as-transient-resources" class="md-nav__link">
+    BP 3.1 Treat all clusters as transient resources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-32-decouple-storage-and-compute" class="md-nav__link">
+    BP 3.2 Decouple storage and compute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-33-use-the-latest-ami-and-emr-version-available" class="md-nav__link">
+    BP 3.3 Use the latest AMI and EMR version available
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-34-spread-clusters-across-availability-zonessubnets-and-time-of-provisioning" class="md-nav__link">
+    BP 3.4 Spread clusters across availability zones/subnets and time of provisioning
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-36-use-on-demand-for-core-nodes-and-spot-for-task" class="md-nav__link">
+    BP 3.6 Use on demand for core nodes and spot for task
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-36-use-instance-fleet-with-allocation-strategy" class="md-nav__link">
+    BP 3.6 Use instance fleet with allocation strategy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-37-with-instance-fleet-diversify-with-instances-in-the-same-family-and-across-generations-first" class="md-nav__link">
+    BP 3.7 With instance fleet, diversify with instances in the same family and across generations first
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-38-if-optimizing-for-availability-avoid-exotic-instance-types" class="md-nav__link">
+    BP 3.8 If optimizing for availability, avoid exotic instance types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-39-when-using-autoscaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
+    BP 3.9 When using autoscaling, keep core nodes constant and scale with only task nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-310-avoid-s3-503-slow-downs" class="md-nav__link">
+    BP 3.10 Avoid S3 503 slow downs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-311-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
+    BP 3.11 Audit and update  EMR and EC2 limits to avoid throttling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-312-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
+    BP 3.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-313-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
+    BP 3.13 Right size your EBS volumes to avoid UNHEALTHY nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bp-31-treat-all-clusters-as-transient-resources" class="md-nav__link">
+    BP 3.1 Treat all clusters as transient resources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-32-decouple-storage-and-compute" class="md-nav__link">
+    BP 3.2 Decouple storage and compute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-33-use-the-latest-ami-and-emr-version-available" class="md-nav__link">
+    BP 3.3 Use the latest AMI and EMR version available
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-34-spread-clusters-across-availability-zonessubnets-and-time-of-provisioning" class="md-nav__link">
+    BP 3.4 Spread clusters across availability zones/subnets and time of provisioning
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-36-use-on-demand-for-core-nodes-and-spot-for-task" class="md-nav__link">
+    BP 3.6 Use on demand for core nodes and spot for task
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-36-use-instance-fleet-with-allocation-strategy" class="md-nav__link">
+    BP 3.6 Use instance fleet with allocation strategy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-37-with-instance-fleet-diversify-with-instances-in-the-same-family-and-across-generations-first" class="md-nav__link">
+    BP 3.7 With instance fleet, diversify with instances in the same family and across generations first
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-38-if-optimizing-for-availability-avoid-exotic-instance-types" class="md-nav__link">
+    BP 3.8 If optimizing for availability, avoid exotic instance types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-39-when-using-autoscaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
+    BP 3.9 When using autoscaling, keep core nodes constant and scale with only task nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-310-avoid-s3-503-slow-downs" class="md-nav__link">
+    BP 3.10 Avoid S3 503 slow downs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-311-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
+    BP 3.11 Audit and update  EMR and EC2 limits to avoid throttling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-312-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
+    BP 3.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-313-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
+    BP 3.13 Right size your EBS volumes to avoid UNHEALTHY nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/reliability/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="3-reliability"><strong> 3 - Reliability </strong><a class="headerlink" href="#3-reliability" title="Permanent link">&para;</a></h1>
+<p>A series of Best Practices (BP) for running cost optimized workloads on EMR. </p>
+<h2 id="bp-31-treat-all-clusters-as-transient-resources"><strong> BP 3.1 Treat all clusters as transient resources </strong><a class="headerlink" href="#bp-31-treat-all-clusters-as-transient-resources" title="Permanent link">&para;</a></h2>
+<p>Whether you use your EMR cluster as a long or short running cluster, treat them as transient resources. This means you have the automation in place to re-provision clusters on demand and have standard templates to ensure cluster startup consistency. Even if you are using a long running clusters, it’s recommended to recreate the cluster during some periodical interval.</p>
+<p>Services integrated with clusters also need to be decoupled from the cluster. For example any persistent data,  metadata, scripts, and job/work orchestrators (e.g oozie and airflow) should be stored off cluster. Decoupling the cluster from these services minimizes blast radius in the event of a cluster failure and non impacted clusters can continue using these off-cluster services. </p>
+<p>There are several benefits to this approach. It makes upgrading, patching, rotating ami’s or making any other infrastructure changes easier. It allows you to quickly recover from failures and it removes the operational overhead of managing a long running cluster.  You may also see an improvement in cost since clusters will only run for the duration of your job or use case. </p>
+<p>If you need to store state on cluster, ensure the state is backed up and sync’ed. </p>
+<p><img alt="BP - 1" src="../images/bp-1.png" /></p>
+<p>For more information on orchestrating transient EMR cluster, see: </p>
+<p><a href="https://aws.amazon.com/blogs/aws/new-using-step-functions-to-orchestrate-amazon-emr-workloads/">https://aws.amazon.com/blogs/aws/new-using-step-functions-to-orchestrate-amazon-emr-workloads/</a></p>
+<p><a href="https://aws.amazon.com/blogs/big-data/orchestrating-analytics-jobs-on-amazon-emr-notebooks-using-amazon-mwaa/">https://aws.amazon.com/blogs/big-data/orchestrating-analytics-jobs-on-amazon-emr-notebooks-using-amazon-mwaa/</a></p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-longrunning-transient.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-longrunning-transient.html</a></p>
+<p>Specifically for EMR application logging, consider using EMR’s Persistent Application User Interfaces (Spark, YARN RM, Tez UI, etc) which are hosted by EMR off cluster and available even after clusters are terminated. </p>
+<p>For more information on off cluster monitoring options, see: </p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html</a></p>
+<p><a href="https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/">https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/</a></p>
+<p>For more information on external catalog, see: </p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-metastore-external-hive.html">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-metastore-external-hive.html</a></p>
+<h2 id="bp-32-decouple-storage-and-compute"><strong> BP 3.2 Decouple storage and compute </strong><a class="headerlink" href="#bp-32-decouple-storage-and-compute" title="Permanent link">&para;</a></h2>
+<p>Store persistent data in Amazon S3 and use the EMR File System (EMRFS) for reading and writing data from Amazon EMR. EMRFS is an implementation of HDFS that all Amazon EMR clusters use for accessing data in Amazon S3. Applications such as Apache Hive and Apache Spark work with Amazon S3 by mapping the HDFS APIs to Amazon S3 APIs (like EMRFS available with Amazon EMR).  You specify which file system to use by the prefix of the URI used to access the data. For example, s3://DOC-EXAMPLE-BUCKET1/path references an Amazon S3 bucket using EMRFS. </p>
+<p>By keeping persistent data in Amazon S3, you minimize the impact that infrastructure or service disruptions can have on your data. For example, in the event of an EC2 hardware failure during an application run, data in Amazon S3 will not be impacted. You can provision a new cluster and re run your application that points to the existing S3 bucket. </p>
+<p>From an application and user perspective, by decoupling storage and compute, you can point many EMR clusters at the same source of truth. If you have different departments that want to operate different jobs, they can act in isolation without affecting the core production of your environment. This also allows you to split interactive query workloads with ETL type workloads which gives you more flexibility in how you operate For example, In an Amazon EMR environment you can provision a new cluster with a new technology and operate it in parallel on your data with your core production environment.  Once you make a decision on which technology to adopt, you can easily cut over from one to other. This allows future proofing and option value because you can keep pace the analytic tool set evolves, your infrastructure can evolve with it, without any expensive re platforming or re transformation of data. </p>
+<p>HDFS is still available on Amazon EMR clusters and is a good option for temporary or intermediate data. For example, workloads with iterative reads on the same data set or Disk I/O intensive workloads. For example, some hive jobs write a lot of data to HDFS, either staging data or through a multi step pipeline. It may be more cost efficient and performant to use HDFS for these stages compared to writing to Amazon S3. You lose the HDFS data once EMR clusters are terminated so this should only be used for intermediate or staging data. Another strategy is to ensure that when using HDFS, you checkpoint data at regular intervals so that if you lose cluster mid-work, you do not have to restart from scratch. Once data is written to HDFS, you can use something like s3distcp to move your data to Amazon S3. </p>
+<p><img alt="BP - 2" src="../images/bp-2.png" /></p>
+<h2 id="bp-33-use-the-latest-ami-and-emr-version-available"><strong> BP 3.3 Use the latest AMI and EMR version available </strong><a class="headerlink" href="#bp-33-use-the-latest-ami-and-emr-version-available" title="Permanent link">&para;</a></h2>
+<p>In the Cost Optimization section, we talked about the benefits of using the latest EMR version. Equally important is using the latest AMI available. This ensures your up to date with the latest bug fixes, features and security updates. EMR allows has 2 AMI options available - default EMR AMI and Custom AMI. </p>
+<p>The default EMR AMI is based on the most up-to-date Amazon Linux AMI available at the time of the Amazon EMR release. Each Amazon EMR release version is "locked" to the Amazon Linux AMI version to maintain compatibility. This means that the same Amazon Linux AMI version is used for an Amazon EMR release version even when newer Amazon Linux AMIs become available. For this reason, we recommend that you use the latest Amazon EMR release version unless you need an earlier version for compatibility and are unable to migrate.</p>
+<p>When using a custom AMI, it is recommended to base your customization on the most recent EBS-backed Amazon Linux AMI (AL2 for 5.30.0 and later). Consider creating a new custom EMR AMI each time a new AL AMI is released. </p>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-default-ami.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-default-ami.html</a></p>
+<h2 id="bp-34-spread-clusters-across-availability-zonessubnets-and-time-of-provisioning"><strong> BP 3.4 Spread clusters across availability zones/subnets and time of provisioning </strong><a class="headerlink" href="#bp-34-spread-clusters-across-availability-zonessubnets-and-time-of-provisioning" title="Permanent link">&para;</a></h2>
+<p>Spread clusters across multiple Availability Zones (AZ) to provide resiliency against AZ failures. An added benefit is that it can help reduce insufficient capacity errors (ICE) since your EC2 requests are now across multiple EC2 pools. Instances of a single cluster can only be provisioned in a single AZ.</p>
+<p>EMR helps you achieve this with instance fleets. Instead of specifying a single Amazon EC2 availability zone for your Amazon EMR cluster and a specific Amazon EC2 instance type for an Amazon EMR instance group, you can provide a list of availability zones and instances, and Amazon EMR will automatically select an optimal combination based on cost and availability. For example, If Amazon EMR detects an AWS large-scale event in one or more of the Availability Zones, or cannot get enough capacity, Amazon EMR automatically attempts to route traffic away from the impacted Availability Zones and tries to launch clusters in alternate Availability Zones according to your selections.</p>
+<p>With Instance Groups, you must explicitly set the subnet at provisioning time. You can still spread clusters across your AZs by picking through round robin or at random.</p>
+<p><img alt="BP - 5" src="../images/bp-5.png" /></p>
+<p>If your use case allows, spread cluster provisioning times across the hour or day to distribute your requests to EC2 instead of provisioning clusters at the same time. This decreases the likelihood of getting insufficient capacity errors.</p>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html</a></p>
+<h2 id="bp-36-use-on-demand-for-core-nodes-and-spot-for-task"><strong> BP 3.6 Use on demand for core nodes and spot for task </strong><a class="headerlink" href="#bp-36-use-on-demand-for-core-nodes-and-spot-for-task" title="Permanent link">&para;</a></h2>
+<p>Core nodes run the Data Node daemon to coordinate data storage as part of the Hadoop Distributed File System (HDFS). If a core node is running on spot and the spot node is reclaimed, Hadoop has to rebalance the data in HDFS to the remaining core nodes. If there are no core nodes remaining, you run the risk of losing HDFS data and the name node going into safe mode making the cluster unhealthy and usable. </p>
+<p><img alt="BP - 3" src="../images/bp-3.png" /></p>
+<h2 id="bp-36-use-instance-fleet-with-allocation-strategy"><strong> BP 3.6 Use instance fleet with allocation strategy </strong><a class="headerlink" href="#bp-36-use-instance-fleet-with-allocation-strategy" title="Permanent link">&para;</a></h2>
+<p>The instance fleet configuration for Amazon EMR clusters lets you select a wide variety of provisioning options for Amazon EC2 instances, and helps you develop a flexible and elastic resourcing strategy for each node type in your cluster.</p>
+<p>You can have one instance fleet for each node group - master, core and task. Within the instance fleet,  you specify a target capacity for on-demand and spot instances and with the allocation strategy option, you can select up to 30 instance types per fleet. </p>
+<p><img alt="BP - 6" src="../images/bp-6.png" /></p>
+<p>In an instance fleet configuration, you specify a target capacity for On-Demand Instances and Spot Instances within each fleet. When the cluster launches, Amazon EMR provisions instances until the targets are fulfilled using any of the instances specified if your fleet. When Amazon EC2 reclaims a Spot Instance in a running cluster because of a price increase or instance failure, Amazon EMR tries to replace the instance with any of the instance types that you specify. This makes it easier to regain capacity during a spike in Spot pricing.</p>
+<p>It is recommended that you use the allocation strategy option for faster cluster provisioning, more accurate Spot Instance allocation, and fewer Spot Instance interruptions. With the allocation strategy enabled,  On-Demand Instances use a lowest-price strategy, which launches the lowest-priced instances first. Spot Instances use a capacity-optimized strategy, which launches Spot Instances from pools that have optimal capacity for the number of instances that are launching. For both On-demand and spot,  we recommend specifying a larger number of instance types to diversify and reduce the chance of experiencing insufficient capacity errors. </p>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html#emr-instance-fleet-allocation-strategy">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html#emr-instance-fleet-allocation-strategy</a></p>
+<h2 id="bp-37-with-instance-fleet-diversify-with-instances-in-the-same-family-and-across-generations-first"><strong> BP 3.7 With instance fleet, diversify with instances in the same family and across generations first </strong><a class="headerlink" href="#bp-37-with-instance-fleet-diversify-with-instances-in-the-same-family-and-across-generations-first" title="Permanent link">&para;</a></h2>
+<p>When deciding which instances to include in your instance fleet, it is recommend to first diversify across the same family. For example, if you are using m5.4xlarge, you should first add m5.8xlarge and then m5.12xlarge. Instances within the same family are identical and your job should perform consistent across the different instances. Ensure your application container (spark executors, tez container) is not larger than the smallest instance in your fleet.  Next, you should diversify across generations, for example, including m6.4xlarge and m4.8xlarge. </p>
+<p>Diversifying your instance fleet across families should be considered last e.g r5 and m5 due to difference in core to memory ratios resulting in potential underutilization depending on your application container sizes. </p>
+<h2 id="bp-38-if-optimizing-for-availability-avoid-exotic-instance-types"><strong> BP 3.8 If optimizing for availability, avoid exotic instance types </strong><a class="headerlink" href="#bp-38-if-optimizing-for-availability-avoid-exotic-instance-types" title="Permanent link">&para;</a></h2>
+<p>Exotic instances are designed for specific use cases such as “zn”, “dn“, and “ad" as well as large instance types like 24xlarge. Exotic instance types have smaller EC2 capacity pools which increase the likelihood of Insufficient Capacity Errors and spot reclamation. It is recommended to avoid these types of instances if  your use case does not have requirements for these types of instances and you want higher guarantees of instance availability. </p>
+<h2 id="bp-39-when-using-autoscaling-keep-core-nodes-constant-and-scale-with-only-task-nodes"><strong> BP 3.9 When using autoscaling, keep core nodes constant and scale with only task nodes </strong><a class="headerlink" href="#bp-39-when-using-autoscaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" title="Permanent link">&para;</a></h2>
+<p>Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need rebalance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS rebalance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. </p>
+<p>In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the hdfs replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that a minimum, you keep 2 core nodes and set dfs.replication=2. </p>
+<p>Below is a managed scaling configuration example where the cluster will scale only on task nodes. In this example, the minimum nodes is 25, maximum 100. Of the 25 minimum, they will be all on-demand and core nodes. When the cluster needs to scale up, the remaining 75 will be task nodes on spot. </p>
+<p><img alt="BP - 4" src="../images/bp-4.png" /></p>
+<h2 id="bp-310-avoid-s3-503-slow-downs"><strong> BP 3.10 Avoid S3 503 slow downs </strong><a class="headerlink" href="#bp-310-avoid-s3-503-slow-downs" title="Permanent link">&para;</a></h2>
+<p>When you have an increased request rate to your S3 bucket, S3 might return 503 Slow Down errors while scaling to support the request rate. The default request rate is 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket. There are a number of ways to handle S3 503 slow downs. </p>
+<p>1) Use EMRFS retry strategies</p>
+<p>EMRFS provides 2 ways to improve the success rate of your S3 requests. You can adjust your retry strategy by configuring properties in your emrfs-site configuration.</p>
+<ul>
+<li>
+<p>Increase the maximum retry limit for the default exponential backoff retry strategy. By default, the EMRFS retry limit is set to 4. You can increase the retry limit on a new cluster, on a running cluster, or at application runtime. (for example try 20-50 by setting fs.s3.maxRetries in emrfs-site.xml)</p>
+</li>
+<li>
+<p>Enable and configure the additive-increase/multiplicative-decrease (AIMD) retry strategy. AIMD is supported for Amazon EMR versions 6.4.0 and later.</p>
+</li>
+</ul>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-emrfs-retry.html">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-emrfs-retry.html</a></p>
+<p>2) Increase fs.s3n.multipart.uploads.split.size</p>
+<ul>
+<li>Specifies the maximum size of a part, in bytes, before EMRFS starts a new part upload when multipart uploads is enabled. Default is 134217728 (134mb). The max is 5368709120 (5GB) – you can start with something in the middle and see if there’s any impact to performance (for example 1-2 gb)</li>
+</ul>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-upload-s3.html#Config_Multipart">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-upload-s3.html#Config_Multipart</a></p>
+<p>3) Combine or stagger out requests to S3 </p>
+<p>Combining requests to S3 reduces the number of calls per second. This can be achieved in a few ways: </p>
+<ul>
+<li>If the error happens during write, reduce the parallelism of the jobs. For example, use Spark .coalesce() or .repartition() operations to reduce number of Spark output partitions before writing to Amazon S3. You can also reduce the number of cores per executor or reduce the number of executors.</li>
+<li>If the error happens during read, compact small files in the source prefix. Compacting small files reduces the number of input files which reduces the number of Amazon S3 requests. </li>
+<li>If possible, stagger jobs out across the day or hour. For example, If your jobs don’t all need to start at the same time or top of the hour, spread them across the hour or day to smoothen out the requests to S3. </li>
+</ul>
+<p>For more information, see: </p>
+<p><a href="https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-503-slow-down/">https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-503-slow-down/</a></p>
+<p>4) Optimize your S3 Data layout</p>
+<p>Rate limits (3,500 write and 5,500 read) are applied at the prefix level. By understanding your job access patterns, you can reduce throttling errors by partitioning your data in S3 </p>
+<p>For example, comparing the two s3 structures below, the second example with product in the prefix will allow you to achieve higher s3 request rates since requests are spread across different prefix. The S3 bucket limit would be 7,000 write requests and 11,000 read requests. </p>
+<div class="codehilite"><pre><span></span><code>s3://&lt;bucket1&gt;/dt=2021-11-01
+s3://&lt;bucket2&gt;/product=1/dt=2021-11-01
+    s3://&lt;bucket2&gt;/product=2/dt=2021-11-01
+</code></pre></div>
+
+<p>It is also important that your S3 data layout is structured in a way that allows for partition pruning. With partition pruning, your applications will only scan the objets it needs and skip over the other prefixes reducing the number of requests to S3.</p>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic</a></p>
+<h2 id="bp-311-audit-and-update-emr-and-ec2-limits-to-avoid-throttling"><strong> BP 3.11 Audit and update  EMR and EC2 limits to avoid throttling </strong><a class="headerlink" href="#bp-311-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" title="Permanent link">&para;</a></h2>
+<p>Amazon EMR throttles API calls to maintain system stability. EMR has two types of limits:</p>
+<p>1) Limit on Resources - maximum number of clusters that can </p>
+<ul>
+<li>The maximum number of active clusters that can be run at the same time.</li>
+<li>The maximum number of active instances per instance group.</li>
+</ul>
+<p>2)  Limits on APIs</p>
+<ul>
+<li>Burst limit – This is the maximum number of API calls you can make at once. For example, the maximum number of AddInstanceFleet API requests that you can make per second is set at 5 calls/second as a default. This implies that the burst limit of AddInstanceFleet API is 5 calls/second, or that, at any given time, you can make at most 5 AddInstanceFleet API calls. However, after you use the burst limit, your subsequent calls are limited by the rate limit.</li>
+<li>Rate limit – This is the replenishment rate of the API's burst capacity. For example, replenishment rate of AddInstanceFleet calls is set at 0.5 calls/second as a default. This means that after you reach the burst limit, you have to wait at least 2 seconds (0.5 calls/second X 2 seconds = 1 call) to make the API call. If you make a call before that, you are throttled by the EMR web service. At any point, you can only make as many calls as the burst capacity without being throttled. Every additional second you wait, your burst capacity increases by 0.5 calls until it reaches the maximum limit of 5, which is the burst limit.</li>
+</ul>
+<p>To prevent throttling errors, we recommend: </p>
+<ul>
+<li>Reduce the frequency of the API calls. For example, if you’re using the DescribeStep API and you don’t need to know the status of the job right away, you can reduce the frequency of the call to 1min+ </li>
+<li>Stagger the intervals of the API calls so that they don't all run at the same time.</li>
+<li>Implement exponential backoff (<a href="https://docs.aws.amazon.com/general/latest/gr/api-retries.html">https://docs.aws.amazon.com/general/latest/gr/api-retries.html</a>) when making API calls.</li>
+</ul>
+<p>For more information, see:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html</a></p>
+<h2 id="bp-312-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters"><strong> BP 3.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters </strong><a class="headerlink" href="#bp-312-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" title="Permanent link">&para;</a></h2>
+<p>dfs.replication is the number of copies of each block to store for durability in HDFS. if dfs.replication is set to 1, and a Core node is lost due to spot reclamation or hardware failure, you risk losing HDFS data. Depending on the hdfs block that was lost, you may not be able to perform certain EMR actions. e.g submit hive job if core tez library in HDFS is missing</p>
+<p>dfs.replication defaults are set based off of initial core count:</p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html</a></p>
+<p>To ensure the core node instance group is highly available, it is recommended that you launch at least two core nodes and set dfs.replication parameter to 2. </p>
+<p>Few other considerations:</p>
+<ul>
+<li>Do not scale down below dfs.replication. For example if dfs.replication=3, keep your core node minimum to 3</li>
+<li>Increasing dfs.replication will require additional EBS volume </li>
+</ul>
+<h2 id="bp-313-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes"><strong> BP 3.13 Right size your EBS volumes to avoid UNHEALTHY nodes </strong><a class="headerlink" href="#bp-313-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" title="Permanent link">&para;</a></h2>
+<p>When disk usage on a core or task node disk (for example, /mnt or /mnt1) exceeds 90%, the disk is marked as unhealthy. If fewer than 25% of a node's disks are healthy, the NodeManager marks the whole node as unhealthy and communicates this to the ResourceManager, which then stops assigning containers to the node.</p>
+<p>If the node remains UNHEALTHY for more than 45 minutes, YARN ResourceManager gracefully decommissions the node when termination protection is off.  If termination protection is on, the core nodes remain in an UNHEALTHY state and only task nodes are terminated.</p>
+<p>The two most common reasons disk’s exceed 90% are writing of HDFS and spark shuffle data. To avoid this scenario,  it is recommended to right size your EBS volumes for your use case. You can either add more EBS volumes or increase the total size of the EBS capacity so that it never exceeds the default 90% utilization disk checker rate. </p>
+<p>From a monitoring and alerting perspective, there are a few options.   You can monitor and alert on HDFS utilization using the Cloudwatch metric “HDFSUtilization”.  This can help determine if disks are exceeding the 90% threshold due to HDFS usage. At a per node and disk level, using options in BP 1.12 can help identify if disk is filling due to spark shuffle or some other process. At a cluster level, you can also create an alarm for the MRUnhealthyNodes CloudWatch metric which  reports the number of nodes reporting an UNHEALTHY status. Since UNHEALTHY nodes are excluded from processing tasks from YARN Resourcemanager, having UNHEALTHY nodes can degrade job performance. </p>
+<p>The 90% is a default value which can be configured by “yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage" in yarn-site.xml. However, to fix nodes going UNHEALTHY, it is not recommended to adjust this % but instead, right size your EBS volumes. </p>
+<p>For more information, see:</p>
+<p><a href="https://aws.amazon.com/premiumsupport/knowledge-center/emr-exit-status-100-lost-node/">https://aws.amazon.com/premiumsupport/knowledge-center/emr-exit-status-100-lost-node/</a></p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_TerminationProtection.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_TerminationProtection.html</a></p>
+<p>Calculating required HDFS utilization: <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html#emr-plan-instances-hdfs">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html#emr-plan-instances-hdfs</a></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../introduction/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Introduction
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.4fa0e4ee.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1d3bfcf1.min.js"></script>
+      
+    
+  </body>
+</html>

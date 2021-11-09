@@ -189,37 +189,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
-      
-      <label class="md-nav__link" for="__nav_1">
-        Guides
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="Guides" data-md-level="1">
-        <label class="md-nav__title" for="__nav_1">
-          <span class="md-nav__icon md-icon"></span>
-          Guides
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-  
-  
-  
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
         Introduction
       </a>
-    </li>
-  
-
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -318,7 +291,19 @@
   
     <li class="md-nav__item">
       <a href="../../reliability/introduction/" class="md-nav__link">
-        Home
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reliability/best_practices/" class="md-nav__link">
+        Best Practices
       </a>
     </li>
   
@@ -349,14 +334,14 @@
                 
                   <h1>Introduction</h1>
                 
-                <p>AWS EMR Cost Optimization includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your very first proof of concept to the ongoing operation of production workloads, adopting the practices in this document can enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.</p>
+                <p>EMR Cost Optimization best practices focus on the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your very first proof of concept to the ongoing operation of production workloads, adopting the practices in this document can enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.</p>
 <p>A cost-optimized workload is one that</p>
 <ol>
 <li>Meets functional and non functional requirements </li>
 <li>Fully utilizes all cluster resources and</li>
 <li>Achieves an outcome at the lowest possible price point</li>
 </ol>
-<p>To best understand this, let’s take a look at an example. Let’s assume we have an ETL job that needs to be completed within 8 hours. </p>
+<p>To better understand this, let’s look at an example. Let’s assume we have an ETL job that needs to be completed within 8 hours. </p>
 <p><img alt="Sample EMR Job - 1" src="../images/intro-1.png" /></p>
 <p>In order to meet the requirements of completing the job within 8 hours,  a certain amount of compute resources will be required. This is represented in the graph by the “Job Demand”. Sometimes this is static, where the amount of resources needed is consistent throughout the duration of the job.</p>
 <p><img alt="Sample EMR Job - 2" src="../images/intro-2.png" /></p>
