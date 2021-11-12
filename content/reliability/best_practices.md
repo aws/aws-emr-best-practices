@@ -75,13 +75,13 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html>
 
-## ** BP 2.6 Use on demand for core nodes and spot for task **
+## ** BP 2.5 Use on demand for core nodes and spot for task **
 
 Core nodes run the Data Node daemon to coordinate data storage as part of the Hadoop Distributed File System (HDFS). If a core node is running on spot and the spot node is reclaimed, Hadoop has to re balance the data in HDFS to the remaining core nodes. If there are no core nodes remaining, you run the risk of losing HDFS data and the name node going into safe mode making the cluster unhealthy and usable. 
 
 ![BP - 3](images/bp-3.png)
 
-## ** BP 2.7 Use instance fleet with allocation strategy **
+## ** BP 2.6 Use instance fleet with allocation strategy **
 
 The instance fleet configuration for Amazon EMR clusters lets you select a wide variety of provisioning options for Amazon EC2 instances, and helps you develop a flexible and elastic resourcing strategy for each node type in your cluster.
 
@@ -103,11 +103,18 @@ When deciding which instances to include in your instance fleet, it is recommend
 
 Diversifying your instance fleet across families should be considered last e.g r5 and m5 due to difference in core to memory ratios resulting in potential underutilization depending on your application container sizes. 
 
-## ** BP 2.8 If optimizing for availability, avoid exotic instance types **
+## ** BP 2.8 With instance fleet, ensure the unit/weight matches the instance size or is proportional to the rest of the instances in your fleet **
+
+When using instance fleets, you can specify multiple instance types and a total target capacity for your core or task fleet. When you specify an instance, you decide how much each instance counts toward the target. Ensure this unit/weight matches the actual instance size or is proportional to the rest of the instances in your fleet.
+
+For example, if your fleet includes: m5.2xlarge, m5.4xlarge and m5.8xlarge. You would want your units/weights to match the instance size - 2:4:8. This is to ensure that when EMR provision your cluster or scales up, you are consistently getting the same total compute. You could also do 1:2:4 since they are still proportional to the instance sizes.  If the weights were not proportional, e.g 1:2:3, each time your cluster provisions, your total cluster capacity can be different. 
+
+
+## ** BP 2.9 If optimizing for availability, avoid exotic instance types **
 
 Exotic instances are designed for specific use cases such as “zn”, “dn“, and “ad" as well as large instance types like 24xlarge. Exotic instance types have smaller EC2 capacity pools which increase the likelihood of Insufficient Capacity Errors and spot reclamation. It is recommended to avoid these types of instances if  your use case does not have requirements for these types of instances and you want higher guarantees of instance availability. 
 
-## ** BP 2.9 When using auto scaling, keep core nodes constant and scale with only task nodes **
+## ** BP 2.10 When using auto scaling, keep core nodes constant and scale with only task nodes **
 
 Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need re balance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS re balance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. 
 
@@ -117,7 +124,7 @@ Below is a managed scaling configuration example where the cluster will scale on
 
 ![BP - 4](images/bp-4.png)
 
-## ** BP 2.10 Handling S3 503 slow downs **
+## ** BP 2.11 Handling S3 503 slow downs **
 
 When you have an increased request rate to your S3 bucket, S3 might return 503 Slow Down errors while scaling to support the request rate. The default request rate is 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket. There are a number of ways to handle S3 503 slow downs. 
 
@@ -175,7 +182,7 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic>
 
-## ** BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling **
+## ** BP 2.12 Audit and update  EMR and EC2 limits to avoid throttling **
 
 Amazon EMR throttles API calls to maintain system stability. EMR has two types of limits:
 
@@ -200,7 +207,7 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html>
 
-## ** BP 2.12 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
+## ** BP 2.13 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
 
 dfs.replication is the number of copies of each block to store for durability in HDFS. if dfs.replication is set to 1, and a Core node is lost due to spot reclamation or hardware failure, you risk losing HDFS data. Depending on the hdfs block that was lost, you may not be able to perform certain EMR actions. e.g submit hive job if core tez library in HDFS is missing
 
@@ -216,7 +223,7 @@ Few other considerations:
 * Increasing dfs.replication will require additional EBS volume 
 
 
-## ** BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes **
+## ** BP 2.14 Right size your EBS volumes to avoid UNHEALTHY nodes **
 
 When disk usage on a core or task node disk (for example, /mnt or /mnt1) exceeds 90%, the disk is marked as unhealthy. If fewer than 25% of a node's disks are healthy, the NodeManager marks the whole node as unhealthy and communicates this to the ResourceManager, which then stops assigning containers to the node.
 

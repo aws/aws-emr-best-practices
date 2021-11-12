@@ -8,14 +8,20 @@ theme:
     - tabs
 nav:
   - Introduction: 'index.md'
-  # - Security:
-  #   - Introduction: 'index.md'
   - 1 - Cost Optimizations:
     - Introduction: 'cost_optimization/introduction.md'
     - Best Practices: 'cost_optimization/best_practices.md'
   - 2 - Reliability:
     - Introduction: 'reliability/introduction.md'
-    - Best Practices: 'reliability/best_practices.md'    
+    - Best Practices: 'reliability/best_practices.md'   
+  - 3 - Security: 
+    - Introduction: 'security/introduction.md'
+    - Best Practices: 'security/best_practices.md'      
+  # - 4 - Performance Efficiency: 'index.md'
+  # - 5 - Operational Excellence: 'index.md'
+  - 4 - Applications:
+    - Spark: 'applications/spark/index.md'
+    # - Hive: 'index.md'      
     # - Introduction: 'index.md'
   # - Performance:
   #   - Introduction: 'index.md'
