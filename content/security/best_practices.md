@@ -1,8 +1,8 @@
-# ** 2 - Security **
+# ** 3 - Security **
 
 Best Practices (BP) for running secure workloads on EMR. 
 
-## ** BP 2.1 Encrypt Data at rest and in transit **
+## ** BP 3.1 Encrypt Data at rest and in transit **
 
 Properly protecting your data at rest and in transit using encryption is a core component of our well-architected pillar of security. Amazon EMR security configurations make it easy for you to encrypt data both at rest and in transit. A security configuration is like a template for encryption and other security configurations that you can apply to any cluster when you launch it.
 
@@ -15,7 +15,7 @@ For more information about setting up security configurations in Amazon EMR, see
 <https://aws.amazon.com/blogs/big-data/secure-amazon-emr-with-encryption>
 
 
-## ** BP 2.2 Restrict network access to your EMR cluster and keep EMR block public access feature enabled **
+## ** BP 3.2 Restrict network access to your EMR cluster and keep EMR block public access feature enabled **
 
 Inbound and outbound network access to your EMR cluster is controlled by security groups. It is recommended to apply the principle of least privilege to your security groups. This is so that your cluster is locked down to only the applications or individuals who need access from the expected source IPs.
 
@@ -25,7 +25,7 @@ The block public access feature prevents a cluster in a public subnet from launc
 
 Use Persistent Application UI's to remove the need to open firewall to get access to debugging UI
 
-## ** BP 2.3 Provision clusters in a private subnet **
+## ** BP 3.3 Provision clusters in a private subnet **
 
 It is recommended to provision your EMR clusters in Private Subnets. Private subnets allow you to limit access to deployed components, and to control security and routing of the system. With a private subnet, you can enable communication with your own network over a VPN tunnel or AWS direct connect. This would allow you to access your EMR clusters from your network, without exposure to the internet. For access to other AWS services from your EMR Cluster e.g S3, VPC endpoints can be used.
 
@@ -33,7 +33,7 @@ For more information on configuring EMR clusters in private subnets or VPC endpo
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-vpc-subnet.html>
 <https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html>
 
-## ** BP 2.4 Configure EC2 instance metadata service (IMDS) v2 **
+## ** BP 3.4 Configure EC2 instance metadata service (IMDS) v2 **
 
 In AWS, Instance Metadata Service (IMDS) provides “data about your instance that you can use to configure or manage the running instance. Every instance has access to its own MDS using any HTTP client request, such as, curl command from the instance to http://169.254.169.254/latest/meta-data. IMDSv1 is fully secure and AWS will continue to support it. But IMDSv2 adds new “belt and suspenders” protections for four types of vulnerabilities that could be used to try to access the IMDS. For more see:
 <https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/>
@@ -41,18 +41,18 @@ In AWS, Instance Metadata Service (IMDS) provides “data about your instance th
 From EMR 5.32 and 6.2 onward, Amazon EMR components use IMDSv2 for all IMDS calls. For IMDS calls in your application code, you can use both IMDSv1 and IMDSv2. It is recommended to turn off IMDSv1 and only allow IMDSv2 for added security. This can be configured in EMR Security Configurations. For more information, see:
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-create-security-configuration.html#emr-security-configuration-imdsv2>
 
-## ** BP 2.5 Create a separacase IAM role for each cluster or use case **
+## ** BP 3.5 Create a separacase IAM role for each cluster or use case **
 
 EMR uses an IAM service roles to perform actions on your behalf to provision and manage clusters. It is recommended to create a separate IAM role for each use case and workload. This allows you to segregate access control between clusters. If you have multiple clusters, each cluster can only the services and data defined within the IAM policy. 
 
-## ** BP 2.6 Use scoped down IAM policies for authorization such as AmazonEMRFullAccessPolicy_v2 **
+## ** BP 3.6 Use scoped down IAM policies for authorization such as AmazonEMRFullAccessPolicy_v2 **
 
 EMR provides managed IAM policies to grant specific access privileges to users. Managed policies offer the benefit of updating automatically if permission requirements change. If you use inline policies, service changes may occur that cause permission errors to appear. 
 
 It is recommended to use new managed policies (v2 policies) which have been scoped-down to align with AWS best practices. The v2 managed policies restrict access using tags. They allow only specified Amazon EMR actions and require cluster resources that are tagged with an EMR-specific key. For more details and usage, see:
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-policy-fullaccess-v2.html>
 
-## ** BP 2.7 Audit user activity with AWS CloudTrail **
+## ** BP 3.7 Audit user activity with AWS CloudTrail **
 
 AWS CloudTrail, a service that provides a record of actions taken by a user, role, or an AWS service, is integrated with Amazon EMR. CloudTrail captures all API calls for Amazon EMR as events. The calls captured include calls from the Amazon EMR console and code calls to the Amazon EMR API operations. If you create a trail, you can enable continuous delivery of CloudTrail events to an Amazon S3 bucket, including events for Amazon EMR.
 
@@ -60,7 +60,7 @@ You can also audit the S3 objects that EMR accesses by using S3 access logs. AWS
 
 Because you have full control over your EMR cluster, you can always install your own third-party agents or tooling. You do so by using bootstrap actions or custom AMIs to help support your auditing requirements.
 
-## ** BP 2.8 Upgrade your EMR Releases frequently or use a Custom AMI to get the latest OS and application software patches **
+## ** BP 3.8 Upgrade your EMR Releases frequently or use a Custom AMI to get the latest OS and application software patches **
 
 Each Amazon EMR release version is "locked" to the Amazon Linux AMI version to maintain compatibility. This means that the same Amazon Linux AMI version is used for an Amazon EMR release version even when newer Amazon Linux AMIs become available. For this reason, we recommend that you use the latest Amazon EMR release version unless you need an earlier version for compatibility and are unable to migrate.
 

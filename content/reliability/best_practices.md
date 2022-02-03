@@ -114,17 +114,8 @@ For example, if your fleet includes: m5.2xlarge, m5.4xlarge and m5.8xlarge. You 
 
 Exotic instances are designed for specific use cases such as “zn”, “dn“, and “ad" as well as large instance types like 24xlarge. Exotic instance types have smaller EC2 capacity pools which increase the likelihood of Insufficient Capacity Errors and spot reclamation. It is recommended to avoid these types of instances if  your use case does not have requirements for these types of instances and you want higher guarantees of instance availability. 
 
-## ** BP 2.10 When using auto scaling, keep core nodes constant and scale with only task nodes **
 
-Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need re balance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS re balance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. 
-
-In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the hdfs replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that a minimum, you keep 2 core nodes and set dfs.replication=2. 
-
-Below is a managed scaling configuration example where the cluster will scale only on task nodes. In this example, the minimum nodes is 25, maximum 100. Of the 25 minimum, they will be all on-demand and core nodes. When the cluster needs to scale up, the remaining 75 will be task nodes on spot. 
-
-![BP - 4](images/bp-4.png)
-
-## ** BP 2.11 Handling S3 503 slow downs **
+## ** BP 2.10 Handling S3 503 slow downs **
 
 When you have an increased request rate to your S3 bucket, S3 might return 503 Slow Down errors while scaling to support the request rate. The default request rate is 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket. There are a number of ways to handle S3 503 slow downs. 
 
@@ -182,7 +173,7 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic>
 
-## ** BP 2.12 Audit and update  EMR and EC2 limits to avoid throttling **
+## ** BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling **
 
 Amazon EMR throttles API calls to maintain system stability. EMR has two types of limits:
 
@@ -207,7 +198,7 @@ For more information, see:
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html>
 
-## ** BP 2.13 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
+## ** BP 2.12 Set dfs.replication > 1 if using Spot for core nodes or for long running clusters **
 
 dfs.replication is the number of copies of each block to store for durability in HDFS. if dfs.replication is set to 1, and a Core node is lost due to spot reclamation or hardware failure, you risk losing HDFS data. Depending on the hdfs block that was lost, you may not be able to perform certain EMR actions. e.g submit hive job if core tez library in HDFS is missing
 
@@ -223,7 +214,7 @@ Few other considerations:
 * Increasing dfs.replication will require additional EBS volume 
 
 
-## ** BP 2.14 Right size your EBS volumes to avoid UNHEALTHY nodes **
+## ** BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes **
 
 When disk usage on a core or task node disk (for example, /mnt or /mnt1) exceeds 90%, the disk is marked as unhealthy. If fewer than 25% of a node's disks are healthy, the NodeManager marks the whole node as unhealthy and communicates this to the ResourceManager, which then stops assigning containers to the node.
 
