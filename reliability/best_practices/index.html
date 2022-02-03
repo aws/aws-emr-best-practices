@@ -395,36 +395,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-210-when-using-auto-scaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
-    BP 2.10 When using auto scaling, keep core nodes constant and scale with only task nodes
+  <a href="#bp-210-handling-s3-503-slow-downs" class="md-nav__link">
+    BP 2.10 Handling S3 503 slow downs
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-211-handling-s3-503-slow-downs" class="md-nav__link">
-    BP 2.11 Handling S3 503 slow downs
+  <a href="#bp-211-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
+    BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-212-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
-    BP 2.12 Audit and update  EMR and EC2 limits to avoid throttling
+  <a href="#bp-212-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
+    BP 2.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-213-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
-    BP 2.13 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-214-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
-    BP 2.14 Right size your EBS volumes to avoid UNHEALTHY nodes
+  <a href="#bp-213-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
+    BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes
   </a>
   
 </li>
@@ -628,36 +621,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-210-when-using-auto-scaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
-    BP 2.10 When using auto scaling, keep core nodes constant and scale with only task nodes
+  <a href="#bp-210-handling-s3-503-slow-downs" class="md-nav__link">
+    BP 2.10 Handling S3 503 slow downs
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-211-handling-s3-503-slow-downs" class="md-nav__link">
-    BP 2.11 Handling S3 503 slow downs
+  <a href="#bp-211-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
+    BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-212-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" class="md-nav__link">
-    BP 2.12 Audit and update  EMR and EC2 limits to avoid throttling
+  <a href="#bp-212-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
+    BP 2.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-213-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" class="md-nav__link">
-    BP 2.13 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-214-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
-    BP 2.14 Right size your EBS volumes to avoid UNHEALTHY nodes
+  <a href="#bp-213-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" class="md-nav__link">
+    BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes
   </a>
   
 </li>
@@ -736,12 +722,7 @@
 <p>For example, if your fleet includes: m5.2xlarge, m5.4xlarge and m5.8xlarge. You would want your units/weights to match the instance size - 2:4:8. This is to ensure that when EMR provision your cluster or scales up, you are consistently getting the same total compute. You could also do 1:2:4 since they are still proportional to the instance sizes.  If the weights were not proportional, e.g 1:2:3, each time your cluster provisions, your total cluster capacity can be different. </p>
 <h2 id="bp-29-if-optimizing-for-availability-avoid-exotic-instance-types"><strong> BP 2.9 If optimizing for availability, avoid exotic instance types </strong><a class="headerlink" href="#bp-29-if-optimizing-for-availability-avoid-exotic-instance-types" title="Permanent link">&para;</a></h2>
 <p>Exotic instances are designed for specific use cases such as “zn”, “dn“, and “ad" as well as large instance types like 24xlarge. Exotic instance types have smaller EC2 capacity pools which increase the likelihood of Insufficient Capacity Errors and spot reclamation. It is recommended to avoid these types of instances if  your use case does not have requirements for these types of instances and you want higher guarantees of instance availability. </p>
-<h2 id="bp-210-when-using-auto-scaling-keep-core-nodes-constant-and-scale-with-only-task-nodes"><strong> BP 2.10 When using auto scaling, keep core nodes constant and scale with only task nodes </strong><a class="headerlink" href="#bp-210-when-using-auto-scaling-keep-core-nodes-constant-and-scale-with-only-task-nodes" title="Permanent link">&para;</a></h2>
-<p>Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need re balance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS re balance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. </p>
-<p>In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the hdfs replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that a minimum, you keep 2 core nodes and set dfs.replication=2. </p>
-<p>Below is a managed scaling configuration example where the cluster will scale only on task nodes. In this example, the minimum nodes is 25, maximum 100. Of the 25 minimum, they will be all on-demand and core nodes. When the cluster needs to scale up, the remaining 75 will be task nodes on spot. </p>
-<p><img alt="BP - 4" src="../images/bp-4.png" /></p>
-<h2 id="bp-211-handling-s3-503-slow-downs"><strong> BP 2.11 Handling S3 503 slow downs </strong><a class="headerlink" href="#bp-211-handling-s3-503-slow-downs" title="Permanent link">&para;</a></h2>
+<h2 id="bp-210-handling-s3-503-slow-downs"><strong> BP 2.10 Handling S3 503 slow downs </strong><a class="headerlink" href="#bp-210-handling-s3-503-slow-downs" title="Permanent link">&para;</a></h2>
 <p>When you have an increased request rate to your S3 bucket, S3 might return 503 Slow Down errors while scaling to support the request rate. The default request rate is 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket. There are a number of ways to handle S3 503 slow downs. </p>
 <p>1) Use EMRFS retry strategies</p>
 <p>EMRFS provides 2 ways to improve the success rate of your S3 requests. You can adjust your retry strategy by configuring properties in your emrfs-site configuration.</p>
@@ -781,7 +762,7 @@ s3://&lt;bucket2&gt;/product=1/dt=2021-11-01
 <p>It is also important that your S3 data layout is structured in a way that allows for partition pruning. With partition pruning, your applications will only scan the objects it needs and skip over the other prefixes reducing the number of requests to S3.</p>
 <p>For more information, see:</p>
 <p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic</a></p>
-<h2 id="bp-212-audit-and-update-emr-and-ec2-limits-to-avoid-throttling"><strong> BP 2.12 Audit and update  EMR and EC2 limits to avoid throttling </strong><a class="headerlink" href="#bp-212-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" title="Permanent link">&para;</a></h2>
+<h2 id="bp-211-audit-and-update-emr-and-ec2-limits-to-avoid-throttling"><strong> BP 2.11 Audit and update  EMR and EC2 limits to avoid throttling </strong><a class="headerlink" href="#bp-211-audit-and-update-emr-and-ec2-limits-to-avoid-throttling" title="Permanent link">&para;</a></h2>
 <p>Amazon EMR throttles API calls to maintain system stability. EMR has two types of limits:</p>
 <p>1) Limit on Resources - maximum number of clusters that can </p>
 <ul>
@@ -801,7 +782,7 @@ s3://&lt;bucket2&gt;/product=1/dt=2021-11-01
 </ul>
 <p>For more information, see:</p>
 <p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html</a></p>
-<h2 id="bp-213-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters"><strong> BP 2.13 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters </strong><a class="headerlink" href="#bp-213-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" title="Permanent link">&para;</a></h2>
+<h2 id="bp-212-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters"><strong> BP 2.12 Set dfs.replication &gt; 1 if using Spot for core nodes or for long running clusters </strong><a class="headerlink" href="#bp-212-set-dfsreplication-1-if-using-spot-for-core-nodes-or-for-long-running-clusters" title="Permanent link">&para;</a></h2>
 <p>dfs.replication is the number of copies of each block to store for durability in HDFS. if dfs.replication is set to 1, and a Core node is lost due to spot reclamation or hardware failure, you risk losing HDFS data. Depending on the hdfs block that was lost, you may not be able to perform certain EMR actions. e.g submit hive job if core tez library in HDFS is missing</p>
 <p>dfs.replication defaults are set based off of initial core count:</p>
 <p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html">https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html</a></p>
@@ -811,7 +792,7 @@ s3://&lt;bucket2&gt;/product=1/dt=2021-11-01
 <li>Do not scale down below dfs.replication. For example if dfs.replication=3, keep your core node minimum to 3</li>
 <li>Increasing dfs.replication will require additional EBS volume </li>
 </ul>
-<h2 id="bp-214-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes"><strong> BP 2.14 Right size your EBS volumes to avoid UNHEALTHY nodes </strong><a class="headerlink" href="#bp-214-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" title="Permanent link">&para;</a></h2>
+<h2 id="bp-213-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes"><strong> BP 2.13 Right size your EBS volumes to avoid UNHEALTHY nodes </strong><a class="headerlink" href="#bp-213-right-size-your-ebs-volumes-to-avoid-unhealthy-nodes" title="Permanent link">&para;</a></h2>
 <p>When disk usage on a core or task node disk (for example, /mnt or /mnt1) exceeds 90%, the disk is marked as unhealthy. If fewer than 25% of a node's disks are healthy, the NodeManager marks the whole node as unhealthy and communicates this to the ResourceManager, which then stops assigning containers to the node.</p>
 <p>If the node remains UNHEALTHY for more than 45 minutes, YARN ResourceManager gracefully decommissions the node when termination protection is off.  If termination protection is on, the core nodes remain in an UNHEALTHY state and only task nodes are terminated.</p>
 <p>The two most common reasons disk’s exceed 90% are writing of HDFS and spark shuffle data. To avoid this scenario,  it is recommended to right size your EBS volumes for your use case. You can either add more EBS volumes or increase the total size of the EBS capacity so that it never exceeds the default 90% utilization disk checker rate. </p>

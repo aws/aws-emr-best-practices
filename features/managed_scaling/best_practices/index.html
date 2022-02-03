@@ -58,6 +58,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#41-managed-scaling" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -396,10 +401,42 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Managed Scaling
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         Managed Scaling
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bp-411-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
+    BP 4.1.1 Keep core nodes constant and scale with only task nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -418,6 +455,38 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bp-411-keep-core-nodes-constant-and-scale-with-only-task-nodes" class="md-nav__link">
+    BP 4.1.1 Keep core nodes constant and scale with only task nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
@@ -428,9 +497,23 @@
                   </a>
                 
                 
-                  <h1>Managed Scaling</h1>
-                
-                <p>Best Practices (BP) for using EMR Managed Scaling - coming soon</p>
+                <h1 id="41-managed-scaling"><strong> 4.1 - Managed Scaling </strong><a class="headerlink" href="#41-managed-scaling" title="Permanent link">&para;</a></h1>
+<h2 id="bp-411-keep-core-nodes-constant-and-scale-with-only-task-nodes"><strong> BP 4.1.1 Keep core nodes constant and scale with only task nodes </strong><a class="headerlink" href="#bp-411-keep-core-nodes-constant-and-scale-with-only-task-nodes" title="Permanent link">&para;</a></h2>
+<p>Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. As such, during scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need re balance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes disk volume during HDFS re balance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy making it unusable by YARN. </p>
+<p>In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the hdfs replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that a minimum, you keep 2 core nodes and set dfs.replication=2. </p>
+<p>Below is a managed scaling configuration example where the cluster will scale only on task nodes. In this example, the minimum nodes is 25, maximum 100. Of the 25 minimum, they will be all on-demand and core nodes. When the cluster needs to scale up, the remaining 75 will be task nodes on spot. </p>
+<p><img alt="BP - 4" src="../images/bp-4.png" /></p>
+<!-- ## ** BP 4.1.2 Monitor Managed Scaling with Cloudwatch Metrics **
+
+## ** BP 4.1.3 Consider adjusting YARN decommissioning timeouts depending on your workload **
+
+## ** BP 4.1.4 When using multiple Task Groups, use the VCPU unit Type for scaling **
+
+## ** BP 4.1.5 When using auto scaling, keep core nodes constant and scale with only task nodes **
+## ** BP 4.1.6 When using auto scaling, keep core nodes constant and scale with only task nodes **
+## ** BP 4.1.7 When using auto scaling, keep core nodes constant and scale with only task nodes **
+## ** BP 4.1.8 When using auto scaling, keep core nodes constant and scale with only task nodes **
+## ** BP 4.1.9 When using auto scaling, keep core nodes constant and scale with only task nodes ** -->
                 
               
               
