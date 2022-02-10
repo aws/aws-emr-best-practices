@@ -18,7 +18,7 @@ nav:
     - Introduction: 'security/introduction.md'
     - Best Practices: 'security/best_practices.md'    
   - 4 - Features: 
-    - Managed Scaling: 'features/managed_scaling/best_practices.md'          
+    - 4.1 - Managed Scaling: 'features/managed_scaling/best_practices.md'          
   # - 4 - Performance Efficiency: 'index.md'
   # - 5 - Operational Excellence: 'index.md'
   # - 4 - Applications:
@@ -38,3 +38,5 @@ markdown_extensions:
         permalink: true
     - admonition
     - codehilite
+    - attr_list
+    - md_in_html
