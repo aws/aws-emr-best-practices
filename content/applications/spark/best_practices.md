@@ -4,15 +4,15 @@
 
 Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports [several instance types](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html) to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.
 
-* *Memory-optimized* instances like r5 and r4 are good candidates for memory intensive workloads. Spark jobs that cache large DataFrames, Datasets or RDDs, perform operations like joins and union on large tables, use a lot of internal or user-defined broadcast variables or accumulators, go through many GC cycles and perform massive shuffles (when dynamic allocation is disabled) are likely to be memory intensive. Following diagram shows YARN memory available percentage and aggregated OS memory utilization from Cloudwatch EMR namespace and Ganglia respectively.
+* **Memory-optimized** instances like r5 and r4 are good candidates for memory intensive workloads. Spark jobs that cache large DataFrames, Datasets or RDDs, perform operations like joins and union on large tables, use a lot of internal or user-defined broadcast variables or accumulators, go through many GC cycles and perform massive shuffles (when dynamic allocation is disabled) are likely to be memory intensive. Following diagram shows YARN memory available percentage and aggregated OS memory utilization from Cloudwatch EMR namespace and Ganglia respectively.
 
 ![BP - 1](images/spark-bp-1.png)
 
-* *CPU-optimized* instances like c5 and c4 are good candidates for CPU intensive workloads . Spark jobs involving complex aggregate operations involving many in-built arithmetic functions or UDFs and jobs that use a lot of LRU caches are likely to be CPU intensive. Following screenshot shows aggregated CPU utilization of the EMR cluster from Ganglia.
+* **CPU-optimized** instances like c5 and c4 are good candidates for CPU intensive workloads . Spark jobs involving complex aggregate operations involving many in-built arithmetic functions or UDFs and jobs that use a lot of LRU caches are likely to be CPU intensive. Following screenshot shows aggregated CPU utilization of the EMR cluster from Ganglia.
 
 ![BP - 2](images/spark-bp-2.png)
 
-* *General purpose* instances like m5 and m4 are good candidates for a mix of CPU and memory intensive workloads. They are also great for benchmarking and onboarding your Spark applications. Following sheet outlines the CPU:Memory ratio of of 3 example instances instances at a similar price.
+* **General purpose** instances like m5 and m4 are good candidates for a mix of CPU and memory intensive workloads. They are also great for benchmarking and onboarding your Spark applications. Following sheet outlines the CPU:Memory ratio of of 3 example instances instances at a similar price.
 
 | Instance Type | Instance | EC2 price | EMR price | Cores | Memory in GiB | CPU:memory ratio |
 --------|----------------|------------|-----------|--------|------------|------------|
@@ -20,8 +20,8 @@ Spark workloads may require different types of hardware for different job charac
 | Memory | m6g.4xlarge |  $3.02 |  0.27 | 48 | 384 | 8 |
 | General | m5.16xlarge |  $3.07 |  0.27 | 64 | 256 | 4 |
 
-* *Storage-optimized *instances like i3ens, d2 are good candidates for I/O intensive workloads. If your use case is CPU/memory bound but also consumes a lot of I/O, and demands high disk throughput and low read or write latencies from transient HDFS storage, you can consider using instances backed by SSD storage like r5ds, c5ds, m5ds etc.. For jobs that perform massive shuffles (when dynamic allocation is enabled), Spark external shuffle service will write the shuffle data blocks to the local disks of each node running executors.
-* *GPU instances* such as p3 family for Spark ML and intensive analytical workloads like image processing. From EMR 6.2, you can also use [Nvidia RAPIDS accelerator](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-rapids.html) plugin to improve your GPU instance performance without any changes to your code or data processing pipelines.
+* **Storage-optimized** instances like i3ens, d2 are good candidates for I/O intensive workloads. If your use case is CPU/memory bound but also consumes a lot of I/O, and demands high disk throughput and low read or write latencies from transient HDFS storage, you can consider using instances backed by SSD storage like r5ds, c5ds, m5ds etc.. For jobs that perform massive shuffles (when dynamic allocation is enabled), Spark external shuffle service will write the shuffle data blocks to the local disks of each node running executors.
+* **GPU instances** such as p3 family for Spark ML and intensive analytical workloads like image processing. From EMR 6.2, you can also use [Nvidia RAPIDS accelerator](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-rapids.html) plugin to improve your GPU instance performance without any changes to your code or data processing pipelines.
 
 Starting EMR 5.31+ and 6.1+, there is Graviton support (r6g, m6g, c6g.) which offers up to 15% improvement in performance and 30% reduction in cost based on our derived benchmarks. They are a great choice to replace your legacy instances to observe improved performance at a lower cost.
 
@@ -31,7 +31,7 @@ Starting EMR 5.31+ and 6.1+, there is Graviton support (r6g, m6g, c6g.) which of
 
 Spark offers two kinds of deploy modes called client and cluster deploy modes. Deploy mode determines where your Spark driver runs. Spark driver is the cockpit for your application. It hosts the SparkContext (or SparkSession) for your application. It keeps track of all tasks executed by the executors and the state of the executors via heartbeats. Driver also fetches the results from the executors running tasks. Choose the right deploy mode based on your workload requirements.
 
-*Client deploy mode*
+### Client deploy mode
 
 This is the default deploy mode for Spark applications in EMR. In this deploy mode, the driver process will be launched within your Spark client - whether you submit your job from EMR master node (using EMR step or spark-submit) or using a client external to EMR. Spark driver is a single point of failure. A failed driver JVM will not be relaunched in client deploy mode. Also, when client loses connectivity with YARN, your job will be killed.
 
@@ -43,8 +43,7 @@ Use this deploy mode if :-
 * If you are running too many executors (1000+). Since Spark driver manages and monitors tasks and executors, too many executors will slow down the driver since they have to send heartbeats, poll task status etc. Since EMR allows you to specify a different instance type for master instance, you can choose a very powerful instance like z1d and allocate the memory and CPU resources to Spark drivers especially if you are running a very high number of executors.
 * If you want to print output to the console.
 
-
-*Cluster deploy mode*
+### Cluster deploy mode
 
 In cluster deploy mode, your Spark driver will be colocated within the Application Master (AM) container from YARN regardless of where you submit your Spark application from.
 
@@ -87,7 +86,7 @@ sc.hadoopConfiguration.set("parquet.crypto.factory.class" ,"org.apache.parquet.c
 // Parquet file footers will be protected with master key "keyB"
 squaresDF.write.option("parquet.encryption.column.keys" , "keyA:square").option("parquet.encryption.footer.key" , "keyB").parquet("/path/to/table.parquet.encrypted")
 // Read encrypted dataframe files
-val df2 *=* spark.read.parquet("/path/to/table.parquet.encrypted")
+val df2 = spark.read.parquet("/path/to/table.parquet.encrypted")
 ```
 
 ## ** BP 6.4  -  Partitioning **
@@ -174,16 +173,15 @@ val conf = new SparkConf()
 ```
 You can also fine tune the following Kryo configs :-
 
-spark.kryo.unsafe - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
-spark.kryoserializer.buffer.max - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
-spark.kryoserializer.buffer - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
+**spark.kryo.unsafe** - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
+**spark.kryoserializer.buffer.max** - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
+**spark.kryoserializer.buffer** - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
 
 ## ** BP 6.7  -   Use appropriate garbage collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
-Following is the spark configuration
-
+Following is the spark configuration :-
 ```
 [{
 "classification": "spark-defaults",
@@ -209,7 +207,7 @@ You can also monitor GC performance using Spark UI. the GC time should be ideall
 
 When using spark APIs, try to go with the most optimal choice if your use case permits. Following are a few examples.
 
-*repartition vs coalesce*
+### repartition vs coalesce
 
 Both repartition and coalesce are used for changing the number of shuffle partitions. Repartition is used for both increasing and decreasing the shuffle partitions whereas coalesce is used for only decreasing the number of shuffle partitions. If your goal is to decrease the number of shuffle partitions, consider using coalesce instead of repartition. The reason is, repartition triggers a full shuffle but coalesce triggers only a partial shuffle and thus minimizes the amount of data shuffled by keeping a few nodes as receivers of shuffle data.
 ```
@@ -217,11 +215,11 @@ df.coalesce(1) //instead of df.repartition(1)
 ```
 But please note that when you coalesce (or repartition) to a very small number, your JVM will process a lot of data which can lead to OOM issues or disk space issues due to shuffle spill.
 
-*groupByKey vs reduceByKey*
+### groupByKey vs reduceByKey
 
 Use reduceByKey instead of groupByKey wherever possible. With groupByKey, data will be transferred over the network and collected on the reduced workers. This can lead to OOMs since all data is sent across the network. Whereas, with reduceByKey, data is combined at partition-level, with only one output for one key at each partition to send over the network. reduceByKey required combining all your values into another value with the exact same type.
 
-*orderBy vs sortBy or sortWithinPartitions*
+### orderBy vs sortBy or sortWithinPartitions
 
 orderBy does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or sortWithinPartitions does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or sortWithinPartitions if global sorting is not necessary - especially during writes. Try to avoid orderBy clause. Values can be aggregated across partitions in your queries if needed.
 
@@ -338,11 +336,12 @@ When there is a data skew, it is best handled at code level since very little ca
 
 There are several types of joins in Spark
 
-* Broadcast Join
+### Broadcast Join
     * Broadcast joins are the most optimal options
-* Shuffle Hash Join
-* Sort Merge Join
-* Broadcast Nested Loop Join
+
+### Shuffle Hash Join
+### Sort Merge Join
+### Broadcast Nested Loop Join
 
 ## ** BP 6.17 -   Configure observability **
 
@@ -354,9 +353,9 @@ Choose an observability platform based on your requirements.
 
 ## ** BP 6.19  -   Common Errors **
 
-* *Avoid 503 slow downs*
-    * For mitigating S3 throttling errors, consider increasing fs.s3.maxRetries in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs.
-    * You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
+1. **Avoid 503 slow downs**
+ * For mitigating S3 throttling errors, consider increasing fs.s3.maxRetries in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs.
+ * You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
 
 ```
 [{
@@ -368,30 +367,28 @@ Choose an observability platform based on your requirements.
     "configurations": []
 }]
 ```
+ * Consider using Iceberg tables’ ObjectStoreLocationProvider to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
+```
+ CREATE TABLE my_catalog.my_ns.my_table
+ ( id bigint,
+   data string,
+   category string)
+   USING iceberg OPTIONS
+   ( 'write.object-storage.enabled'=true,
+     'write.data.path'='s3://my-table-data-bucket')
+     PARTITIONED BY (category);
+```
+Your S3 files will be arranged under MURMUR3 hash prefixes like below.
+```
+ 2021-11-01 05:39:24  809.4 KiB 7ffbc860/my_ns/my_table/00328-1642-5ce681a7-dfe3-4751-ab10-37d7e58de08a-00015.parquet
+ 2021-11-01 06:00:10    6.1 MiB 7ffc1730/my_ns/my_table/00460-2631-983d19bf-6c1b-452c-8195-47e450dfad9d-00001.parquet
+ 2021-11-01 04:33:24    6.1 MiB 7ffeeb4e/my_ns/my_table/00156-781-9dbe3f08-0a1d-4733-bd90-9839a7ceda00-00002.parquet
+```
+* If using Iceberg is not an option and if above approaches don’t resolve the issue, you can create an AWS support case to partition your S3 prefixes. But the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/
 
-    * Consider using Iceberg tables’ ObjectStoreLocationProvider to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
-
-      ```
-      CREATE TABLE my_catalog.my_ns.my_table
-              ( id bigint,
-              data string,
-              category string)
-              USING iceberg OPTIONS
-              ( 'write.object-storage.enabled'=true,
-              'write.data.path'='s3://my-table-data-bucket')
-              PARTITIONED BY (category);
-      ```
-      Your S3 files will be arranged under MURMUR3 hash prefixes like below.
-
-      ```
-        2021-11-01 05:39:24  809.4 KiB 7ffbc860/my_ns/my_table/00328-1642-5ce681a7-dfe3-4751-ab10-37d7e58de08a-00015.parquet
-        2021-11-01 06:00:10    6.1 MiB 7ffc1730/my_ns/my_table/00460-2631-983d19bf-6c1b-452c-8195-47e450dfad9d-00001.parquet
-        2021-11-01 04:33:24    6.1 MiB 7ffeeb4e/my_ns/my_table/00156-781-9dbe3f08-0a1d-4733-bd90-9839a7ceda00-00002.parquet
-      ```
-
-    * If using Iceberg is not an option and if above approaches don’t resolve the issue, you can create an AWS support case to partition your S3 prefixes. But the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/
-
-* *Increase event queue size and heartbeat interval for large number of executors*
+2. **Increase event queue size and heartbeat interval for large number of executors**
     - If the size of “dropped events
-* *Increase HADOOP, YARN and HDFS heap sizes for intensive workflows*
-* *Use spark.yarn.archive to avoid compressing dependencies especially for high concurrency workloads*
+
+3. **Increase HADOOP, YARN and HDFS heap sizes for intensive workflows**
+
+4. **Use spark.yarn.archive to avoid compressing dependencies especially for high concurrency workloads**
