@@ -1,4 +1,4 @@
-# ** 6 - Spark # **
+# ** 6 - Spark **
 
 ## ** BP 6.1  -  Determine right infrastructure for your Spark workloads **
 
@@ -14,12 +14,11 @@ Spark workloads may require different types of hardware for different job charac
 
 * *General purpose* instances like m5 and m4 are good candidates for a mix of CPU and memory intensive workloads. They are also great for benchmarking and onboarding your Spark applications. Following sheet outlines the CPU:Memory ratio of of 3 example instances instances at a similar price.
 
-        |  Instance Type |  EC2 price | EMR price |  Cores |  Memory in | CPU:memory |
-        |                |            |           |        |      GiB   |    ratio   |
+| Instance Type | Instance | EC2 price | EMR price | Cores | Memory in GiB | CPU:memory ratio |
 --------|----------------|------------|-----------|--------|------------|------------|
-Compute |  m5.4xlarge    |  $3.06     |  0.27     |   72   |   144      |  2         |
-Memory  |  m6g.4xlarge   |  $3.02		  |  0.27     |   48   |   384      |  8         |
-General |  m5.16xlarge   |  $3.07     |  0.27     |   64   |   256      |  4         |
+| Compute | m5.4xlarge |  $3.06 |  0.27 | 72 | 144 | 2 |
+| Memory | m6g.4xlarge |  $3.02 |  0.27 | 48 | 384 | 8 |
+| General | m5.16xlarge |  $3.07 |  0.27 | 64 | 256 | 4 |
 
 * *Storage-optimized *instances like i3ens, d2 are good candidates for I/O intensive workloads. If your use case is CPU/memory bound but also consumes a lot of I/O, and demands high disk throughput and low read or write latencies from transient HDFS storage, you can consider using instances backed by SSD storage like r5ds, c5ds, m5ds etc.. For jobs that perform massive shuffles (when dynamic allocation is enabled), Spark external shuffle service will write the shuffle data blocks to the local disks of each node running executors.
 * *GPU instances* such as p3 family for Spark ML and intensive analytical workloads like image processing. From EMR 6.2, you can also use [Nvidia RAPIDS accelerator](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-rapids.html) plugin to improve your GPU instance performance without any changes to your code or data processing pipelines.
@@ -184,6 +183,7 @@ spark.kryoserializer.buffer - Initial size of Kryo's serialization buffer. Defau
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
 Following is the spark configuration
+
 ```
 [{
 "classification": "spark-defaults",
@@ -305,6 +305,7 @@ WKT we must use Dataframes and Datasets instead of RDDs since both have several 
 * Dataframes avoid unnecessary exchanges. For example, distinct after join will be accomplished with two exchanges in datasets but with only one exchange in DFs.
 
 Only downside to using dataframes instead of datasets is that, with dataset, you generally define schema in class.
+
 ```
 case class DeviceIoTData (
   battery_level: Long,
@@ -369,6 +370,7 @@ Choose an observability platform based on your requirements.
 ```
 
     * Consider using Iceberg tables’ ObjectStoreLocationProvider to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
+
       ```
       CREATE TABLE my_catalog.my_ns.my_table
               ( id bigint,
@@ -380,11 +382,13 @@ Choose an observability platform based on your requirements.
               PARTITIONED BY (category);
       ```
       Your S3 files will be arranged under MURMUR3 hash prefixes like below.
+
       ```
         2021-11-01 05:39:24  809.4 KiB 7ffbc860/my_ns/my_table/00328-1642-5ce681a7-dfe3-4751-ab10-37d7e58de08a-00015.parquet
         2021-11-01 06:00:10    6.1 MiB 7ffc1730/my_ns/my_table/00460-2631-983d19bf-6c1b-452c-8195-47e450dfad9d-00001.parquet
         2021-11-01 04:33:24    6.1 MiB 7ffeeb4e/my_ns/my_table/00156-781-9dbe3f08-0a1d-4733-bd90-9839a7ceda00-00002.parquet
       ```
+
     * If using Iceberg is not an option and if above approaches don’t resolve the issue, you can create an AWS support case to partition your S3 prefixes. But the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/
 
 * *Increase event queue size and heartbeat interval for large number of executors*
