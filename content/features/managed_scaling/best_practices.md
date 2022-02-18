@@ -40,7 +40,8 @@ To mitigate this, you can lower *spark.blacklist.decommissioning.timeout* to mak
 
 * If a task is assigned to this node, and YARN transitions from DECOMMISSIONING into DECOMMISSIONED, the task will fail and will need to be reassigned to another node 
 * Spark blacklist also protects from bad nodes in the cluster -e.g faulty hardware leading to high task failure rate. Lowering the blacklist timeout can increase task failure rate since tasks will continue to assigned to these nodes.
-* Nodes can be transitioned from DECOMMISSIONING to RUNNING due to a scale up request. In this scenario, tasks will not fail and with a lower blacklist timeout and pending tasks can continuosuly be assigned to the node
+
+Nodes can be transitioned from DECOMMISSIONING to RUNNING due to a scale up request. In this scenario, tasks will not fail and with a lower blacklist timeout and pending tasks can continuosuly be assigned to the node
 
 
 With *yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs,* consider increasing this from the default of 1hr to the length of your longest running task. This is to ensure that YARN does not force terminate the node while the task is running and having it to re-run on another node. The cost associated with re-running the long running task is generally higher than keeping the node running to ensure its completed.
