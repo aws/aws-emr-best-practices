@@ -455,10 +455,29 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bp-416-configure-spark-history-server-shs-custom-executor-log-url-to-point-to-job-history-server-jhs-directly" class="md-nav__link">
+    BP 4.1.6 Configure Spark History Server (SHS) custom executor log URL to point to Job History Server (JHS) Directly
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spot_usage/best_practices/" class="md-nav__link">
+        4.2 - Spot Usage
+      </a>
     </li>
   
 
@@ -603,6 +622,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bp-416-configure-spark-history-server-shs-custom-executor-log-url-to-point-to-job-history-server-jhs-directly" class="md-nav__link">
+    BP 4.1.6 Configure Spark History Server (SHS) custom executor log URL to point to Job History Server (JHS) Directly
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -655,6 +681,13 @@
 <p><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scale-on-demand.html">https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scale-on-demand.html</a></p>
 <p>In general, we recommend using EMR managed Scaling since the metric evaluation is every 5-10 seconds. This means your EMR cluster will adjust quicker to the change in the required cluster resources. In addition, EMR managed Scaling also supports Instance Fleets and the the scaling policy is simpler to configure because EMR managed scaling only requires min and max amounts for purchasing options (On demand/Spot) and Node Type (Core/Task). </p>
 <p>Custom Automatic Scaling should be considered if you want autoscaling outside of YARN applications or if you want full control over your scaling policies (e.g evaluation period, cool down, number of nodes)</p>
+<h2 id="bp-416-configure-spark-history-server-shs-custom-executor-log-url-to-point-to-job-history-server-jhs-directly"><strong> BP 4.1.6 Configure Spark History Server (SHS) custom executor log URL to point to Job History Server (JHS) Directly  </strong><a class="headerlink" href="#bp-416-configure-spark-history-server-shs-custom-executor-log-url-to-point-to-job-history-server-jhs-directly" title="Permanent link">&para;</a></h2>
+<p>When you use SHS to access application container logs, YARN Resource manager relies on the NodeManager that the jobs Application Master (AM) ran on, to redirect to the JHS. The JHS is what hosts the container logs. A jobs executor logs cannot be accessed if the AM ran on a node that’s been decommissioned due to managed scaling or spot</p>
+<p>A solution to this is pointing SHS to the JHS directly, instead of letting node manager redirect. </p>
+<p>Spark 3.0 introduced spark.history.custom.executor.log.url, which allows you specify custom spark executor log url.</p>
+<p>You can configure spark.history.custom.executor.log.url as below to point to JHS directly:
+{{HTTP_SCHEME}}<JHS_HOST>:<JHS_PORT>/jobhistory/logs/{{NM_HOST}}:{{NM_PORT}}/{{CONTAINER_ID}}/{{CONTAINER_ID}}/{{USER}}/{{FILE_NAME}}?start=-4096</p>
+<p>Where <JHS_HOST> and <JHS_PORT> with actual value - JHS Host is the master node with EMR </p>
                 
               
               
@@ -688,13 +721,13 @@
         </a>
       
       
-        <a href="../../../applications/spark/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../../spot_usage/best_practices/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              4.2 - Spot Usage
             </div>
           </div>
           <div class="md-footer__button md-icon">
