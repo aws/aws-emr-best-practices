@@ -64,3 +64,19 @@ The following link highlights the key differences between EMR Managed Scaling vs
 In general, we recommend using EMR managed Scaling since the metric evaluation is every 5-10 seconds. This means your EMR cluster will adjust quicker to the change in the required cluster resources. In addition, EMR managed Scaling also supports Instance Fleets and the the scaling policy is simpler to configure because EMR managed scaling only requires min and max amounts for purchasing options (On demand/Spot) and Node Type (Core/Task). 
 
 Custom Automatic Scaling should be considered if you want autoscaling outside of YARN applications or if you want full control over your scaling policies (e.g evaluation period, cool down, number of nodes)
+
+## ** BP 4.1.6 Configure Spark History Server (SHS) custom executor log URL to point to Job History Server (JHS) Directly  **
+
+When you use SHS to access application container logs, YARN Resource manager relies on the NodeManager that the jobs Application Master (AM) ran on, to redirect to the JHS. The JHS is what hosts the container logs. A jobs executor logs cannot be accessed if the AM ran on a node that’s been decommissioned due to managed scaling or spot
+
+A solution to this is pointing SHS to the JHS directly, instead of letting node manager redirect. 
+
+Spark 3.0 introduced spark.history.custom.executor.log.url, which allows you specify custom spark executor log url.
+ 
+You can configure spark.history.custom.executor.log.url as below to point to JHS directly:
+{{HTTP_SCHEME}}<JHS_HOST>:<JHS_PORT>/jobhistory/logs/{{NM_HOST}}:{{NM_PORT}}/{{CONTAINER_ID}}/{{CONTAINER_ID}}/{{USER}}/{{FILE_NAME}}?start=-4096
+
+Where <JHS_HOST> and <JHS_PORT> with actual value - JHS Host is the master node with EMR 
+
+
+

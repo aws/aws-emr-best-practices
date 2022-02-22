@@ -8,6 +8,9 @@ We currently have published guides for the following topics:
 - Security
 - Features
 	- Managed Scaling
+	- Spot Usage
+- Applications
+	- Spark
 
 
 In the future we will be publishing best practices guidance for Applications (e.g Spark, Hudi), Architecture and other EMR features
