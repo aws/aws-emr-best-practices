@@ -13,7 +13,7 @@
     
     
       
-        <title>Best Practices - EMR Best Practices Guides</title>
+        <title>** 5.1 - Spark ** - EMR Best Practices Guides</title>
       
     
     
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Best Practices
+              ** 5.1 - Spark **
             
           </span>
         </div>
@@ -462,14 +462,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
       
       
@@ -490,14 +488,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" >
       
       
       
@@ -532,259 +528,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Best Practices
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../best_practices/" class="md-nav__link">
         Best Practices
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#bp-511-determine-right-infrastructure-for-your-spark-workloads" class="md-nav__link">
-    BP 5.1.1  -  Determine right infrastructure for your Spark workloads
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-512-choose-the-right-deploy-mode" class="md-nav__link">
-    BP 5.1.2  -  Choose the right deploy mode
-  </a>
-  
-    <nav class="md-nav" aria-label="BP 5.1.2  -  Choose the right deploy mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#client-deploy-mode" class="md-nav__link">
-    Client deploy mode
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cluster-deploy-mode" class="md-nav__link">
-    Cluster deploy mode
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-513-use-right-file-formats-and-compression-type" class="md-nav__link">
-    BP 5.1.3  -  Use right file formats and compression type
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-514-partitioning" class="md-nav__link">
-    BP 5.1.4  -  Partitioning
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-515-tune-driverexecutor-memory-cores-and-sparksqlshufflepartitions-to-fully-utilize-cluster-resources" class="md-nav__link">
-    BP 5.1.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-516-use-kryo-serializer-by-registering-custom-classes-especially-for-dataset-schemas" class="md-nav__link">
-    BP 5.1.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-517-use-appropriate-garbage-collector" class="md-nav__link">
-    BP 5.1.7  -   Use appropriate garbage collector
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-518-use-appropriate-apis-wherever-possible" class="md-nav__link">
-    BP 5.1.8  -   Use appropriate APIs wherever possible
-  </a>
-  
-    <nav class="md-nav" aria-label="BP 5.1.8  -   Use appropriate APIs wherever possible">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repartition-vs-coalesce" class="md-nav__link">
-    repartition vs coalesce
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#groupbykey-vs-reducebykey" class="md-nav__link">
-    groupByKey vs reduceByKey
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#orderby-vs-sortby-or-sortwithinpartitions" class="md-nav__link">
-    orderBy vs sortBy or sortWithinPartitions
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-519-leverage-spot-nodes-with-managed-autoscaling" class="md-nav__link">
-    BP 5.1.9 -   Leverage spot nodes with managed autoscaling
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5110-for-workloads-with-fixedpredictable-pattern-disable-dynamic-allocation" class="md-nav__link">
-    BP 5.1.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5111-leverage-hdfs-as-temporary-storage-for-io-intensive-workloads" class="md-nav__link">
-    BP 5.1.11  -   Leverage HDFS as temporary storage for I/O intensive workloads
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5112-spark-speculation-with-emrfs" class="md-nav__link">
-    BP 5.1.12  -   Spark speculation with EMRFS
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5113-data-quality-and-integrity-checks-with-deequ" class="md-nav__link">
-    BP 5.1.13 -   Data quality and integrity checks with deequ
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5114-use-dataframes-wherever-possible" class="md-nav__link">
-    BP 5.1.14 -   Use DataFrames wherever possible
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5115-data-skew" class="md-nav__link">
-    BP 5.1.15  -   Data Skew
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5116-use-right-type-of-join" class="md-nav__link">
-    BP 5.1.16  -   Use right type of join
-  </a>
-  
-    <nav class="md-nav" aria-label="BP 5.1.16  -   Use right type of join">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#broadcast-join" class="md-nav__link">
-    Broadcast Join
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shuffle-hash-join" class="md-nav__link">
-    Shuffle Hash Join
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sort-merge-join" class="md-nav__link">
-    Sort Merge Join
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#broadcast-nested-loop-join" class="md-nav__link">
-    Broadcast Nested Loop Join
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5117-configure-observability" class="md-nav__link">
-    BP 5.1.17 -   Configure observability
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5118-debugging-and-monitoring-spark-applications" class="md-nav__link">
-    BP 5.1.18  - Debugging and monitoring Spark applications
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bp-5119-common-errors" class="md-nav__link">
-    BP 5.1.19  -   Common Errors
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1055,7 +803,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/spark/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/spark/best_practices_LOCAL_3845.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
@@ -1480,26 +1228,6 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
       </main>
       
         <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        
-        <a href="../introduction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Introduction
-            </div>
-          </div>
-        </a>
-      
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
