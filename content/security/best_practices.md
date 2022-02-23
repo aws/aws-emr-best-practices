@@ -41,7 +41,7 @@ In AWS, Instance Metadata Service (IMDS) provides “data about your instance th
 From EMR 5.32 and 6.2 onward, Amazon EMR components use IMDSv2 for all IMDS calls. For IMDS calls in your application code, you can use both IMDSv1 and IMDSv2. It is recommended to turn off IMDSv1 and only allow IMDSv2 for added security. This can be configured in EMR Security Configurations. For more information, see:
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-create-security-configuration.html#emr-security-configuration-imdsv2>
 
-## ** BP 3.5 Create a separacase IAM role for each cluster or use case **
+## ** BP 3.5 Create a separate IAM role for each cluster or use case **
 
 EMR uses an IAM service roles to perform actions on your behalf to provision and manage clusters. It is recommended to create a separate IAM role for each use case and workload. This allows you to segregate access control between clusters. If you have multiple clusters, each cluster can only the services and data defined within the IAM policy. 
 
