@@ -1,6 +1,6 @@
-# ** 6 - Spark **
+# ** 5.1 - Spark **
 
-## ** BP 6.1  -  Determine right infrastructure for your Spark workloads **
+## ** BP 5.1.1  -  Determine right infrastructure for your Spark workloads **
 
 Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports [several instance types](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html) to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.
 
@@ -27,7 +27,7 @@ Starting EMR 5.31+ and 6.1+, there is Graviton support (r6g, m6g, c6g.) which of
 
 ![BP - 3](images/spark-bp-3.png)
 
-## ** BP 6.2  -  Choose the right deploy mode **
+## ** BP 5.1.2  -  Choose the right deploy mode **
 
 Spark offers two kinds of deploy modes called client and cluster deploy modes. Deploy mode determines where your Spark driver runs. Spark driver is the cockpit for your application. It hosts the SparkContext (or SparkSession) for your application. It keeps track of all tasks executed by the executors and the state of the executors via heartbeats. Driver also fetches the results from the executors running tasks. Choose the right deploy mode based on your workload requirements.
 
@@ -60,7 +60,7 @@ Use cluster deploy mode if :-
 
 Regardless of which deploy mode you choose, make sure that your driver Spark configs are tuned for your workload needs.
 
-## ** BP 6.3  -  Use right file formats and compression type **
+## ** BP 5.1.3  -  Use right file formats and compression type **
 
 It is highly recommended that you use right file formats for optimal performance. Do not use legacy file formats like CSV, JSON, text files etc. since the read/write performance will much slower. It is highly recommended that you use columnar file formats like Parquet, ORC etc. Especially for Spark, Parquet would be the best choice.
 
@@ -89,7 +89,7 @@ squaresDF.write.option("parquet.encryption.column.keys" , "keyA:square").option(
 val df2 = spark.read.parquet("/path/to/table.parquet.encrypted")
 ```
 
-## ** BP 6.4  -  Partitioning **
+## ** BP 5.1.4  -  Partitioning **
 
 Partitioning your data is very important if you are going to run your code or queries with filter conditions. Partitioning helps you arrange your data files into S3 prefixes based on the partition key. It helps minimize read/write access footprint i.e., you will be able to only read files from partition folder specified in your where clause - thus skipping a full read. Partitioning can also help if your data ingestion is incremental in nature. However, partitioning can reduce read throughput if you are performing full table scans.
 
@@ -108,11 +108,59 @@ The above code will create maximum of 400 files per datecol partition. You can u
 
 Partitioning ensures that pruning takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Query plan can be studied from Spark UI to ensure that pruning takes place while reading and writing to partitioned tables from Spark.
 
-## ** BP 6.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources **
+## ** BP 5.1.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources **
 
-EMR defaults are aimed at smaller JVM sizes. For example, following are the default configuration for
+Amazon EMR configures Spark defaults during the cluster launch based on your cluster's infrastructure (number of instances and instance types). EMR configured defaults are generally sufficient for majority of the workloads. However, if it is not meeting your performance expectations, we recommend you to tune Spark driver/executor configurations and see if you can achieve a better performance. Following are the general recommendations.  
 
-## ** BP 6.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas **
+For a starting point, generally, its advisable to set spark.executor.cores to 4 or 5 and tune spark.executor.memory around this value. Also, when you calculate the spark.executor.memory, you need to account for the executor overhead which is set to 0.1875 by default (i.e., 18.75% of spark.executor.memory). For example, for a 2 worker node r4.8xlarge cluster, following will be the configurations.
+
+Based on [Task Configurations](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html) r4.8xlarge node has YARN memory of 241664 MB (based on the value of yarn.nodemanager.resource.memory-mb). The instance has 32 vCores. If we set spark.executor.cores as 4, we can run 8 executors at a time. So, the configurations will be following.
+
+spark.executor.cores = 4
+spark.executor.memory + (spark.executor.memory * spark.yarn.executor.memoryOverheadFactor) = (241664 MB / 8) = 30208 MB
+spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memoryOverheadFactor=0.1875)
+
+If you have a cluster of 10 r4.8xlarge nodes, then totally, 80 executors can run with 24544 MB memory and 4 vCores each.
+
+Please note that some jobs benefit from bigger executor JVMs (more cores assigned). Some jobs benefit from smaller but more number of executors. So, you can use the above formula to arrive at optimal values for your application. EMR Spark has a feature called [maximizeResourceAllocation](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation). Setting this property to true will lead to one fat JVM per node that uses all of the available cores in that instance. However, please note that this setting may not prove to be optimal all types of workloads. It is not recommended to set this property to true if your cluster is a shared cluster with multiple parallel applications or if your cluster has HBase.
+
+After configuring the values, run a sample job and monitor the Resource Manager UI, ContainerPendingRatio and YARNMemoryAvailablePcnt Cloudwatch metrics to verify that the vCores and YARN memory are being fully utilized. [Spark JMX metrics](https://spark.apache.org/docs/latest/monitoring.html) provides JMX level visibility which is the best way to determine resource utilization.
+
+While using instance fleets, it is generally advisable to request worker nodes with similar vCore:memory ratio (for eg: requesting r4, r5 and r6gs in the same fleet). However, in some cases, in order to ensure capacity, you may have to diversify the instance type families as well in your request (for eg: requesting c5s, m5s and r5s in same fleet). EMR will configure driver/executor memory based on minimum of master, core and task OS memory. Generally, in this case, it is best to use the default configurations. However, if needed, you can fine tune the driver and executor configurations based on above principles. But in that case, you will need to take YARN memory and vCores of all the different instance families into consideration.
+
+To provide an example, lets say you have requested a cluster with a core fleet containing following instances: r5.4xlarge, r5.12xlarge, c5.4xlarge, c5.12xlarge, m5.4xlarge, m5.12xlarge. All the 4xlarge instances in this fleet have 16 vCores and 12xlarge instances have 48 vCores. But the OS/YARN memory are different.
+
+| Instance | YARN memory in MB |
+|----------------|------------|
+| c5.4xlarge | 24576 |
+| c5.12xlarge | 90112 |
+| m5.4xlarge | 57344 |
+| m5.12xlarge | 188416 |
+| r5.4xlarge | 122880 |
+| r5.12xlarge | 385024 |
+
+Now, let us calculate executor memory after setting spark.executor.cores = 4 by starting with smallest YARN memory from the above table (c5.4xlarge) and dividing the YARN memory by spark.executor.cores to get the total container size -> 24576 / 4 = 6144.
+
+spark.executor.memory = 6144 - (6144 * 0.1875) = 4992 MB
+
+In default Spark implementation, with the above math, if you set 4992 MB as executor memory, then in r5.12xlarge, the resources will be under utilized even though you will not see the evidence of it from the Resource Manager UI. With the above configs, 77 executors can run in r5.12xlarge but there are only 48 vCores. So, even though 77 executors will have YARN resources allocated, they are only able to run 48 tasks at any given time which could be considered a wastage of JVMs.
+
+In order to alleviate this issue, from EMR 5.32 and EMR 6.2, there is a feature called Heterogenous Executors which dynamically calculates executor sizes. It is defined by the property "spark.yarn.heterogeneousExecutors.enabled" and is set to "true" by default. Further, you will be able to control the maximum resources allocated to each executor with properties "spark.executor.maxMemory" and "spark.executor.maxCores". Minimum resources are calculated with "spark.executor.cores" and "spark.executor.memory". For uniform instance groups or for flexible fleets with instance types having similar vCore:memory ratio, you can try setting this property to false and see if you get better performance.
+
+Similar to executors, driver memory and vCores can be calculated as well. The default memory overhead for driver container is 10% of driver memory. If you are using cluster deploy mode, then the driver resources will be allocated from one of the worker nodes. So, based on the driver memory/core configurations, it will take away some of the YARN resources that could be used for launching executors. If you are using client deploy mode and submitting jobs from EMR master node or a remote server, then driver resources are taken from the master node or remote server and will not affect the resources available for executor JVMs. The default driver memory (without maximizeResourceAllocation) is 2 GB. You can increase driver memory or cores for following conditions:
+
+1) Your cluster size is very large and there are many executors (1000+) that need to send heartbeats to driver.
+2) Your result size retrieved during actions such as printing output to console is very large. For this, you will also need to tune "spark.driver.maxResultSize".
+
+You can use smaller driver memory (or use the default spark.driver.memory) if you are running multiple jobs in parallel.
+
+Now, coming to "spark.sql.shuffle.partitions" for Dataframes and Datasets and "spark.default.parallelism" for RDDs, it is recommended to set this value to total number of vCores in your cluster or a multiple of that value. For example, a 10 core node r4.8xlarge cluster can accommodate 320 vCores in total. Hence, you can set shuffle partitions or parallelism to 320 or a multiple of 320 such that each vCore handles a Spark partition. It is not recommended to set this value too high or too low. Generally 1 or 2x the total number of vCores is optimal. Generally, each Spark shuffle partition should process ~128 MB of data. This can be determined by looking at the execution plan from the Spark UI.
+
+![BP - 16](images/spark-bp-16.png)
+
+From above, you can see average size in exchange is 2.2 KB which means we can try to reduce "spark.sql.shuffle.partitions".
+
+## ** BP 5.1.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas **
 
 Spark uses Java Serializer by default. From Spark 2.0+, Spark internally uses Kryo Serializer when shuffling RDDs with simple types, arrays of simple types, or string type. It is highly recommended that you use Kryo Serializer and also register your classes in the application.
 ```
@@ -177,7 +225,7 @@ You can also fine tune the following Kryo configs :-
 **spark.kryoserializer.buffer.max** - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
 **spark.kryoserializer.buffer** - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
 
-## ** BP 6.7  -   Use appropriate garbage collector **
+## ** BP 5.1.7  -   Use appropriate garbage collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
@@ -203,7 +251,7 @@ You can also monitor GC performance using Spark UI. the GC time should be ideall
 
 ![BP - 8](images/spark-bp-8.png)
 
-## ** BP 6.8  -   Use appropriate APIs wherever possible **
+## ** BP 5.1.8  -   Use appropriate APIs wherever possible **
 
 When using spark APIs, try to go with the most optimal choice if your use case permits. Following are a few examples.
 
@@ -223,7 +271,7 @@ Use reduceByKey instead of groupByKey wherever possible. With groupByKey, data w
 
 orderBy does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or sortWithinPartitions does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or sortWithinPartitions if global sorting is not necessary - especially during writes. Try to avoid orderBy clause. Values can be aggregated across partitions in your queries if needed.
 
-## ** BP 6.9 -   Leverage spot nodes with managed autoscaling **
+## ** BP 5.1.9 -   Leverage spot nodes with managed autoscaling **
 
 Enable managed autoscaling for your EMR clusters. From EMR 5.32 and EMR 6.2 there have been optimizations made to managed scaling to make it more resilient for your Spark workloads. Try to leverage task instance fleets with many instance types per fleet with Spot request since it would give both cost and performance gains. However, in this case, make sure that your output is being written directly to EMRFS since we will have limited core node capacity.
 
@@ -239,7 +287,7 @@ For Spark workloads, we observed ~50% gains compared to custom autoscaling clust
 
 ![BP - 11](images/spark-bp-11.png)
 
-## ** BP 6.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation **
+## ** BP 5.1.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation **
 
 Dynamic allocation is enabled in EMR by default. It is a great feature when your cluster is set for autoscaling and
 ```
@@ -255,7 +303,7 @@ Dynamic allocation is enabled in EMR by default. It is a great feature when your
 }]
 ```
 
-## ** BP 6.11  -   Leverage HDFS as temporary storage for I/O intensive workloads **
+## ** BP 5.1.11  -   Leverage HDFS as temporary storage for I/O intensive workloads **
 
 Many EMR users directly read and write data in S3. This is generally suited for most type of use cases. However, for I/O intensive workflows, this approach could be slower - especially for heavy writes.
 
@@ -273,7 +321,7 @@ Even if you are using S3 directly to store your data, if your workloads are inte
 
 However,  while using this architecture, please make sure that you are sizing your HDFS properly to prevent job failures due to lack of storage space when the job is running. Refer to best practice BP 3.14 in Reliability section.
 
-## ** BP 6.12  -   Spark speculation with EMRFS **
+## ** BP 5.1.12  -   Spark speculation with EMRFS **
 
 In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to data loss or duplicate data. By default, “spark.speculation” is turned off. Only enable spark.speculation if you are doing one of the following.
 
@@ -285,7 +333,7 @@ You can consider enabling spark.speculation especially while running workloads o
 
 Please do not enable spark.speculation if you are not using EMRFSOutputCommitter to write Parquet files or if you are not using HDFS to write the output since it may lead to incorrect or missing or duplicate data in your destination.
 
-## ** BP 6.13 -   Data quality and integrity checks with deequ **
+## ** BP 5.1.13 -   Data quality and integrity checks with deequ **
 
 Spark and Hadoop frameworks do not guarantee inherent data integrity. While it is very rare, you may observe some data corruption or missing data or duplicate data due to unexpected errors in the hardware and software stack.
 
@@ -294,7 +342,7 @@ In order to check your data integrity, consider using [Deequ](https://github.com
 [Test data quality at scale with Deequ | AWS Big Data Blog](https://aws.amazon.com/blogs/big-data/test-data-quality-at-scale-with-deequ/)
 [Testing data quality at scale with PyDeequ | AWS Big Data Blog](https://aws.amazon.com/blogs/big-data/testing-data-quality-at-scale-with-pydeequ/)
 
-## ** BP 6.14 -   Use DataFrames wherever possible **
+## ** BP 5.1.14 -   Use DataFrames wherever possible **
 
 WKT we must use Dataframes and Datasets instead of RDDs since both have several enhancements over RDDs like catalyst optimizer and adaptive query execution. But between Datasets and Dataframes Dataframes perform certain optimizations during DAG creation and execution. These optimizations can be identified by inspecting the query plan. For example -
 
@@ -324,7 +372,7 @@ case class DeviceIoTData (
 ```
 This provides you type-safety. When there are changes to your schema, it can be consolidated and tracked in a single class. This can be considered as an industry standard. While using Spark dataframes, you can achieve something similar by maintaining the table columns in a list.
 
-## ** BP 6.15  -   Data Skew **
+## ** BP 5.1.15  -   Data Skew **
 
 Data skew can significantly slow down the processing since a single JVM could be handling a large amount of data. In this case observed in Spark UI, a single task is processing 25 times more data than other tasks. This can inevitably lead to slowness, OOMs and disk space filling issues.
 
@@ -332,7 +380,7 @@ Data skew can significantly slow down the processing since a single JVM could be
 
 When there is a data skew, it is best handled at code level since very little can be done in terms of configuration. You can increase JVM size but that will impact other tasks and is not the best approach. Some common approaches include salting,
 
-## ** BP 6.16  -   Use right type of join **
+## ** BP 5.1.16  -   Use right type of join **
 
 There are several types of joins in Spark
 
@@ -343,15 +391,15 @@ There are several types of joins in Spark
 ### Sort Merge Join
 ### Broadcast Nested Loop Join
 
-## ** BP 6.17 -   Configure observability **
+## ** BP 5.1.17 -   Configure observability **
 
 Choose an observability platform based on your requirements.
 
 
-## ** BP 6.18  - Debugging and monitoring Spark applications **
+## ** BP 5.1.18  - Debugging and monitoring Spark applications **
 
 
-## ** BP 6.19  -   Common Errors **
+## ** BP 5.1.19  -   Common Errors **
 
 1. **Avoid 503 slow downs**
  * For mitigating S3 throttling errors, consider increasing fs.s3.maxRetries in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs.
