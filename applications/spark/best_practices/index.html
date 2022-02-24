@@ -678,8 +678,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5110-for-workloads-with-fixedpredictable-pattern-disable-dynamic-allocation" class="md-nav__link">
-    BP 5.1.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation
+  <a href="#bp-5110-for-workloads-with-predictable-pattern-consider-disabling-dynamic-allocation" class="md-nav__link">
+    BP 5.1.10  -   For workloads with predictable pattern, consider disabling dynamic allocation
   </a>
   
 </li>
@@ -716,6 +716,40 @@
   <a href="#bp-5115-data-skew" class="md-nav__link">
     BP 5.1.15  -   Data Skew
   </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.15  -   Data Skew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#salting" class="md-nav__link">
+    Salting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolated-salting" class="md-nav__link">
+    Isolated Salting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolated-broadcast-join" class="md-nav__link">
+    Isolated broadcast join
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashing-for-sparksql-queries" class="md-nav__link">
+    Hashing for SparkSQL queries
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -761,22 +795,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5117-configure-observability" class="md-nav__link">
-    BP 5.1.17 -   Configure observability
+  <a href="#bp-5117-configuring-spark-executor-blacklist" class="md-nav__link">
+    BP 5.1.17  - Configuring Spark Executor Blacklist
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5118-debugging-and-monitoring-spark-applications" class="md-nav__link">
-    BP 5.1.18  - Debugging and monitoring Spark applications
+  <a href="#bp-5118-configure-observability" class="md-nav__link">
+    BP 5.1.18 -   Configure observability
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5119-common-errors" class="md-nav__link">
-    BP 5.1.19  -   Common Errors
+  <a href="#bp-5119-debugging-and-monitoring-spark-applications" class="md-nav__link">
+    BP 5.1.19  - Debugging and monitoring Spark applications
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-5120-common-errors" class="md-nav__link">
+    BP 5.1.20  -   Common Errors
   </a>
   
 </li>
@@ -940,8 +981,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5110-for-workloads-with-fixedpredictable-pattern-disable-dynamic-allocation" class="md-nav__link">
-    BP 5.1.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation
+  <a href="#bp-5110-for-workloads-with-predictable-pattern-consider-disabling-dynamic-allocation" class="md-nav__link">
+    BP 5.1.10  -   For workloads with predictable pattern, consider disabling dynamic allocation
   </a>
   
 </li>
@@ -978,6 +1019,40 @@
   <a href="#bp-5115-data-skew" class="md-nav__link">
     BP 5.1.15  -   Data Skew
   </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.15  -   Data Skew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#salting" class="md-nav__link">
+    Salting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolated-salting" class="md-nav__link">
+    Isolated Salting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolated-broadcast-join" class="md-nav__link">
+    Isolated broadcast join
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashing-for-sparksql-queries" class="md-nav__link">
+    Hashing for SparkSQL queries
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1023,22 +1098,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5117-configure-observability" class="md-nav__link">
-    BP 5.1.17 -   Configure observability
+  <a href="#bp-5117-configuring-spark-executor-blacklist" class="md-nav__link">
+    BP 5.1.17  - Configuring Spark Executor Blacklist
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5118-debugging-and-monitoring-spark-applications" class="md-nav__link">
-    BP 5.1.18  - Debugging and monitoring Spark applications
+  <a href="#bp-5118-configure-observability" class="md-nav__link">
+    BP 5.1.18 -   Configure observability
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5119-common-errors" class="md-nav__link">
-    BP 5.1.19  -   Common Errors
+  <a href="#bp-5119-debugging-and-monitoring-spark-applications" class="md-nav__link">
+    BP 5.1.19  - Debugging and monitoring Spark applications
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-5120-common-errors" class="md-nav__link">
+    BP 5.1.20  -   Common Errors
   </a>
   
 </li>
@@ -1178,8 +1260,10 @@
 <div class="codehilite"><pre><span></span><code>df.repartition(400).write.partitionBy(&quot;datecol&quot;).parquet(&quot;s3://bucket/output/&quot;)
 </code></pre></div>
 
-<p>The above code will create maximum of 400 files per datecol partition. You can use repartitioning to control the file size in destination. i.e., for merging smaller files. But for splitting large files, you can use the property "spark.sql.files.maxPartitionBytes".</p>
-<p>Partitioning ensures that pruning takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Query plan can be studied from Spark UI to ensure that pruning takes place while reading and writing to partitioned tables from Spark.</p>
+<p>The above code will create maximum of 400 files per datecol partition. Repartition API alters number of shuffle partitions during runtime and partitionBy API determines the partition field(s). You can also control the number of shuffle partitions with the Spark property "spark.sql.shuffle.partitions". You can use repartition API to control the file size in destination. i.e., for merging smaller files. But for splitting large files, you can use the property "spark.sql.files.maxPartitionBytes".</p>
+<p>Partitioning ensures that pruning takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Spark logical plan or DAG can be studied to ensure that pruning takes place while reading and writing to partitioned tables from Spark. It may look similar to below.</p>
+<p>FileScan parquet default.dimension[Store#12,Date#13,Price#14,CPI#15] Batched: true, DataFilters: [isnotnull(Date#16), (Date#16 &gt; 02–14–2022), isnotnull(Store#12)], Format: Parquet, Location: InMemoryFileIndex[dbfs:/user/hive/warehouse/dimension], PartitionFilters: [], <strong>PushedFilters: [IsNotNull(Date), GreaterThan(Date,02–14–2022), IsNotNull(Store)]</strong>, ReadSchema: struct<Store:int,Date:string,Price:double,CPI:string></p>
+<p>FileScan parquet default.fact[Dept#22,Sales#23,Store#24,Date#25] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex[dbfs:/user/hive/warehouse/fact/Store=12/Date=02–14–2022…, PartitionFilters: [isnotnull(Date#27), (Date#25 &gt; 02–14–2022), isnotnull(Store#24), <strong>dynamicpruningexpression(Date#2…, PushedFilters: [], ReadSchema: struct<Dept:int,Sales:double></strong></p>
 <h2 id="bp-515-tune-driverexecutor-memory-cores-and-sparksqlshufflepartitions-to-fully-utilize-cluster-resources"><strong> BP 5.1.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources </strong><a class="headerlink" href="#bp-515-tune-driverexecutor-memory-cores-and-sparksqlshufflepartitions-to-fully-utilize-cluster-resources" title="Permanent link">&para;</a></h2>
 <p>Amazon EMR configures Spark defaults during the cluster launch based on your cluster's infrastructure (number of instances and instance types). EMR configured defaults are generally sufficient for majority of the workloads. However, if it is not meeting your performance expectations, we recommend you to tune Spark driver/executor configurations and see if you can achieve a better performance. Following are the general recommendations.  </p>
 <p>For a starting point, generally, its advisable to set spark.executor.cores to 4 or 5 and tune spark.executor.memory around this value. Also, when you calculate the spark.executor.memory, you need to account for the executor overhead which is set to 0.1875 by default (i.e., 18.75% of spark.executor.memory). For example, for a 2 worker node r4.8xlarge cluster, following will be the configurations.</p>
@@ -1231,12 +1315,15 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <p>In default Spark implementation, with the above math, if you set 4992 MB as executor memory, then in r5.12xlarge, the resources will be under utilized even though you will not see the evidence of it from the Resource Manager UI. With the above configs, 77 executors can run in r5.12xlarge but there are only 48 vCores. So, even though 77 executors will have YARN resources allocated, they are only able to run 48 tasks at any given time which could be considered a wastage of JVMs.</p>
 <p>In order to alleviate this issue, from EMR 5.32 and EMR 6.2, there is a feature called Heterogenous Executors which dynamically calculates executor sizes. It is defined by the property "spark.yarn.heterogeneousExecutors.enabled" and is set to "true" by default. Further, you will be able to control the maximum resources allocated to each executor with properties "spark.executor.maxMemory" and "spark.executor.maxCores". Minimum resources are calculated with "spark.executor.cores" and "spark.executor.memory". For uniform instance groups or for flexible fleets with instance types having similar vCore:memory ratio, you can try setting this property to false and see if you get better performance.</p>
 <p>Similar to executors, driver memory and vCores can be calculated as well. The default memory overhead for driver container is 10% of driver memory. If you are using cluster deploy mode, then the driver resources will be allocated from one of the worker nodes. So, based on the driver memory/core configurations, it will take away some of the YARN resources that could be used for launching executors. If you are using client deploy mode and submitting jobs from EMR master node or a remote server, then driver resources are taken from the master node or remote server and will not affect the resources available for executor JVMs. The default driver memory (without maximizeResourceAllocation) is 2 GB. You can increase driver memory or cores for following conditions:</p>
-<p>1) Your cluster size is very large and there are many executors (1000+) that need to send heartbeats to driver.
-2) Your result size retrieved during actions such as printing output to console is very large. For this, you will also need to tune "spark.driver.maxResultSize".</p>
+<ol>
+<li>Your cluster size is very large and there are many executors (1000+) that need to send heartbeats to driver.</li>
+<li>Your result size retrieved during actions such as printing output to console is very large. For this, you will also need to tune "spark.driver.maxResultSize".</li>
+</ol>
 <p>You can use smaller driver memory (or use the default spark.driver.memory) if you are running multiple jobs in parallel.</p>
 <p>Now, coming to "spark.sql.shuffle.partitions" for Dataframes and Datasets and "spark.default.parallelism" for RDDs, it is recommended to set this value to total number of vCores in your cluster or a multiple of that value. For example, a 10 core node r4.8xlarge cluster can accommodate 320 vCores in total. Hence, you can set shuffle partitions or parallelism to 320 or a multiple of 320 such that each vCore handles a Spark partition. It is not recommended to set this value too high or too low. Generally 1 or 2x the total number of vCores is optimal. Generally, each Spark shuffle partition should process ~128 MB of data. This can be determined by looking at the execution plan from the Spark UI.</p>
 <p><img alt="BP - 16" src="../images/spark-bp-16.png" /></p>
-<p>From above, you can see average size in exchange is 2.2 KB which means we can try to reduce "spark.sql.shuffle.partitions".</p>
+<p>From the above screenshot, you can see average size in exchange is 2.2 KB which means we can try to reduce "spark.sql.shuffle.partitions" to increase partition size during exchange (or shuffle).</p>
+<p>Apart from this, if you want to use a tooling for configuration suggestions, consider using <a href="https://aws.amazon.com/blogs/big-data/tune-hadoop-and-spark-performance-with-dr-elephant-and-sparklens-on-amazon-emr/">Sparklens and Dr. Elephant</a> with Amazon EMR which will provide tuning suggestions based on metrics collected during your job run.</p>
 <h2 id="bp-516-use-kryo-serializer-by-registering-custom-classes-especially-for-dataset-schemas"><strong> BP 5.1.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas </strong><a class="headerlink" href="#bp-516-use-kryo-serializer-by-registering-custom-classes-especially-for-dataset-schemas" title="Permanent link">&para;</a></h2>
 <p>Spark uses Java Serializer by default. From Spark 2.0+, Spark internally uses Kryo Serializer when shuffling RDDs with simple types, arrays of simple types, or string type. It is highly recommended that you use Kryo Serializer and also register your classes in the application.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">val</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SparkSession</span><span class="w"></span>
@@ -1256,7 +1343,7 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <span class="w">                  </span><span class="p">.</span><span class="n">getOrCreate</span><span class="w"></span>
 </code></pre></div>
 
-<p>If you do not specify classesToRegister, then there will be a Kryo conversion overhead. So, it is highly recommended to register classes in your application. Especially, if you are using data sets, consider registering your data set schema classes along with classes used in Spark internally based on the data types and structures used in your program.</p>
+<p>If you do not specify classesToRegister, then there will be a Kryo conversion overhead which could impact performance. Hence, it is highly recommended to register classes in your application. Especially, if you are using Datasets, consider registering your Dataset schema classes along with classes used in Spark internally based on the data types and structures used in your program. An example provided below:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">val</span><span class="w"> </span><span class="n">conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SparkConf</span><span class="p">()</span><span class="w"></span>
 <span class="w">        </span><span class="n">conf</span><span class="p">.</span><span class="n">registerKryoClasses</span><span class="p">(</span><span class="w"></span>
 <span class="w">          </span><span class="k">Array</span><span class="p">(</span><span class="w"></span>
@@ -1332,27 +1419,48 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <h3 id="orderby-vs-sortby-or-sortwithinpartitions">orderBy vs sortBy or sortWithinPartitions<a class="headerlink" href="#orderby-vs-sortby-or-sortwithinpartitions" title="Permanent link">&para;</a></h3>
 <p>orderBy does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or sortWithinPartitions does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or sortWithinPartitions if global sorting is not necessary - especially during writes. Try to avoid orderBy clause. Values can be aggregated across partitions in your queries if needed.</p>
 <h2 id="bp-519-leverage-spot-nodes-with-managed-autoscaling"><strong> BP 5.1.9 -   Leverage spot nodes with managed autoscaling </strong><a class="headerlink" href="#bp-519-leverage-spot-nodes-with-managed-autoscaling" title="Permanent link">&para;</a></h2>
-<p>Enable managed autoscaling for your EMR clusters. From EMR 5.32 and EMR 6.2 there have been optimizations made to managed scaling to make it more resilient for your Spark workloads. Try to leverage task instance fleets with many instance types per fleet with Spot request since it would give both cost and performance gains. However, in this case, make sure that your output is being written directly to EMRFS since we will have limited core node capacity.</p>
-<p>Following policy defines max core nodes to 2 and we are requesting the core nodes to be on-demand which is highly recommended. Rest of the nodes are Spot task nodes.</p>
+<p>Enable managed autoscaling for your EMR clusters. From EMR 5.32 and EMR 6.2 there have been optimizations made to managed scaling to make it more resilient for your Spark workloads. It is not recommended to use Spot with core or master nodes since during reclaimation event, your cluster could be terminated and you would need to re-process all the work. Try to leverage task instance fleets with many instance types per fleet with Spot since it would give both cost and performance gains. However, in this case, make sure that your output is being written directly to EMRFS since we will have fixed core node on-demand capacity.</p>
+<p>Following policy defines max core nodes to 2 and we are requesting the core nodes to be on-demand as recommended. Rest of the nodes are Spot task nodes.</p>
 <p><img alt="BP - 9" src="../images/spark-bp-9.png" /></p>
 <p>Following experimentation illustrates the performance gains using Managed Autoscaling.</p>
 <p><img alt="BP - 10" src="../images/spark-bp-10.png" /></p>
 <p>For Spark workloads, we observed ~50% gains compared to custom autoscaling clusters.</p>
 <p><img alt="BP - 11" src="../images/spark-bp-11.png" /></p>
-<h2 id="bp-5110-for-workloads-with-fixedpredictable-pattern-disable-dynamic-allocation"><strong> BP 5.1.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation </strong><a class="headerlink" href="#bp-5110-for-workloads-with-fixedpredictable-pattern-disable-dynamic-allocation" title="Permanent link">&para;</a></h2>
-<p>Dynamic allocation is enabled in EMR by default. It is a great feature when your cluster is set for autoscaling and</p>
+<p>Please note that the results may vary based on your workloads. Also, if your workloads are SLA sensitive and fault intolerant, it is best to use on-demand nodes for task fleets as well since reclaimation of Spot may lead to re-computation of one or many stages or tasks.</p>
+<h2 id="bp-5110-for-workloads-with-predictable-pattern-consider-disabling-dynamic-allocation"><strong> BP 5.1.10  -   For workloads with predictable pattern, consider disabling dynamic allocation </strong><a class="headerlink" href="#bp-5110-for-workloads-with-predictable-pattern-consider-disabling-dynamic-allocation" title="Permanent link">&para;</a></h2>
+<p>Dynamic allocation is enabled in EMR by default. It is a great feature for following types of workloads:</p>
+<ol>
+<li>Workloads processing variable amount of data  </li>
+<li>When your cluster uses autoscaling</li>
+<li>Dynamic processing requirements or unpredictable workload patterns</li>
+<li>Streaming and ad-hoc workloads</li>
+<li>When your cluster runs multiple applications</li>
+<li>Your cluster is long-running</li>
+</ol>
+<p>The above would cover at least 95% of the workloads run by our customers today. However, there are a very few cases where:</p>
+<ol>
+<li>Workloads have a very predicatable pattern</li>
+<li>Amount of data processed is predictable and consistent throughout the application</li>
+<li>Cluster runs Spark application in batch mode</li>
+<li>Clusters are transient and are of fixed size (no autoscaling)</li>
+<li>Application processing is relatively uniform. Workload is not spikey in nature.</li>
+</ol>
+<p>For example, you may have a use case where you are collecting weather information of certain geo regions twice a day. In this case, your data load will be predictable and you will run two batch jobs per day - one at BOD and one at EOD. Also, you may use two transient clusters to process these two jobs.  </p>
+<p>For such use cases, you can consider disabling dynamic allocation along with setting the precise  number and size of executors and vCores like below.</p>
 <div class="codehilite"><pre><span></span><code>[{
     &quot;classification&quot;: &quot;spark-defaults&quot;,
     &quot;properties&quot;: {
         &quot;spark.dynamicAllocation.enabled&quot;: &quot;false&quot;,
         &quot;spark.executor.instances&quot;: &quot;12&quot;,
-        &quot;spark.executor.memory&quot;: &quot;4G&quot;,
-        &quot;spark.executor.cores&quot;: &quot;2&quot;
+        &quot;spark.executor.memory&quot;: &quot;8G&quot;,
+        &quot;spark.executor.cores&quot;: &quot;4&quot;
     },
     &quot;configurations&quot;: []
 }]
 </code></pre></div>
 
+<p>Please note that if you are running more than one application at a time, you may need to tweak the configurations to allocate resources to them. By disabling dynamic allocation, Spark driver or YARN Application Master does not have to calculate resource requirements at runtime or collect certain heuristics. This may save anywhere from 5-10% of job execution time. However, you will need to carefully plan Spark executor configurations in order to ensure that your entire cluster is being utilized. If you choose to do this, then it is better to disable autoscaling since your cluster only runs a fixed number of executors at any given time unless your cluster runs other applications as well.</p>
+<p>However, only consider this option if your workloads meet all the above criteria since otherwise your jobs may fail due to lack of resources or you may end up wasting your cluster resources.</p>
 <h2 id="bp-5111-leverage-hdfs-as-temporary-storage-for-io-intensive-workloads"><strong> BP 5.1.11  -   Leverage HDFS as temporary storage for I/O intensive workloads </strong><a class="headerlink" href="#bp-5111-leverage-hdfs-as-temporary-storage-for-io-intensive-workloads" title="Permanent link">&para;</a></h2>
 <p>Many EMR users directly read and write data in S3. This is generally suited for most type of use cases. However, for I/O intensive workflows, this approach could be slower - especially for heavy writes.</p>
 <p><img alt="BP - 12" src="../images/spark-bp-12.png" /></p>
@@ -1360,8 +1468,8 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <p><img alt="BP - 13" src="../images/spark-bp-13.png" /></p>
 <p>Following is a typical application of HDFS for transient storage. A Spark context could be shared between multiple workflows, wherein, each workflow comprising of multiple transformations. After all transformations are complete, each workflow would write the output to HDFS location. Once all transforms are complete, you can save the final output to S3 either using S3DistCp or SDK determined by the number of files and output size.</p>
 <p><img alt="BP - 14" src="../images/spark-bp-14.png" /></p>
-<p>Even if you are using S3 directly to store your data, if your workloads are intensive, use disk optimized instances or SSD storage (i.e., r5d’s and r6gd’s instead of r5s and r6g’s). Because, the dynamic allocation will use Spark external shuffle service that spills data to local disks when the executor JVM cannot hold any more shuffle data.</p>
-<p>However,  while using this architecture, please make sure that you are sizing your HDFS properly to prevent job failures due to lack of storage space when the job is running. Refer to best practice BP 3.14 in Reliability section.</p>
+<p>However,  while using this architecture, please make sure that you are sizing your HDFS properly to prevent job failures due to lack of storage space when the job is running. Refer to best practice BP 2.13 in Reliability section.</p>
+<p>Even if you are using S3 directly to store your data, if your workloads are shuffle intensive, use storage optimized instances or SSD/NVMe based storage (for example: r5d’s and r6gd’s instead of r5s and r6g’s). This is because dynamic allocation will use Spark external shuffle service that spills data to local disks when the executor JVM cannot hold any more shuffle data. This process is a very I/O intensive one and will benefit from instance types that offer high disk throughput.</p>
 <h2 id="bp-5112-spark-speculation-with-emrfs"><strong> BP 5.1.12  -   Spark speculation with EMRFS </strong><a class="headerlink" href="#bp-5112-spark-speculation-with-emrfs" title="Permanent link">&para;</a></h2>
 <p>In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to data loss or duplicate data. By default, “spark.speculation” is turned off. Only enable spark.speculation if you are doing one of the following.</p>
 <ul>
@@ -1369,13 +1477,25 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <li>Using HDFS as temporary storage (in an understanding that final output will be written to S3 using S3DistCp)</li>
 <li>Using HDFS as storage</li>
 </ul>
+<p><strong>Do not enable spark.speculation if none of the above criteria is met since it will lead to incorrect or missing or duplicate data in your destination.</strong></p>
 <p>You can consider enabling spark.speculation especially while running workloads on very large clusters, provided you are performing one of the above actions. Reason is that, due to some hardware issues, one node out of 500+ nodes could be slower and may run tasks slowly even if data size being processed is the same as other tasks. Chances of this happening are higher in larger clusters. In that case, spark.speculation will help relaunch those slow tasks on other nodes providing SLA consistency (as long as the above criteria are met).</p>
-<p>Please do not enable spark.speculation if you are not using EMRFSOutputCommitter to write Parquet files or if you are not using HDFS to write the output since it may lead to incorrect or missing or duplicate data in your destination.</p>
+<p>You can set spark.speculation to true in spark-defaults or pass it as a command line option (--conf spark.speculation="true").</p>
+<div class="codehilite"><pre><span></span><code>[{
+    &quot;classification&quot;: &quot;spark-defaults&quot;,
+    &quot;properties&quot;: {
+        &quot;spark.speculation&quot;: &quot;true&quot;
+    },
+    &quot;configurations&quot;: []
+}]
+</code></pre></div>
+
+<p>Please do not enable spark.speculation if you are writing any non-Parquet files to S3 or if you are writing Parquet files to S3 without the default EMRFSOutputCommitter.</p>
 <h2 id="bp-5113-data-quality-and-integrity-checks-with-deequ"><strong> BP 5.1.13 -   Data quality and integrity checks with deequ </strong><a class="headerlink" href="#bp-5113-data-quality-and-integrity-checks-with-deequ" title="Permanent link">&para;</a></h2>
-<p>Spark and Hadoop frameworks do not guarantee inherent data integrity. While it is very rare, you may observe some data corruption or missing data or duplicate data due to unexpected errors in the hardware and software stack.</p>
+<p>Spark and Hadoop frameworks do not inherently guarantee data integrity. While it is very rare, you may observe some data corruption or missing data or duplicate data due to unexpected errors in the hardware and software stack. It is highly recommended that you validate the integrity and quality of your data atleast once after your job execution. It would be best to check data correctness in multiple stages of your job - especially if your job is long-running.</p>
 <p>In order to check your data integrity, consider using <a href="https://github.com/awslabs/deequ">Deequ</a> for your Spark workloads. Following are the blogs that can help you get started with Deequ for Spark workloads.</p>
 <p><a href="https://aws.amazon.com/blogs/big-data/test-data-quality-at-scale-with-deequ/">Test data quality at scale with Deequ | AWS Big Data Blog</a>
 <a href="https://aws.amazon.com/blogs/big-data/testing-data-quality-at-scale-with-pydeequ/">Testing data quality at scale with PyDeequ | AWS Big Data Blog</a></p>
+<p>Sometimes, you may have to write your own validation logic. For example, if you are doing a lot of calculations or aggregations, you will need to compute twice and compare the two results for accuracy. In other cases, you may also implement checksum on data computed and compare it with the checksum on data written to disk or S3. If you see unexpected results, then check your Spark UI and see if you are getting too many errors from a single node by sorting the Task list based on "Status" and checking for error message of failed tasks. If you are seeing too many random unexpected errors such as "ArrayIndexOutOfBounds" or checksum errors from a single node, then it may be possible that the node is impaired. Exclude or terminate this node and re-start your job.</p>
 <h2 id="bp-5114-use-dataframes-wherever-possible"><strong> BP 5.1.14 -   Use DataFrames wherever possible </strong><a class="headerlink" href="#bp-5114-use-dataframes-wherever-possible" title="Permanent link">&para;</a></h2>
 <p>WKT we must use Dataframes and Datasets instead of RDDs since both have several enhancements over RDDs like catalyst optimizer and adaptive query execution. But between Datasets and Dataframes Dataframes perform certain optimizations during DAG creation and execution. These optimizations can be identified by inspecting the query plan. For example -</p>
 <ul>
@@ -1402,24 +1522,87 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 )
 </code></pre></div>
 
-<p>This provides you type-safety. When there are changes to your schema, it can be consolidated and tracked in a single class. This can be considered as an industry standard. While using Spark dataframes, you can achieve something similar by maintaining the table columns in a list.</p>
+<p>This provides you type-safety. When there are changes to your schema, it can be consolidated and tracked in a single class. This can be considered as an industry standard. While using Spark DDataframes, you can achieve something similar by maintaining the table columns in a list and fetching from that list dynamically in your code. But this requires some additional coding effort.</p>
 <h2 id="bp-5115-data-skew"><strong> BP 5.1.15  -   Data Skew </strong><a class="headerlink" href="#bp-5115-data-skew" title="Permanent link">&para;</a></h2>
 <p>Data skew can significantly slow down the processing since a single JVM could be handling a large amount of data. In this case observed in Spark UI, a single task is processing 25 times more data than other tasks. This can inevitably lead to slowness, OOMs and disk space filling issues.</p>
 <p><img alt="BP - 15" src="../images/spark-bp-15.png" /></p>
-<p>When there is a data skew, it is best handled at code level since very little can be done in terms of configuration. You can increase JVM size but that will impact other tasks and is not the best approach. Some common approaches include salting,</p>
-<h2 id="bp-5116-use-right-type-of-join"><strong> BP 5.1.16  -   Use right type of join </strong><a class="headerlink" href="#bp-5116-use-right-type-of-join" title="Permanent link">&para;</a></h2>
-<p>There are several types of joins in Spark</p>
-<h3 id="broadcast-join">Broadcast Join<a class="headerlink" href="#broadcast-join" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>* Broadcast joins are the most optimal options
+<p>When there is a data skew, it is best handled at code level since very little can be done in terms of configuration. You can increase JVM size or use one fat executor per node in order to prevent OOMs to the best of ability. But this will impact other tasks and also will not improve your job performance since one task uses only one vCPU.</p>
+<p>Following are some of the common strategies to mitigate data skew at code level.</p>
+<h3 id="salting">Salting<a class="headerlink" href="#salting" title="Permanent link">&para;</a></h3>
+<p>Salting is one of the most common skew mitigation technique where you add a "salt" to the column say "col1" that is skewed. You can split it into multiple columns like "col1_0","col1_1","col1_2" and so on. As number of salts increase, the skew decreases i.e., more parallelism of tasks can be achieved.</p>
+<p><strong>Original data</strong></p>
+<p><img alt="BP - 17" src="../images/spark-bp-17.png" /></p>
+<p><strong>Salted 4  times</strong></p>
+<p><img alt="BP - 18" src="../images/spark-bp-18.png" /></p>
+<p><strong>Salted 8 times</strong></p>
+<p><img alt="BP - 19" src="../images/spark-bp-19.png" /></p>
+<p>A typical Salting workflow looks like below:</p>
+<p><img alt="BP - 20" src="../images/spark-bp-20.png" /></p>
+<p>For example, a salt column is added to the data with 100 randomized salts during narrow transformation phase (map or flatMap type of transforms).</p>
+<div class="codehilite"><pre><span></span><code>n = 100
+salted_df = df.withColumn(&quot;salt&quot;, (rand * n).cast(IntegerType))
 </code></pre></div>
 
+<p>Now, aggregation is performed on this salt column and the results are reduced by keys</p>
+<div class="codehilite"><pre><span></span><code><span class="n">unsalted_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salted_df</span><span class="p">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s">&quot;salt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">groupByFields</span><span class="p">).</span><span class="n">agg</span><span class="p">(</span><span class="n">aggregateFields</span><span class="p">).</span><span class="n">groupBy</span><span class="p">(</span><span class="n">groupByFields</span><span class="p">).</span><span class="n">agg</span><span class="p">(</span><span class="n">aggregateFields</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>Similar logic can  be applied for windowing functions as well.</p>
+<p>A downside to this approach is that it creates too many small tasks for non-skewed keys as well which may have a negative impact on the performance.</p>
+<h3 id="isolated-salting">Isolated Salting<a class="headerlink" href="#isolated-salting" title="Permanent link">&para;</a></h3>
+<p>This is an approach where salting is applied to only subset of the keys. If 80% or more data belongs to one field, isolated salting approach could be considered (for eg: skew due to NULL columns). In narrow transformation phase, we will isolate the skewed column. In the wide transformation phase, we  will isolate and reduce the heavily skewed column after salting. Finally, we will reduce other values without the salt and merge the results.</p>
+<p>Isolated Salting workflow looks like below:</p>
+<p><img alt="BP - 21" src="../images/spark-bp-21.png" /></p>
+<p>An example code looks like below:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">val</span> <span class="nv">count</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="nv">val</span> <span class="nv">salted</span> <span class="o">=</span> <span class="nv">df</span>.<span class="nv">withColumn</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">salt</span><span class="s2">&quot;</span>, <span class="nv">when</span><span class="ss">(</span><span class="s1">&#39;</span><span class="s">col === &quot;A&quot;, rand(1) * count cast IntegerType) otherwise 0)</span>
+<span class="nv">val</span> <span class="nv">replicaDF</span> <span class="o">=</span> <span class="nv">skewDF</span>
+      .<span class="nv">withColumn</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">replica</span><span class="s2">&quot;</span>, <span class="nv">when</span><span class="ss">(</span><span class="s1">&#39;</span><span class="s">col === &quot;A&quot;, (0 until count) toArray) otherwise Array(0))</span>
+      .<span class="nv">withColumn</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">salt</span><span class="s2">&quot;</span>, <span class="nv">explode</span><span class="ss">(</span><span class="s1">&#39;</span><span class="s">replica</span><span class="s1">&#39;</span><span class="ss">))</span>
+      .<span class="nv">drop</span><span class="ss">(</span><span class="s1">&#39;</span><span class="s">replica</span><span class="s1">&#39;</span><span class="ss">)</span>
+<span class="nv">val</span> <span class="nv">merged</span> <span class="o">=</span> <span class="nv">salted</span>.<span class="nv">join</span><span class="ss">(</span><span class="nv">replicaDF</span>, <span class="nv">joinColumns</span> :<span class="o">+</span> <span class="s2">&quot;</span><span class="s">salt</span><span class="s2">&quot;</span><span class="ss">)</span>
+</code></pre></div>
+
+<h3 id="isolated-broadcast-join">Isolated broadcast join<a class="headerlink" href="#isolated-broadcast-join" title="Permanent link">&para;</a></h3>
+<p>In this approach, smaller lookup table is broadcasted across workers and joined in map phase itself. Thus, reducing the amount of data shuffles. Similar to last approach, skewed keys are separated from normal keys. Then, we reduce the ”normal” keys and perform map-side join on isolated ”skewed” keys. Finally, we can merge the results of skewed and normal joins</p>
+<p>Isolated map-side join workflow looks like below:</p>
+<p><img alt="BP - 22" src="../images/spark-bp-22.png" /></p>
+<p>An example code looks like below:</p>
+<div class="codehilite"><pre><span></span><code>val count = 8
+val salted = skewDF.withColumn(&quot;salt&quot;, when(&#39;col === &quot;A&quot;, rand(1) * count cast IntegerType) otherwise 0).repartition(&#39;col&#39;, &#39;salt&#39;) // Re-partition to remove skew
+val broadcastDF = salted.join(broadcast(sourceDF), &quot;symbol&quot;)
+</code></pre></div>
+
+<h3 id="hashing-for-sparksql-queries">Hashing for SparkSQL queries<a class="headerlink" href="#hashing-for-sparksql-queries" title="Permanent link">&para;</a></h3>
+<p>While running SparkSQL queries, you may have seen that it runs out of memory sometimes due to skew. Especially, this could be seen for windowing queries with a skew.</p>
+<p>Following could be an example query with a skew.</p>
+<div class="codehilite"><pre><span></span><code>select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey) AS row_num FROM testdb.skewlineitem
+</code></pre></div>
+
+<p>Considering there is a skew in l_orderkey field, we can split the above query into 4 hashes.</p>
+<div class="codehilite"><pre><span></span><code>select * from (select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey) AS row_num FROM testdb.skewlineitem where cast(l_orderkey as integer)%4 = 1
+union
+select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey ) AS row_num FROM testdb.skewlineitem where cast(l_orderkey as integer)%4 = 2
+union
+select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey ) AS row_num FROM testdb.skewlineitem where cast(l_orderkey as integer)%4 = 3
+union
+select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey ) AS row_num FROM testdb.skewlineitem where cast(l_orderkey as integer)%4 = 4 )
+limit 10;
+</code></pre></div>
+
+<p>If the values are highly skewed, then salting approaches should be used instead since this approach will still send all the skewed keys to a single task. This approach should be used to prevent OOMs quickly rather than to increase performance. The read job is re-computed for the number of sub queries written.</p>
+<h2 id="bp-5116-use-right-type-of-join"><strong> BP 5.1.16  -   Use right type of join </strong><a class="headerlink" href="#bp-5116-use-right-type-of-join" title="Permanent link">&para;</a></h2>
+<p>There are several types of joins in Spark. Some are more optimal than the other based on certain considerations.</p>
+<h3 id="broadcast-join">Broadcast Join<a class="headerlink" href="#broadcast-join" title="Permanent link">&para;</a></h3>
+<p>Broadcast joins are the most optimal options</p>
 <h3 id="shuffle-hash-join">Shuffle Hash Join<a class="headerlink" href="#shuffle-hash-join" title="Permanent link">&para;</a></h3>
 <h3 id="sort-merge-join">Sort Merge Join<a class="headerlink" href="#sort-merge-join" title="Permanent link">&para;</a></h3>
 <h3 id="broadcast-nested-loop-join">Broadcast Nested Loop Join<a class="headerlink" href="#broadcast-nested-loop-join" title="Permanent link">&para;</a></h3>
-<h2 id="bp-5117-configure-observability"><strong> BP 5.1.17 -   Configure observability </strong><a class="headerlink" href="#bp-5117-configure-observability" title="Permanent link">&para;</a></h2>
+<h2 id="bp-5117-configuring-spark-executor-blacklist"><strong> BP 5.1.17  - Configuring Spark Executor Blacklist </strong><a class="headerlink" href="#bp-5117-configuring-spark-executor-blacklist" title="Permanent link">&para;</a></h2>
+<h2 id="bp-5118-configure-observability"><strong> BP 5.1.18 -   Configure observability </strong><a class="headerlink" href="#bp-5118-configure-observability" title="Permanent link">&para;</a></h2>
 <p>Choose an observability platform based on your requirements.</p>
-<h2 id="bp-5118-debugging-and-monitoring-spark-applications"><strong> BP 5.1.18  - Debugging and monitoring Spark applications </strong><a class="headerlink" href="#bp-5118-debugging-and-monitoring-spark-applications" title="Permanent link">&para;</a></h2>
-<h2 id="bp-5119-common-errors"><strong> BP 5.1.19  -   Common Errors </strong><a class="headerlink" href="#bp-5119-common-errors" title="Permanent link">&para;</a></h2>
+<h2 id="bp-5119-debugging-and-monitoring-spark-applications"><strong> BP 5.1.19  - Debugging and monitoring Spark applications </strong><a class="headerlink" href="#bp-5119-debugging-and-monitoring-spark-applications" title="Permanent link">&para;</a></h2>
+<h2 id="bp-5120-common-errors"><strong> BP 5.1.20  -   Common Errors </strong><a class="headerlink" href="#bp-5120-common-errors" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Avoid 503 slow downs</strong></li>
 <li>For mitigating S3 throttling errors, consider increasing fs.s3.maxRetries in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs.</li>
