@@ -637,8 +637,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-518-use-appropriate-garbage-collector" class="md-nav__link">
-    BP 5.1.8  -   Use appropriate garbage collector
+  <a href="#bp-518-tune-garbage-collector" class="md-nav__link">
+    BP 5.1.8  -   Tune Garbage Collector
   </a>
   
 </li>
@@ -974,8 +974,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-518-use-appropriate-garbage-collector" class="md-nav__link">
-    BP 5.1.8  -   Use appropriate garbage collector
+  <a href="#bp-518-tune-garbage-collector" class="md-nav__link">
+    BP 5.1.8  -   Tune Garbage Collector
   </a>
   
 </li>
@@ -1481,7 +1481,7 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 <p><strong>spark.kryo.unsafe</strong> - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
 <strong>spark.kryoserializer.buffer.max</strong> - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
 <strong>spark.kryoserializer.buffer</strong> - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.</p>
-<h2 id="bp-518-use-appropriate-garbage-collector"><strong> BP 5.1.8  -   Use appropriate garbage collector </strong><a class="headerlink" href="#bp-518-use-appropriate-garbage-collector" title="Permanent link">&para;</a></h2>
+<h2 id="bp-518-tune-garbage-collector"><strong> BP 5.1.8  -   Tune Garbage Collector </strong><a class="headerlink" href="#bp-518-tune-garbage-collector" title="Permanent link">&para;</a></h2>
 <p>By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.</p>
 <p>Following is the spark configuration :-</p>
 <div class="codehilite"><pre><span></span><code>[{
