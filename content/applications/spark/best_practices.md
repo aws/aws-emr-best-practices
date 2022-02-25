@@ -8,6 +8,8 @@ Amazon EMR provides several Spark optimizations out of the box with [EMR Spark r
 
 As seen in the above image, Spark runtime engine on EMR 6.5.0 is 1.9x faster by geometric mean compared to EMR 6.1.0. Hence, it is strongly recommended to migrate to the latest version of Amazon EMR or upgrade the existing version to make use of all these performance benefits.
 
+EMR Serveless.
+
 ## ** BP 5.1.2  -  Determine right infrastructure for your Spark workloads **
 
 Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports [several instance types](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html) to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.
@@ -153,7 +155,9 @@ For a starting point, generally, its advisable to set spark.executor.cores to 4 
 Based on [Task Configurations](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html) r4.8xlarge node has YARN memory of 241664 MB (based on the value of yarn.nodemanager.resource.memory-mb). The instance has 32 vCores. If we set spark.executor.cores as 4, we can run 8 executors at a time. So, the configurations will be following.
 
 spark.executor.cores = 4
+
 spark.executor.memory + (spark.executor.memory * spark.yarn.executor.memoryOverheadFactor) = (241664 MB / 8) = 30208 MB
+
 spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memoryOverheadFactor=0.1875)
 
 If you have a cluster of 10 r4.8xlarge nodes, then totally, 80 executors can run with 24544 MB memory and 4 vCores each.
@@ -285,13 +289,13 @@ You can also tune the GC parameters for GC performance. You can see the comprehe
 -XX:InitiatingHeapOccupancyPercent=45
 -XX:MaxGCPauseMillis=200
 
-You can also monitor GC performance using Spark UI. the GC time should be ideally <= 1% of total task runtime. If not, tune the GC settings or executor size. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is a poor GC performance.
+You can monitor GC performance using Spark UI. The GC time should be ideally <= 1% of total task runtime. If not, consider tuning the GC settings or experiment with larger executor sizes. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is indicative of poor GC performance.
 
 ![BP - 8](images/spark-bp-8.png)
 
-## ** BP 5.1.9  -   Use appropriate APIs wherever possible **
+## ** BP 5.1.9  -   Use optimal APIs wherever possible **
 
-When using spark APIs, try to go with the most optimal choice if your use case permits. Following are a few examples.
+When using Spark APIs, try to use the most optimal one if your use case permits. Following are a few examples.
 
 ### repartition vs coalesce
 
@@ -703,10 +707,12 @@ AWS offers [Amazon Managed Prometheus (AMP)](https://aws.amazon.com/prometheus/)
 
 Apart from native solutions, you can also use one of the AWS Partner solutions. Some of the popular choices are Splunk, Data Dog and Sumo Logic.
 
-## ** BP 5.1.21  -  Potential Resolution for Common Errors **
+## ** BP 5.1.21  -  Potential resolutions for not-so-common errors **
 
-1. **S3 503 Slow Down Mitigation**
-For mitigating S3 throttling errors, consider increasing *fs.s3.maxRetries* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
+Following are some interesting resolutions for common (but not so common) errors faced by EMR customers. We will continue to update this list as and when we encounter new and unique issues and resolutions.
+
+###Potential strategies to mitigate S3 throttling errors
+For mitigating S3 throttling errors (503: Slow Down), consider increasing *fs.s3.maxRetries* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it further based on your processing needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
 
 ```
 [{
@@ -718,7 +724,7 @@ For mitigating S3 throttling errors, consider increasing *fs.s3.maxRetries* in e
     "configurations": []
 }]
 ```
-Consider using Iceberg format's [ObjectStoreLocationProvider](https://iceberg.apache.org/docs/latest/aws/#object-store-file-layout) to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
+Consider using Iceberg format [ObjectStoreLocationProvider](https://iceberg.apache.org/docs/latest/aws/#object-store-file-layout) to store data under S3 hash [0*7FFFFF] prefixes. This would help S3 scale traffic more efficiently as your job's processing requirements increase and thus help mitigate the S3 throttling errors.
 ```
  CREATE TABLE my_catalog.my_ns.my_table
  ( id bigint,
@@ -729,17 +735,116 @@ Consider using Iceberg format's [ObjectStoreLocationProvider](https://iceberg.ap
      'write.data.path'='s3://my-table-data-bucket')
      PARTITIONED BY (category);
 ```
-Your S3 files will be arranged under MURMUR3 hash prefixes like below.
+Your S3 files will be arranged under MURMUR3 S3 hash prefixes like below.
 ```
  2021-11-01 05:39:24  809.4 KiB 7ffbc860/my_ns/my_table/00328-1642-5ce681a7-dfe3-4751-ab10-37d7e58de08a-00015.parquet
  2021-11-01 06:00:10    6.1 MiB 7ffc1730/my_ns/my_table/00460-2631-983d19bf-6c1b-452c-8195-47e450dfad9d-00001.parquet
  2021-11-01 04:33:24    6.1 MiB 7ffeeb4e/my_ns/my_table/00156-781-9dbe3f08-0a1d-4733-bd90-9839a7ceda00-00002.parquet
 ```
-* If using Iceberg is not an option and if above approaches don’t resolve the issue, you can create an AWS support case to partition your S3 prefixes. But the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/
+Please note that using Iceberg ObjectStoreLocationProvider is not a fail proof mechanism to avoid S3 503s. You would still need to set appropriate EMRFS retries to provide additional resiliency. You can refer to a detailed POC on Iceberg ObjectStoreLocationProvider[here](https://github.com/vasveena/IcebergPOC/blob/main/Iceberg-EMR-POC.ipynb).
 
-2. **Increase event queue size and heartbeat interval for large number of executors**
-    - If the size of “dropped events
+If you have exhausted all the above options, you can create an AWS support case to partition your S3 prefixes for bootstrapping capacity. Please note that the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/.
 
-3. **Increase HADOOP, YARN and HDFS heap sizes for intensive workflows**
+###Precautions to take while running too many executors
+If you are running Spark jobs on large clusters with many number of executors, you may have encountered dropped events from Spark driver logs.
 
-4. **Use spark.yarn.archive to avoid compressing dependencies especially for high concurrency workloads**
+```
+ERROR scheduler.LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
+WARN scheduler.LiveListenerBus: Dropped 1 SparkListenerEvents since Thu Jan 01 01:00:00 UTC 1970
+```
+For this issue, you can increase *spark.scheduler.listenerbus.eventqueue.size* from default of 10000 to 2x or more until you do not see dropped events anymore.
+
+Running large number of executors may also lead to driver hanging since the executors constantly heartbeat to the driver. You can minimize the impact by increasing *spark.executor.heartbeatInterval* from 10s to 30s or so. But do not increase to a very high number since this will prevent finished or failed executors from being reclaimed for a long time which will lead to wastage cluster resources.
+
+If you see the Application Master hanging while requesting executors from the Resource Manager, consider increasing *spark.yarn.containerLauncherMaxThreads* which is defaulted to 25. You may also want to increase *spark.yarn.am.memory* (default: 512 MB) and *spark.yarn.am.cores* (default: 1).
+
+###Adjust HADOOP, YARN and HDFS heap sizes for intensive workflows
+You can see the heap sizes of HDFS and YARN processes under /etc/hadoop/conf/hadoop-env.sh and /etc/hadoop/conf/yarn-env.sh on your cluster.
+
+In hadoop-env.sh, you can see heap sizes for HDFS daemons.
+```
+export HADOOP_OPTS="$HADOOP_OPTS -server -XX:+ExitOnOutOfMemoryError"
+export HADOOP_NAMENODE_HEAPSIZE=25190
+export HADOOP_DATANODE_HEAPSIZE=4096
+```
+In yarn-env.sh, you can see heap sizes for YARN daemons.
+```
+export YARN_NODEMANAGER_HEAPSIZE=2048
+export YARN_RESOURCEMANAGER_HEAPSIZE=7086
+```
+Adjust this heap size as needed based on your processing needs. Sometimes, you may see HDFS errors like "MissingBlocksException" in your job or other random YARN errors. Check your HDFS name node and data node logs or YARN resource manager and node manager logs to ensure that the daemons are healthy. You may find that the daemons are crashing due to OOM issues in .out files like below:
+
+```
+OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00007f0beb662000, 12288, 0) failed; error='Cannot allocate memory' (errno=12)
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 12288 bytes for committing reserved memory.
+# An error report file with more information is saved as:
+# /tmp/hs_err_pid14730.log
+```
+
+In this case, it is possible that your HDFS or YARN daemon was trying to grow its heap size but the OS memory did not have sufficient room to accommodate that. So, when you launch a cluster, you can define -Xms JVM opts to be same as -Xmx for the heap size of the implicated daemon so that the OS memory is allocated when the daemon is initialized. Following is an example for the data node process which can be extended to other daemons as well:
+
+```
+[
+{
+    "Classification": "hadoop-env",
+    "Properties": {
+
+    },
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "HADOOP_DATANODE_OPTS": "-Xms4096m -Xmx4096m $HADOOP_DATANODE_OPTS"
+          “HADOOP_DATANODE_HEAPSIZE”: "4096"
+        },
+        "Configurations": []
+      }
+    ]
+  }
+]
+```
+Additionally, you can also consider reducing *yarn.nodemanager.resource.memory-mb* by subtracting the heap sizes of HADOOP, YARN and HDFS daemons from *yarn.nodemanager.resource.memory-mb* for your instance types.
+
+###Precautions to take for highly concurrent workloads
+
+When you are running multiple Spark applications in parallel, you may sometimes encounter job or step failures due to errors like “Caused by: java.util.zip.ZipException: error in opening zip file” or hanging of the application or Spark client while trying to launch the Application Master container. Check the CPU utilization on the master node when this happens. If the CPU utilization is high, this issue could be because of the repeated process of zipping and uploading Spark and job libraries to HDFS distributed cache from many parallel applications at the same time. Zipping is a compute intensive operation. Your name node could also be bottlenecked while trying to upload multiple large HDFS files.
+
+```
+22/02/25 21:39:45 INFO Client: Preparing resources for our AM container
+22/02/25 21:39:45 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.
+22/02/25 21:39:48 INFO Client: Uploading resource file:/mnt/tmp/spark-b0fe28f9-17e5-42da-ab8a-5c861d81e25b/__spark_libs__3016570917637060246.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/__spark_libs__3016570917637060246.zip
+22/02/25 21:39:49 INFO Client: Uploading resource file:/etc/spark/conf/hive-site.xml -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/hive-site.xml
+22/02/25 21:39:49 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/pyspark.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/pyspark.zip
+22/02/25 21:39:49 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/py4j-0.10.9-src.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/py4j-0.10.9-src.zip
+22/02/25 21:39:50 INFO Client: Uploading resource file:/mnt/tmp/spark-b0fe28f9-17e5-42da-ab8a-5c861d81e25b/__spark_conf__7549408525505552236.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/__spark_conf__.zip
+```
+To mitigate this, you can zip your job dependencies along with Spark dependencies in advance, upload the zip file to HDFS or S3 and set *spark.yarn.archive* to that location. Below is an example:
+```
+zip -r spark-dependencies.zip /mnt/jars/
+hdfs dfs -mkdir /user/hadoop/deps/
+hdfs dfs -copyFromLocal spark-dependencies.zip /user/hadoop/deps/
+```
+/mnt/jars location in the master node contains the application JARs along with JARs in /usr/lib/spark/jars. After this, set spark.yarn.archive or spark.yarn.jars in spark-defaults.
+
+```
+spark.yarn.archive  hdfs:///user/hadoop/deps/spark-dependencies.zip
+```
+You can see that this file size is large.
+```
+hdfs dfs -ls hdfs:///user/hadoop/deps/spark-dependencies.zip
+-rw-r--r--   1 hadoop hdfsadmingroup  287291138 2022-02-25 21:51 hdfs:///user/hadoop/deps/spark-dependencies.zip
+```
+Now you will see that the Spark and Job dependencies are not zipped or uploaded when you submit the job saving a lot of CPU cycles especially when you are running applications at a high concurrency. Other resources uploaded to HDFS by driver can also be zipped and uploaded to HDFS/S3 prior but they are quite lightweight. Monitor your master node's CPU to ensure that the utilization has been brought down.
+```
+22/02/25 21:56:08 INFO Client: Preparing resources for our AM container
+22/02/25 21:56:08 INFO Client: Source and destination file systems are the same. Not copying hdfs:/user/hadoop/deps/spark-dependencies.zip
+22/02/25 21:56:08 INFO Client: Uploading resource file:/etc/spark/conf/hive-site.xml -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/hive-site.xml
+22/02/25 21:56:08 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/pyspark.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/pyspark.zip
+22/02/25 21:56:08 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/py4j-0.10.9-src.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/py4j-0.10.9-src.zip
+22/02/25 21:56:08 INFO Client: Uploading resource file:/mnt/tmp/spark-0fbfb5a9-7c0c-4f9f-befd-3c8f56bc4688/__spark_conf__5472705335503774914.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/__spark_conf__.zip
+```
+If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s [ShutdownHook](https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227). If this happens, increase *hadoop.service.shutdown.timeout* property from 30s to to a larger value.
+
+Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.
