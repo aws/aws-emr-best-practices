@@ -644,11 +644,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-519-use-appropriate-apis-wherever-possible" class="md-nav__link">
-    BP 5.1.9  -   Use appropriate APIs wherever possible
+  <a href="#bp-519-use-optimal-apis-wherever-possible" class="md-nav__link">
+    BP 5.1.9  -   Use optimal APIs wherever possible
   </a>
   
-    <nav class="md-nav" aria-label="BP 5.1.9  -   Use appropriate APIs wherever possible">
+    <nav class="md-nav" aria-label="BP 5.1.9  -   Use optimal APIs wherever possible">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -850,9 +850,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5121-potential-resolution-for-common-errors" class="md-nav__link">
-    BP 5.1.21  -  Potential Resolution for Common Errors
+  <a href="#bp-5121-potential-resolutions-for-not-so-common-errors" class="md-nav__link">
+    BP 5.1.21  -  Potential resolutions for not-so-common errors
   </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.21  -  Potential resolutions for not-so-common errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#potential-strategies-to-mitigate-s3-throttling-errors" class="md-nav__link">
+    Potential strategies to mitigate S3 throttling errors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precautions-to-take-while-running-too-many-executors" class="md-nav__link">
+    Precautions to take while running too many executors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-hadoop-yarn-and-hdfs-heap-sizes-for-intensive-workflows" class="md-nav__link">
+    Adjust HADOOP, YARN and HDFS heap sizes for intensive workflows
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precautions-to-take-for-highly-concurrent-workloads" class="md-nav__link">
+    Precautions to take for highly concurrent workloads
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -981,11 +1015,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-519-use-appropriate-apis-wherever-possible" class="md-nav__link">
-    BP 5.1.9  -   Use appropriate APIs wherever possible
+  <a href="#bp-519-use-optimal-apis-wherever-possible" class="md-nav__link">
+    BP 5.1.9  -   Use optimal APIs wherever possible
   </a>
   
-    <nav class="md-nav" aria-label="BP 5.1.9  -   Use appropriate APIs wherever possible">
+    <nav class="md-nav" aria-label="BP 5.1.9  -   Use optimal APIs wherever possible">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1187,9 +1221,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bp-5121-potential-resolution-for-common-errors" class="md-nav__link">
-    BP 5.1.21  -  Potential Resolution for Common Errors
+  <a href="#bp-5121-potential-resolutions-for-not-so-common-errors" class="md-nav__link">
+    BP 5.1.21  -  Potential resolutions for not-so-common errors
   </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.21  -  Potential resolutions for not-so-common errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#potential-strategies-to-mitigate-s3-throttling-errors" class="md-nav__link">
+    Potential strategies to mitigate S3 throttling errors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precautions-to-take-while-running-too-many-executors" class="md-nav__link">
+    Precautions to take while running too many executors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjust-hadoop-yarn-and-hdfs-heap-sizes-for-intensive-workflows" class="md-nav__link">
+    Adjust HADOOP, YARN and HDFS heap sizes for intensive workflows
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precautions-to-take-for-highly-concurrent-workloads" class="md-nav__link">
+    Precautions to take for highly concurrent workloads
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1215,6 +1283,7 @@
 <p>Amazon EMR provides several Spark optimizations out of the box with <a href="https://aws.amazon.com/blogs/big-data/run-apache-spark-3-0-workloads-1-7-times-faster-with-amazon-emr-runtime-for-apache-spark/">EMR Spark runtime</a> which is 100% compliant with the open source Spark API i.e., it does not require you to configure anything or change your application code. We continue to <a href="https://aws.amazon.com/about-aws/whats-new/2021/10/amazon-emr-6-4-supports-apache-spark-3-1-2/">improve</a> the performance of this Spark runtime engine for new releases. Several <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html">optimizations</a> such as Adaptive Query Execution are only available from 5.30 and 6.0 versions. For example, following is the Spark runtime performance improvement in EMR 6.5.0 (latest version as of writing this) compared to its previous version 6.1.0 based on a derived TPC-DS benchmark test performed on two identical EMR clusters with same hardware and software configurations (except for the version difference).</p>
 <p><img alt="BP - 33" src="../images/spark-bp-33.png" /></p>
 <p>As seen in the above image, Spark runtime engine on EMR 6.5.0 is 1.9x faster by geometric mean compared to EMR 6.1.0. Hence, it is strongly recommended to migrate to the latest version of Amazon EMR or upgrade the existing version to make use of all these performance benefits.</p>
+<p>EMR Serveless.</p>
 <h2 id="bp-512-determine-right-infrastructure-for-your-spark-workloads"><strong> BP 5.1.2  -  Determine right infrastructure for your Spark workloads </strong><a class="headerlink" href="#bp-512-determine-right-infrastructure-for-your-spark-workloads" title="Permanent link">&para;</a></h2>
 <p>Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html">several instance types</a> to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.</p>
 <ul>
@@ -1363,9 +1432,9 @@ df.queryExecution.toString
 <p>Amazon EMR configures Spark defaults during the cluster launch based on your cluster's infrastructure (number of instances and instance types). EMR configured defaults are generally sufficient for majority of the workloads. However, if it is not meeting your performance expectations, we recommend you to tune Spark driver/executor configurations and see if you can achieve a better performance. Following are the general recommendations.  </p>
 <p>For a starting point, generally, its advisable to set spark.executor.cores to 4 or 5 and tune spark.executor.memory around this value. Also, when you calculate the spark.executor.memory, you need to account for the executor overhead which is set to 0.1875 by default (i.e., 18.75% of spark.executor.memory). For example, for a 2 worker node r4.8xlarge cluster, following will be the configurations.</p>
 <p>Based on <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html">Task Configurations</a> r4.8xlarge node has YARN memory of 241664 MB (based on the value of yarn.nodemanager.resource.memory-mb). The instance has 32 vCores. If we set spark.executor.cores as 4, we can run 8 executors at a time. So, the configurations will be following.</p>
-<p>spark.executor.cores = 4
-spark.executor.memory + (spark.executor.memory * spark.yarn.executor.memoryOverheadFactor) = (241664 MB / 8) = 30208 MB
-spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memoryOverheadFactor=0.1875)</p>
+<p>spark.executor.cores = 4</p>
+<p>spark.executor.memory + (spark.executor.memory * spark.yarn.executor.memoryOverheadFactor) = (241664 MB / 8) = 30208 MB</p>
+<p>spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memoryOverheadFactor=0.1875)</p>
 <p>If you have a cluster of 10 r4.8xlarge nodes, then totally, 80 executors can run with 24544 MB memory and 4 vCores each.</p>
 <p>Please note that some jobs benefit from bigger executor JVMs (more cores assigned). Some jobs benefit from smaller but more number of executors. So, you can use the above formula to arrive at optimal values for your application. EMR Spark has a feature called <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation">maximizeResourceAllocation</a>. Setting this property to true will lead to one fat JVM per node that uses all of the available cores in that instance. However, please note that this setting may not prove to be optimal all types of workloads. It is not recommended to set this property to true if your cluster is a shared cluster with multiple parallel applications or if your cluster has HBase.</p>
 <p>After configuring the values, run a sample job and monitor the Resource Manager UI, ContainerPendingRatio and YARNMemoryAvailablePcnt Cloudwatch metrics to verify that the vCores and YARN memory are being fully utilized. <a href="https://spark.apache.org/docs/latest/monitoring.html">Spark JMX metrics</a> provides JMX level visibility which is the best way to determine resource utilization.</p>
@@ -1499,10 +1568,10 @@ spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memor
 -XX:ParallelGCThreads=n
 -XX:InitiatingHeapOccupancyPercent=45
 -XX:MaxGCPauseMillis=200</p>
-<p>You can also monitor GC performance using Spark UI. the GC time should be ideally &lt;= 1% of total task runtime. If not, tune the GC settings or executor size. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is a poor GC performance.</p>
+<p>You can monitor GC performance using Spark UI. The GC time should be ideally &lt;= 1% of total task runtime. If not, consider tuning the GC settings or experiment with larger executor sizes. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is indicative of poor GC performance.</p>
 <p><img alt="BP - 8" src="../images/spark-bp-8.png" /></p>
-<h2 id="bp-519-use-appropriate-apis-wherever-possible"><strong> BP 5.1.9  -   Use appropriate APIs wherever possible </strong><a class="headerlink" href="#bp-519-use-appropriate-apis-wherever-possible" title="Permanent link">&para;</a></h2>
-<p>When using spark APIs, try to go with the most optimal choice if your use case permits. Following are a few examples.</p>
+<h2 id="bp-519-use-optimal-apis-wherever-possible"><strong> BP 5.1.9  -   Use optimal APIs wherever possible </strong><a class="headerlink" href="#bp-519-use-optimal-apis-wherever-possible" title="Permanent link">&para;</a></h2>
+<p>When using Spark APIs, try to use the most optimal one if your use case permits. Following are a few examples.</p>
 <h3 id="repartition-vs-coalesce">repartition vs coalesce<a class="headerlink" href="#repartition-vs-coalesce" title="Permanent link">&para;</a></h3>
 <p>Both repartition and coalesce are used for changing the number of shuffle partitions. Repartition is used for both increasing and decreasing the shuffle partitions whereas coalesce is used for only decreasing the number of shuffle partitions. If your goal is to decrease the number of shuffle partitions, consider using coalesce instead of repartition. The reason is, repartition triggers a full shuffle but coalesce triggers only a partial shuffle and thus minimizes the amount of data shuffled by keeping a few nodes as receivers of shuffle data.</p>
 <div class="codehilite"><pre><span></span><code>df.coalesce(1) //instead of df.repartition(1)
@@ -1785,11 +1854,10 @@ SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1 INNER JOIN t2 ON t1.key = t2.key;
 <h3 id="amazon-opensearch">Amazon Opensearch<a class="headerlink" href="#amazon-opensearch" title="Permanent link">&para;</a></h3>
 <p><a href="https://aws.amazon.com/blogs/opensource/introducing-opensearch/">Amazon Opensearch</a> is a community-driven open source fork of <a href="https://aws.amazon.com/blogs/opensource/stepping-up-for-a-truly-open-source-elasticsearch/">Elasticsearch and Kibana</a>. It is a popular service for log analytics. Logs can be indexed from S3 or local worker nodes to Amazon Opensearch either using AWS Opensearch SDK or Spark connector. These logs can then be visualized using Kibana To analyze JMX metrics and logs, you will need to develop a custom script for sinking the JMX metrics and importing logs.</p>
 <p>Apart from native solutions, you can also use one of the AWS Partner solutions. Some of the popular choices are Splunk, Data Dog and Sumo Logic.</p>
-<h2 id="bp-5121-potential-resolution-for-common-errors"><strong> BP 5.1.21  -  Potential Resolution for Common Errors </strong><a class="headerlink" href="#bp-5121-potential-resolution-for-common-errors" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>S3 503 Slow Down Mitigation</strong>
-For mitigating S3 throttling errors, consider increasing <em>fs.s3.maxRetries</em> in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.</li>
-</ol>
+<h2 id="bp-5121-potential-resolutions-for-not-so-common-errors"><strong> BP 5.1.21  -  Potential resolutions for not-so-common errors </strong><a class="headerlink" href="#bp-5121-potential-resolutions-for-not-so-common-errors" title="Permanent link">&para;</a></h2>
+<p>Following are some interesting resolutions for common (but not so common) errors faced by EMR customers. We will continue to update this list as and when we encounter new and unique issues and resolutions.</p>
+<h3 id="potential-strategies-to-mitigate-s3-throttling-errors">Potential strategies to mitigate S3 throttling errors<a class="headerlink" href="#potential-strategies-to-mitigate-s3-throttling-errors" title="Permanent link">&para;</a></h3>
+<p>For mitigating S3 throttling errors (503: Slow Down), consider increasing <em>fs.s3.maxRetries</em> in emrfs-site configuration. By default, it is set to 15 and you may need to increase it further based on your processing needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">[{</span><span class="w"></span>
 <span class="w">    </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emrfs-site&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -1800,7 +1868,7 @@ For mitigating S3 throttling errors, consider increasing <em>fs.s3.maxRetries</e
 <span class="p">}]</span><span class="w"></span>
 </code></pre></div>
 
-<p>Consider using Iceberg format's <a href="https://iceberg.apache.org/docs/latest/aws/#object-store-file-layout">ObjectStoreLocationProvider</a> to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.</p>
+<p>Consider using Iceberg format <a href="https://iceberg.apache.org/docs/latest/aws/#object-store-file-layout">ObjectStoreLocationProvider</a> to store data under S3 hash [0*7FFFFF] prefixes. This would help S3 scale traffic more efficiently as your job's processing requirements increase and thus help mitigate the S3 throttling errors.</p>
 <div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="nt">CREATE</span><span class="w"> </span><span class="nt">TABLE</span><span class="w"> </span><span class="nt">my_catalog</span><span class="p">.</span><span class="nc">my_ns</span><span class="p">.</span><span class="nc">my_table</span><span class="w"></span>
 <span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nt">id</span><span class="w"> </span><span class="nt">bigint</span><span class="o">,</span><span class="w"></span>
 <span class="w">   </span><span class="nt">data</span><span class="w"> </span><span class="nt">string</span><span class="o">,</span><span class="w"></span>
@@ -1811,29 +1879,104 @@ For mitigating S3 throttling errors, consider increasing <em>fs.s3.maxRetries</e
 <span class="w">     </span><span class="nt">PARTITIONED</span><span class="w"> </span><span class="nt">BY</span><span class="w"> </span><span class="o">(</span><span class="nt">category</span><span class="o">);</span><span class="w"></span>
 </code></pre></div>
 
-<p>Your S3 files will be arranged under MURMUR3 hash prefixes like below.</p>
+<p>Your S3 files will be arranged under MURMUR3 S3 hash prefixes like below.</p>
 <div class="codehilite"><pre><span></span><code> 2021-11-01 05:39:24  809.4 KiB 7ffbc860/my_ns/my_table/00328-1642-5ce681a7-dfe3-4751-ab10-37d7e58de08a-00015.parquet
  2021-11-01 06:00:10    6.1 MiB 7ffc1730/my_ns/my_table/00460-2631-983d19bf-6c1b-452c-8195-47e450dfad9d-00001.parquet
  2021-11-01 04:33:24    6.1 MiB 7ffeeb4e/my_ns/my_table/00156-781-9dbe3f08-0a1d-4733-bd90-9839a7ceda00-00002.parquet
 </code></pre></div>
 
-<ul>
-<li>
-<p>If using Iceberg is not an option and if above approaches don’t resolve the issue, you can create an AWS support case to partition your S3 prefixes. But the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/</p>
-</li>
-<li>
-<p><strong>Increase event queue size and heartbeat interval for large number of executors</strong></p>
-<ul>
-<li>If the size of “dropped events</li>
-</ul>
-</li>
-<li>
-<p><strong>Increase HADOOP, YARN and HDFS heap sizes for intensive workflows</strong></p>
-</li>
-<li>
-<p><strong>Use spark.yarn.archive to avoid compressing dependencies especially for high concurrency workloads</strong></p>
-</li>
-</ul>
+<p>Please note that using Iceberg ObjectStoreLocationProvider is not a fail proof mechanism to avoid S3 503s. You would still need to set appropriate EMRFS retries to provide additional resiliency. You can refer to a detailed POC on Iceberg ObjectStoreLocationProvider<a href="https://github.com/vasveena/IcebergPOC/blob/main/Iceberg-EMR-POC.ipynb">here</a>.</p>
+<p>If you have exhausted all the above options, you can create an AWS support case to partition your S3 prefixes for bootstrapping capacity. Please note that the prefix pattern needs to be known in advance for eg: s3://bucket/000-fff/ or s3://bucket/<date fields from 2020-01-20 to 2030-01-20>/.</p>
+<h3 id="precautions-to-take-while-running-too-many-executors">Precautions to take while running too many executors<a class="headerlink" href="#precautions-to-take-while-running-too-many-executors" title="Permanent link">&para;</a></h3>
+<p>If you are running Spark jobs on large clusters with many number of executors, you may have encountered dropped events from Spark driver logs.</p>
+<div class="codehilite"><pre><span></span><code>ERROR scheduler.LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
+WARN scheduler.LiveListenerBus: Dropped 1 SparkListenerEvents since Thu Jan 01 01:00:00 UTC 1970
+</code></pre></div>
+
+<p>For this issue, you can increase <em>spark.scheduler.listenerbus.eventqueue.size</em> from default of 10000 to 2x or more until you do not see dropped events anymore.</p>
+<p>Running large number of executors may also lead to driver hanging since the executors constantly heartbeat to the driver. You can minimize the impact by increasing <em>spark.executor.heartbeatInterval</em> from 10s to 30s or so. But do not increase to a very high number since this will prevent finished or failed executors from being reclaimed for a long time which will lead to wastage cluster resources.</p>
+<p>If you see the Application Master hanging while requesting executors from the Resource Manager, consider increasing <em>spark.yarn.containerLauncherMaxThreads</em> which is defaulted to 25. You may also want to increase <em>spark.yarn.am.memory</em> (default: 512 MB) and <em>spark.yarn.am.cores</em> (default: 1).</p>
+<h3 id="adjust-hadoop-yarn-and-hdfs-heap-sizes-for-intensive-workflows">Adjust HADOOP, YARN and HDFS heap sizes for intensive workflows<a class="headerlink" href="#adjust-hadoop-yarn-and-hdfs-heap-sizes-for-intensive-workflows" title="Permanent link">&para;</a></h3>
+<p>You can see the heap sizes of HDFS and YARN processes under /etc/hadoop/conf/hadoop-env.sh and /etc/hadoop/conf/yarn-env.sh on your cluster.</p>
+<p>In hadoop-env.sh, you can see heap sizes for HDFS daemons.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">HADOOP_OPTS</span><span class="o">=</span><span class="s2">&quot;$HADOOP_OPTS -server -XX:+ExitOnOutOfMemoryError&quot;</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">HADOOP_NAMENODE_HEAPSIZE</span><span class="o">=</span><span class="mi">25190</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">HADOOP_DATANODE_HEAPSIZE</span><span class="o">=</span><span class="mi">4096</span><span class="w"></span>
+</code></pre></div>
+
+<p>In yarn-env.sh, you can see heap sizes for YARN daemons.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">YARN_NODEMANAGER_HEAPSIZE</span><span class="o">=</span><span class="mi">2048</span><span class="w"></span>
+<span class="k">export</span><span class="w"> </span><span class="n">YARN_RESOURCEMANAGER_HEAPSIZE</span><span class="o">=</span><span class="mi">7086</span><span class="w"></span>
+</code></pre></div>
+
+<p>Adjust this heap size as needed based on your processing needs. Sometimes, you may see HDFS errors like "MissingBlocksException" in your job or other random YARN errors. Check your HDFS name node and data node logs or YARN resource manager and node manager logs to ensure that the daemons are healthy. You may find that the daemons are crashing due to OOM issues in .out files like below:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">OpenJDK</span><span class="w"> </span><span class="nt">64-Bit</span><span class="w"> </span><span class="nt">Server</span><span class="w"> </span><span class="nt">VM</span><span class="w"> </span><span class="nt">warning</span><span class="o">:</span><span class="w"> </span><span class="nt">INFO</span><span class="o">:</span><span class="w"> </span><span class="nt">os</span><span class="p">::</span><span class="nd">commit_memory</span><span class="o">(</span><span class="nt">0x00007f0beb662000</span><span class="o">,</span><span class="w"> </span><span class="nt">12288</span><span class="o">,</span><span class="w"> </span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">failed</span><span class="o">;</span><span class="w"> </span><span class="nt">error</span><span class="o">=</span><span class="s1">&#39;Cannot allocate memory&#39;</span><span class="w"> </span><span class="o">(</span><span class="nt">errno</span><span class="o">=</span><span class="nt">12</span><span class="o">)</span><span class="w"></span>
+<span class="err">#</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="nt">There</span><span class="w"> </span><span class="nt">is</span><span class="w"> </span><span class="nt">insufficient</span><span class="w"> </span><span class="nt">memory</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">Java</span><span class="w"> </span><span class="nt">Runtime</span><span class="w"> </span><span class="nt">Environment</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">continue</span><span class="o">.</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="nt">Native</span><span class="w"> </span><span class="nt">memory</span><span class="w"> </span><span class="nt">allocation</span><span class="w"> </span><span class="o">(</span><span class="nt">mmap</span><span class="o">)</span><span class="w"> </span><span class="nt">failed</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">map</span><span class="w"> </span><span class="nt">12288</span><span class="w"> </span><span class="nt">bytes</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span><span class="nt">committing</span><span class="w"> </span><span class="nt">reserved</span><span class="w"> </span><span class="nt">memory</span><span class="o">.</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="nt">An</span><span class="w"> </span><span class="nt">error</span><span class="w"> </span><span class="nt">report</span><span class="w"> </span><span class="nt">file</span><span class="w"> </span><span class="nt">with</span><span class="w"> </span><span class="nt">more</span><span class="w"> </span><span class="nt">information</span><span class="w"> </span><span class="nt">is</span><span class="w"> </span><span class="nt">saved</span><span class="w"> </span><span class="nt">as</span><span class="o">:</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="o">/</span><span class="nt">tmp</span><span class="o">/</span><span class="nt">hs_err_pid14730</span><span class="p">.</span><span class="nc">log</span><span class="w"></span>
+</code></pre></div>
+
+<p>In this case, it is possible that your HDFS or YARN daemon was trying to grow its heap size but the OS memory did not have sufficient room to accommodate that. So, when you launch a cluster, you can define -Xms JVM opts to be same as -Xmx for the heap size of the implicated daemon so that the OS memory is allocated when the daemon is initialized. Following is an example for the data node process which can be extended to other daemons as well:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;Classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hadoop-env&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;Properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;Configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;Classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;export&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;Properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;HADOOP_DATANODE_OPTS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;-Xms4096m -Xmx4096m $HADOOP_DATANODE_OPTS&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="err">“</span><span class="n">HADOOP_DATANODE_HEAPSIZE</span><span class="err">”</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4096&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;Configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
+</code></pre></div>
+
+<p>Additionally, you can also consider reducing <em>yarn.nodemanager.resource.memory-mb</em> by subtracting the heap sizes of HADOOP, YARN and HDFS daemons from <em>yarn.nodemanager.resource.memory-mb</em> for your instance types.</p>
+<h3 id="precautions-to-take-for-highly-concurrent-workloads">Precautions to take for highly concurrent workloads<a class="headerlink" href="#precautions-to-take-for-highly-concurrent-workloads" title="Permanent link">&para;</a></h3>
+<p>When you are running multiple Spark applications in parallel, you may sometimes encounter job or step failures due to errors like “Caused by: java.util.zip.ZipException: error in opening zip file” or hanging of the application or Spark client while trying to launch the Application Master container. Check the CPU utilization on the master node when this happens. If the CPU utilization is high, this issue could be because of the repeated process of zipping and uploading Spark and job libraries to HDFS distributed cache from many parallel applications at the same time. Zipping is a compute intensive operation. Your name node could also be bottlenecked while trying to upload multiple large HDFS files.</p>
+<div class="codehilite"><pre><span></span><code><span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">45</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Preparing</span><span class="w"> </span><span class="n">resources</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">AM</span><span class="w"> </span><span class="n">container</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">45</span><span class="w"> </span><span class="n">WARN</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Neither</span><span class="w"> </span><span class="n">spark</span><span class="o">.</span><span class="n">yarn</span><span class="o">.</span><span class="n">jars</span><span class="w"> </span><span class="n">nor</span><span class="w"> </span><span class="n">spark</span><span class="o">.</span><span class="n">yarn</span><span class="o">.</span><span class="n">archive</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">set</span><span class="p">,</span><span class="w"> </span><span class="n">falling</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">uploading</span><span class="w"> </span><span class="n">libraries</span><span class="w"> </span><span class="n">under</span><span class="w"> </span><span class="n">SPARK_HOME</span><span class="o">.</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">48</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">b0fe28f9</span><span class="o">-</span><span class="mf">17e5</span><span class="o">-</span><span class="mi">42</span><span class="n">da</span><span class="o">-</span><span class="n">ab8a</span><span class="o">-</span><span class="mi">5</span><span class="n">c861d81e25b</span><span class="o">/</span><span class="n">__spark_libs__3016570917637060246</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0003</span><span class="o">/</span><span class="n">__spark_libs__3016570917637060246</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">49</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">hive</span><span class="o">-</span><span class="n">site</span><span class="o">.</span><span class="n">xml</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0003</span><span class="o">/</span><span class="n">hive</span><span class="o">-</span><span class="n">site</span><span class="o">.</span><span class="n">xml</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">49</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">pyspark</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0003</span><span class="o">/</span><span class="n">pyspark</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">49</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">py4j</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0003</span><span class="o">/</span><span class="n">py4j</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">39</span><span class="p">:</span><span class="mi">50</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">b0fe28f9</span><span class="o">-</span><span class="mf">17e5</span><span class="o">-</span><span class="mi">42</span><span class="n">da</span><span class="o">-</span><span class="n">ab8a</span><span class="o">-</span><span class="mi">5</span><span class="n">c861d81e25b</span><span class="o">/</span><span class="n">__spark_conf__7549408525505552236</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0003</span><span class="o">/</span><span class="n">__spark_conf__</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+</code></pre></div>
+
+<p>To mitigate this, you can zip your job dependencies along with Spark dependencies in advance, upload the zip file to HDFS or S3 and set <em>spark.yarn.archive</em> to that location. Below is an example:</p>
+<div class="codehilite"><pre><span></span><code>zip -r spark-dependencies.zip /mnt/jars/
+hdfs dfs -mkdir /user/hadoop/deps/
+hdfs dfs -copyFromLocal spark-dependencies.zip /user/hadoop/deps/
+</code></pre></div>
+
+<p>/mnt/jars location in the master node contains the application JARs along with JARs in /usr/lib/spark/jars. After this, set spark.yarn.archive or spark.yarn.jars in spark-defaults.</p>
+<div class="codehilite"><pre><span></span><code>spark.yarn.archive  hdfs:///user/hadoop/deps/spark-dependencies.zip
+</code></pre></div>
+
+<p>You can see that this file size is large.</p>
+<div class="codehilite"><pre><span></span><code>hdfs dfs -ls hdfs:///user/hadoop/deps/spark-dependencies.zip
+-rw-r--r--   1 hadoop hdfsadmingroup  287291138 2022-02-25 21:51 hdfs:///user/hadoop/deps/spark-dependencies.zip
+</code></pre></div>
+
+<p>Now you will see that the Spark and Job dependencies are not zipped or uploaded when you submit the job saving a lot of CPU cycles especially when you are running applications at a high concurrency. Other resources uploaded to HDFS by driver can also be zipped and uploaded to HDFS/S3 prior but they are quite lightweight. Monitor your master node's CPU to ensure that the utilization has been brought down.</p>
+<div class="codehilite"><pre><span></span><code><span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Preparing</span><span class="w"> </span><span class="n">resources</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">AM</span><span class="w"> </span><span class="n">container</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Source</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">destination</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">systems</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="o">.</span><span class="w"> </span><span class="n">Not</span><span class="w"> </span><span class="n">copying</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">deps</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">dependencies</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">hive</span><span class="o">-</span><span class="n">site</span><span class="o">.</span><span class="n">xml</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0007</span><span class="o">/</span><span class="n">hive</span><span class="o">-</span><span class="n">site</span><span class="o">.</span><span class="n">xml</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">pyspark</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0007</span><span class="o">/</span><span class="n">pyspark</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">spark</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">py4j</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0007</span><span class="o">/</span><span class="n">py4j</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+<span class="mi">22</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span><span class="w"> </span><span class="mi">21</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Client</span><span class="p">:</span><span class="w"> </span><span class="n">Uploading</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mi">0</span><span class="n">fbfb5a9</span><span class="o">-</span><span class="mi">7</span><span class="n">c0c</span><span class="o">-</span><span class="mi">4</span><span class="n">f9f</span><span class="o">-</span><span class="n">befd</span><span class="o">-</span><span class="mi">3</span><span class="n">c8f56bc4688</span><span class="o">/</span><span class="n">__spark_conf__5472705335503774914</span><span class="o">.</span><span class="n">zip</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">ip</span><span class="o">-</span><span class="mi">172</span><span class="o">-</span><span class="mi">31</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="mf">211.</span><span class="n">ec2</span><span class="o">.</span><span class="n">internal</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/.</span><span class="n">sparkStaging</span><span class="o">/</span><span class="n">application_1645574675843_0007</span><span class="o">/</span><span class="n">__spark_conf__</span><span class="o">.</span><span class="n">zip</span><span class="w"></span>
+</code></pre></div>
+
+<p>If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s <a href="https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227">ShutdownHook</a>. If this happens, increase <em>hadoop.service.shutdown.timeout</em> property from 30s to to a larger value.</p>
+<p>Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.</p>
 
               
             </article>
