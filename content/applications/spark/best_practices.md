@@ -263,7 +263,7 @@ You can also fine tune the following Kryo configs :-
 **spark.kryoserializer.buffer.max** - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
 **spark.kryoserializer.buffer** - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
 
-## ** BP 5.1.8  -   Use appropriate garbage collector **
+## ** BP 5.1.8  -   Tune Garbage Collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
