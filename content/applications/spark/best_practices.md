@@ -2,7 +2,7 @@
 
 ## ** BP 5.1.1  -  Use the most recent version of EMR **
 
-## ** BP 5.1.1  -  Determine right infrastructure for your Spark workloads **
+## ** BP 5.1.2  -  Determine right infrastructure for your Spark workloads **
 
 Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports [several instance types](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html) to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.
 
@@ -29,7 +29,7 @@ Starting EMR 5.31+ and 6.1+, there is Graviton support (r6g, m6g, c6g.) which of
 
 ![BP - 3](images/spark-bp-3.png)
 
-## ** BP 5.1.2  -  Choose the right deploy mode **
+## ** BP 5.1.3  -  Choose the right deploy mode **
 
 Spark offers two kinds of deploy modes called client and cluster deploy modes. Deploy mode determines where your Spark driver runs. Spark driver is the cockpit for your application. It hosts the SparkContext (or SparkSession) for your application. It keeps track of all tasks executed by the executors and the state of the executors via heartbeats. Driver also fetches the results from the executors running tasks. Choose the right deploy mode based on your workload requirements.
 
@@ -62,7 +62,7 @@ Use cluster deploy mode if :-
 
 Regardless of which deploy mode you choose, make sure that your driver Spark configs are tuned for your workload needs.
 
-## ** BP 5.1.3  -  Use right file formats and compression type **
+## ** BP 5.1.4  -  Use right file formats and compression type **
 
 It is highly recommended that you use right file formats for optimal performance. Do not use legacy file formats like CSV, JSON, text files etc. since the read/write performance will much slower. It is highly recommended that you use columnar file formats like Parquet, ORC etc. Especially for Spark, Parquet would be the best choice.
 
@@ -91,7 +91,7 @@ squaresDF.write.option("parquet.encryption.column.keys" , "keyA:square").option(
 val df2 = spark.read.parquet("/path/to/table.parquet.encrypted")
 ```
 
-## ** BP 5.1.4  -  Partitioning **
+## ** BP 5.1.5  -  Partitioning **
 
 Partitioning your data is very important if you are going to run your code or queries with filter conditions. Partitioning helps you arrange your data files into S3 prefixes based on the partition key. It helps minimize read/write access footprint i.e., you will be able to only read files from partition folder specified in your where clause - thus skipping a full read. Partitioning can also help if your data ingestion is incremental in nature. However, partitioning can reduce read throughput if you are performing full table scans.
 
@@ -138,7 +138,7 @@ AdaptiveSparkPlan isFinalPlan=true
             +- FileScan orc testdb.lineitem_shipmodesuppkey_part[l_shipdate#313,l_shipmode#314] Batched: true, DataFilters: [], Format: ORC, Location: InMemoryFileIndex[s3://vasveena-test-vanguard/bigtpcparq/lineitem_shipmodesuppkey_part/l_shipdate..., PartitionFilters: [isnotnull(l_shipdate#313), isnotnull(l_shipmode#314), (l_shipdate#313 = 1993-12-03), (l_shipmode..., PushedFilters: [], ReadSchema: struct<>
 ```
 
-## ** BP 5.1.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources **
+## ** BP 5.1.6 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources **
 
 Amazon EMR configures Spark defaults during the cluster launch based on your cluster's infrastructure (number of instances and instance types). EMR configured defaults are generally sufficient for majority of the workloads. However, if it is not meeting your performance expectations, we recommend you to tune Spark driver/executor configurations and see if you can achieve a better performance. Following are the general recommendations.  
 
@@ -192,7 +192,7 @@ From the above screenshot, you can see average size in exchange is 2.2 KB which 
 
 Apart from this, if you want to use a tooling for configuration suggestions, consider using [Sparklens and Dr. Elephant](https://aws.amazon.com/blogs/big-data/tune-hadoop-and-spark-performance-with-dr-elephant-and-sparklens-on-amazon-emr/) with Amazon EMR which will provide tuning suggestions based on metrics collected during your job run.
 
-## ** BP 5.1.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas **
+## ** BP 5.1.7 -  Use Kryo serializer by registering custom classes especially for Dataset schemas **
 
 Spark uses Java Serializer by default. From Spark 2.0+, Spark internally uses Kryo Serializer when shuffling RDDs with simple types, arrays of simple types, or string type. It is highly recommended that you use Kryo Serializer and also register your classes in the application.
 ```
@@ -256,7 +256,8 @@ You can also fine tune the following Kryo configs :-
 **spark.kryo.unsafe** - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
 **spark.kryoserializer.buffer.max** - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
 **spark.kryoserializer.buffer** - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
-## ** BP 5.1.7  -   Use appropriate garbage collector **
+
+## ** BP 5.1.8  -   Use appropriate garbage collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
@@ -281,7 +282,8 @@ You can also tune the GC parameters for GC performance. You can see the comprehe
 You can also monitor GC performance using Spark UI. the GC time should be ideally <= 1% of total task runtime. If not, tune the GC settings or executor size. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is a poor GC performance.
 
 ![BP - 8](images/spark-bp-8.png)
-## ** BP 5.1.8  -   Use appropriate APIs wherever possible **
+
+## ** BP 5.1.9  -   Use appropriate APIs wherever possible **
 
 When using spark APIs, try to go with the most optimal choice if your use case permits. Following are a few examples.
 
@@ -301,7 +303,7 @@ Use reduceByKey instead of groupByKey wherever possible. With groupByKey, data w
 
 orderBy does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or sortWithinPartitions does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or sortWithinPartitions if global sorting is not necessary - especially during writes. Try to avoid orderBy clause. Values can be aggregated across partitions in your queries if needed.
 
-## ** BP 5.1.9 -   Leverage spot nodes with managed autoscaling **
+## ** BP 5.1.10 -   Leverage spot nodes with managed autoscaling **
 
 Enable managed autoscaling for your EMR clusters. From EMR 5.32 and EMR 6.2 there have been optimizations made to managed scaling to make it more resilient for your Spark workloads. It is not recommended to use Spot with core or master nodes since during reclaimation event, your cluster could be terminated and you would need to re-process all the work. Try to leverage task instance fleets with many instance types per fleet with Spot since it would give both cost and performance gains. However, in this case, make sure that your output is being written directly to EMRFS since we will have fixed core node on-demand capacity.
 
@@ -318,7 +320,8 @@ For Spark workloads, we observed ~50% gains compared to custom autoscaling clust
 ![BP - 11](images/spark-bp-11.png)
 
 Please note that the results may vary based on your workloads. Also, if your workloads are SLA sensitive and fault intolerant, it is best to use on-demand nodes for task fleets as well since reclaimation of Spot may lead to re-computation of one or many stages or tasks.
-## ** BP 5.1.10  -   For workloads with predictable pattern, consider disabling dynamic allocation **
+
+## ** BP 5.1.11  -   For workloads with predictable pattern, consider disabling dynamic allocation **
 
 Dynamic allocation is enabled in EMR by default. It is a great feature for following types of workloads:
 
@@ -357,7 +360,7 @@ Please note that if you are running more than one application at a time, you may
 
 However, only consider this option if your workloads meet all the above criteria since otherwise your jobs may fail due to lack of resources or you may end up wasting your cluster resources.
 
-## ** BP 5.1.11  -   Leverage HDFS as temporary storage for I/O intensive workloads **
+## ** BP 5.1.12  -   Leverage HDFS as temporary storage for I/O intensive workloads **
 
 Many EMR users directly read and write data in S3. This is generally suited for most type of use cases. However, for I/O intensive workflows, this approach could be slower - especially for heavy writes.
 
@@ -375,7 +378,7 @@ However,  while using this architecture, please make sure that you are sizing yo
 
 Even if you are using S3 directly to store your data, if your workloads are shuffle intensive, use storage optimized instances or SSD/NVMe based storage (for example: r5d’s and r6gd’s instead of r5s and r6g’s). This is because dynamic allocation will use Spark external shuffle service that spills data to local disks when the executor JVM cannot hold any more shuffle data. This process is a very I/O intensive one and will benefit from instance types that offer high disk throughput.
 
-## ** BP 5.1.12  -   Spark speculation with EMRFS **
+## ** BP 5.1.13  -   Spark speculation with EMRFS **
 
 In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to data loss or duplicate data. By default, “spark.speculation” is turned off. Only enable spark.speculation if you are doing one of the following.
 
@@ -401,7 +404,7 @@ You can set spark.speculation to true in spark-defaults or pass it as a command 
 
 Please do not enable spark.speculation if you are writing any non-Parquet files to S3 or if you are writing Parquet files to S3 without the default EMRFSOutputCommitter.
 
-## ** BP 5.1.13 -   Data quality and integrity checks with deequ **
+## ** BP 5.1.14 -   Data quality and integrity checks with deequ **
 
 Spark and Hadoop frameworks do not inherently guarantee data integrity. While it is very rare, you may observe some data corruption or missing data or duplicate data due to unexpected errors in the hardware and software stack. It is highly recommended that you validate the integrity and quality of your data atleast once after your job execution. It would be best to check data correctness in multiple stages of your job - especially if your job is long-running.
 
@@ -412,7 +415,7 @@ In order to check your data integrity, consider using [Deequ](https://github.com
 
 Sometimes, you may have to write your own validation logic. For example, if you are doing a lot of calculations or aggregations, you will need to compute twice and compare the two results for accuracy. In other cases, you may also implement checksum on data computed and compare it with the checksum on data written to disk or S3. If you see unexpected results, then check your Spark UI and see if you are getting too many errors from a single node by sorting the Task list based on "Status" and checking for error message of failed tasks. If you are seeing too many random unexpected errors such as "ArrayIndexOutOfBounds" or checksum errors from a single node, then it may be possible that the node is impaired. Exclude or terminate this node and re-start your job.
 
-## ** BP 5.1.14 -   Use DataFrames wherever possible **
+## ** BP 5.1.15 -   Use DataFrames wherever possible **
 
 WKT we must use Dataframes and Datasets instead of RDDs since both have several enhancements over RDDs like catalyst optimizer and adaptive query execution. But between Datasets and Dataframes Dataframes perform certain optimizations during DAG creation and execution. These optimizations can be identified by inspecting the query plan. For example -
 
@@ -442,7 +445,7 @@ case class DeviceIoTData (
 ```
 This provides you type-safety. When there are changes to your schema, it can be consolidated and tracked in a single class. This can be considered as an industry standard. While using Spark DDataframes, you can achieve something similar by maintaining the table columns in a list and fetching from that list dynamically in your code. But this requires some additional coding effort.
 
-## ** BP 5.1.15  -   Data Skew **
+## ** BP 5.1.16  -   Data Skew **
 
 Data skew can significantly slow down the processing since a single JVM could be handling a large amount of data. In this case observed in Spark UI, a single task is processing 25 times more data than other tasks. This can inevitably lead to slowness, OOMs and disk space filling issues.
 
@@ -541,7 +544,7 @@ limit 10;
 ```
 If the values are highly skewed, then salting approaches should be used instead since this approach will still send all the skewed keys to a single task. This approach should be used to prevent OOMs quickly rather than to increase performance. The read job is re-computed for the number of sub queries written.
 
-## ** BP 5.1.16  -  Choose the right type of join **
+## ** BP 5.1.17  -  Choose the right type of join **
 
 There are several types of joins in Spark. Some are more optimal than others based on certain considerations. Spark by default does a few join optimizations. However, we can pass join "hints" as well if needed to instruct Spark to use our preferred type of join. For example, in the following SparkSQL queries we supply broadcast and shuffle join hints respectively.
 
@@ -620,25 +623,80 @@ val crossJoinDF = df1.join(broadcast(df2), df1("l_partkey") >= df2("l_partkey"))
 ```
 ![BP - 29](images/spark-bp-29.png)
 
-## ** BP 5.1.17  - Tune Spark Executor Blacklist **
+## ** BP 5.1.18  - Consider Spark Blacklisting for large clusters **
 
+Spark provides blacklisting feature which allows you to blacklist an executor or even an entire node if one or more tasks fail on the same node or executor for more than configured number of times. Spark blacklisting properties may prove to be very useful especially for very large clusters (100+ nodes) where you may rarely encounter an impaired node. We discussed this issue briefly in BPs 5.1.13 and 5.1.14.
 
+This blacklisting is enabled by default in Amazon EMR with the *spark.blacklist.decommissioning.enabled* property set to true. You can control the time for which the node is blacklisted using *spark.blacklist.decommissioning.timeout property*, which is set to 1 hour by default, equal to the default value for *yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs*. It is recommended to set *spark.blacklist.decommissioning.timeout* to a value equal to or greater than *yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs* to make sure that Amazon EMR blacklists the node for the entire decommissioning period.
 
-## ** BP 5.1.18 -   Configure observability **
+Following are some *experimental* blacklisting properties.
 
-Choose an observability platform based on your requirements.
+**spark.blacklist.task.maxTaskAttemptsPerExecutor** determines the number of times a unit task can be retried on one executor before it is blacklisted for that task. Defaults to 2.
 
+**spark.blacklist.task.maxTaskAttemptsPerNode** determines the number of times a unit task can be retried on one worker node before the entire node is blacklisted for that task. Defaults to 2.
+
+**spark.blacklist.stage.maxFailedTasksPerExecutor** is same as *spark.blacklist.task.maxTaskAttemptsPerExecutor* but the executor is blacklisted for the entire stage.
+
+**spark.blacklist.stage.maxFailedExecutorsPerNode** determines how many different executors are marked as blacklisted for a given stage, before the entire worker node is marked as blacklisted for the stage. Defaults to 2.
+
+**spark.blacklist.application.maxFailedTasksPerExecutor** is same as *spark.blacklist.task.maxTaskAttemptsPerExecutor* but the executor is blacklisted for the entire application.
+
+**spark.blacklist.application.maxFailedExecutorsPerNode** is same as *spark.blacklist.stage.maxFailedExecutorsPerNode* but the worker node is blacklisted for the entire application.
+
+**spark.blacklist.killBlacklistedExecutors** when set to true will kill the executors when they are blacklisted for the entire application or during a fetch failure. If node blacklisting properties are used, it will kill all the executors of a blacklisted node. It defaults to false. Use with caution since it is susceptible to unexpected behavior due to red herring.
+
+**spark.blacklist.application.fetchFailure.enabled** when set to true will blacklist the executor immediately when a fetch failure happens. If external shuffle service is enabled, then the whole node will be blacklisted. This setting is aggressive. Fetch failures usually happen due to a rare occurrence of impaired hardware but may happen due to other reasons as well. Use with caution since it is susceptible to unexpected behavior due to red herring.
+
+The node blacklisting configurations are helpful for the rarely impaired hardware case we discussed earlier. For example, following configurations can be set to ensure that if a task fails more than 2 times in an executor and if more than two executors fail in a particular worker or if you encounter a single fetch failure, then the executor and worker are blacklisted and subsequently removed from your application.
+
+```
+[{
+    "classification": "spark-defaults",
+    "properties": {
+        "spark.blacklist.killBlacklistedExecutors": "true",
+        "spark.blacklist.application.fetchFailure.enabled": "true"
+    },
+    "configurations": []
+}]
+```
+
+You will be able to distinguish blacklisted executors and nodes from the Spark UI and from the Spark driver logs.
+
+![BP - 30](images/spark-bp-30.png)
+
+When a stage fails because of fetch failures from a node being decommissioned, by default, Amazon EMR does not count the stage failure toward the maximum number of failures allowed for a stage as set by *spark.stage.maxConsecutiveAttempts*. This is determined by the setting *spark.stage.attempt.ignoreOnDecommissionFetchFailure* being set to true. This prevents a job from failing if a stage fails multiple times because of node failures for valid reasons such as a manual resize, an automatic scaling event, or Spot instance interruptions.
 
 ## ** BP 5.1.19  - Debugging and monitoring Spark applications **
 
-EMR provides several options to debug and monitor your Spark application.
+EMR provides several options to debug and monitor your Spark application. As you may have seen from some of the screenshots in this document, Spark UI is very helpful to determine your application performance and identify any potential bottlenecks. With regards to Spark UI, you have 3 options in Amazon EMR.
 
-With regards to Spark UI, you have 3 options.
+1. **Spark Event UI** - This is the live user interface typically running on port 20888. It shows the most up-to-date status of your jobs in real-time. You can go to this UI from Application Master URI in the Resource Manager UI. If you are using EMR Studio or EMR Managed Notebooks, you can navigate directly to Spark UI from your Jupyter notebook anytime after a Spark application is created using Livy. This UI is not accessible once the application finishes or if your cluster terminates.
+2. **Spark History Server** - SHS runs on port 18080. It shows the history of your job runs. You may also see live application status but not in real time. SHS will persist beyond your application runtime but it becomes inaccessible when your EMR cluster is terminated.
+3. **EMR Persistent UI** - Amazon EMR provides [Persistent User Interface for Spark](https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html). This UI is accessible for up to 30 days after your application ends even if your cluster is terminated since the logs are stored off-cluster. This option is great for performing post-mortem analysis on your applications without spending on your cluster to stay active.
 
-1.
-You can leverage EMR's persistent UI feature to
+Spark UI options are  also helpful to identify important metrics like shuffle reads/writes, input/output sizes, GC times, and also information like runtime Spark/Hadoop configurations, DAG, execution timeline etc. All these UIs will redirect you to live driver (cluster mode) or executor logs when you click on "stderr" or "stdout" from Tasks and Executors lists. When you encounter a task failure, if stderr of the executor does not provide adequate information, you can check the stdout logs.
 
-## ** BP 5.1.20  -   Common Errors **
+![BP - 31](images/spark-bp-31.png)
+
+Apart from the UIs, you can also see application logs in S3 Log URI configured when you create your EMR cluster. Application Master (AM) logs can be found in s3://bucket/prefix/containers/YARN application ID/container_appID_attemptID_0001/. AM container is the very first container. This is where your driver logs will be located as well if you ran your job in cluster deploy mode. If you ran your job in client deploy mode, driver logs are printed on to the console where you submitted your job which you can write to a file. If you used EMR Step API with client deploy mode, driver logs can be found in EMR Step's stderr. Spark executor logs are found in the same S3 location. All containers than the first container belong to the executors. S3 logs are pushed every few minutes and are not live.
+
+![BP - 32](images/spark-bp-32.png)
+
+If you have SSH access to the nodes, you can also see logs stored in the local disk under /var/log/containers of worker node where a particular executor ran. You will only need to see the local logs if S3 logs are unavailable for some reason. Once the application finishes, the logs are aggregated to HDFS and are available for up to 48 hours based on the property *yarn.log-aggregation.retain-seconds*.
+
+## ** BP 5.1.20 -   Consider Observability Platforms **
+
+Spark JMX metrics will supply you with fine-grained details on resource usage. It goes beyond physical memory allocated and identifies the actual heap usage based on which you can tune your workloads and perform cost optimization. There are several ways to expose these JMX metrics. You can simply use a ConsoleSink which prints the metrics to console where you submit your job or CSVSink to write metrics to a file which you can use for data visualization. But these approaches are not tidy. There are more options as detailed [here](https://spark.apache.org/docs/latest/monitoring.html). You can choose an observability platform based on your requirements. Following are some example native options.
+
+### Amazon Managed Services for Prometheus and Grafana
+AWS offers [Amazon Managed Prometheus (AMP)](https://aws.amazon.com/prometheus/) which is a Prometheus-compatible monitoring and alerting service that makes it easy to monitor containerized applications and infrastructure at scale. [Amazon Managed Grafana (AMG)](https://aws.amazon.com/grafana/) is a fully managed service for open source Grafana developed in collaboration with Grafana Labs. Grafana is a popular open source analytics platform that enables you to query, visualize, alert on and understand your metrics no matter where they are stored. You can find the [deployment instructions](https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/) available to integrate Amazon EMR with OSS Prometheus and Grafana which can be extended to AMP and AMG as well. Additionally, Spark metrics can be collected using [PrometheusServlet](https://spark.apache.org/docs/latest/monitoring.html) and [prometheus/jmx_exporter](https://github.com/prometheus/jmx_exporter). However, some bootstrapping is necessary for this integration.
+
+###Amazon Opensearch
+[Amazon Opensearch](https://aws.amazon.com/blogs/opensource/introducing-opensearch/) is a community-driven open source fork of [Elasticsearch and Kibana](https://aws.amazon.com/blogs/opensource/stepping-up-for-a-truly-open-source-elasticsearch/). It is a popular service for log analytics. Logs can be indexed from S3 or local worker nodes to Amazon Opensearch either using AWS Opensearch SDK or Spark connector. These logs can then be visualized using Kibana To analyze JMX metrics and logs, you will need to develop a custom script for sinking the JMX metrics and importing logs.
+
+Apart from native solutions, you can also use one of the AWS Partner solutions. Some of the popular choices are Splunk, Data Dog and Sumo Logic.
+
+## ** BP 5.1.21  -  Potential Resolution for Common Errors **
 
 1. **S3 503 Slow Down Mitigation**
 For mitigating S3 throttling errors, consider increasing *fs.s3.maxRetries* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
