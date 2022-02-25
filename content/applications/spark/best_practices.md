@@ -1,5 +1,7 @@
 # ** 5.1 - Spark **
 
+## ** BP 5.1.1  -  Use the most recent version of EMR **
+
 ## ** BP 5.1.1  -  Determine right infrastructure for your Spark workloads **
 
 Spark workloads may require different types of hardware for different job characteristics to ensure optimal performance. EMR supports [several instance types](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html) to cover all types of processing requirements. While onboarding new workloads, start your benchmarking with general instance types like m5s or m6gs. Monitor the OS and YARN metrics from Ganglia and CloudWatch to determine the system bottlenecks at peak load. Bottlenecks include CPU, memory, storage and I/O. Once identified, choose the appropriate hardware type for your job’s needs.
@@ -106,11 +108,35 @@ df.repartition(400).write.partitionBy("datecol").parquet("s3://bucket/output/")
 ```
 The above code will create maximum of 400 files per datecol partition. Repartition API alters number of shuffle partitions during runtime and partitionBy API determines the partition field(s). You can also control the number of shuffle partitions with the Spark property "spark.sql.shuffle.partitions". You can use repartition API to control the file size in destination. i.e., for merging smaller files. But for splitting large files, you can use the property "spark.sql.files.maxPartitionBytes".
 
-Partitioning ensures that pruning takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Spark logical plan or DAG can be studied to ensure that pruning takes place while reading and writing to partitioned tables from Spark. It may look similar to below.
+Partitioning ensures that [dynamic partition pruning](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic) takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Spark optimized logical plan or DAG can be studied to ensure that the partition filters are pushed down while reading and writing to partitioned tables from Spark.
 
-FileScan parquet default.dimension[Store#12,Date#13,Price#14,CPI#15] Batched: true, DataFilters: [isnotnull(Date#16), (Date#16 > 02–14–2022), isnotnull(Store#12)], Format: Parquet, Location: InMemoryFileIndex[dbfs:/user/hive/warehouse/dimension], PartitionFilters: [], **PushedFilters: [IsNotNull(Date), GreaterThan(Date,02–14–2022), IsNotNull(Store)]**, ReadSchema: struct<Store:int,Date:string,Price:double,CPI:string>
+For example, following query will push partition filters for faster retrieval. l_shipdate and l_shipmode are partition fields of the table "testdb.lineitem_shipmodesuppkey_part".
 
-FileScan parquet default.fact[Dept#22,Sales#23,Store#24,Date#25] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex[dbfs:/user/hive/warehouse/fact/Store=12/Date=02–14–2022…, PartitionFilters: [isnotnull(Date#27), (Date#25 > 02–14–2022), isnotnull(Store#24), **dynamicpruningexpression(Date#2…, PushedFilters: [], ReadSchema: struct<Dept:int,Sales:double>**
+```
+val df = spark.sql("select count(*) from testdb.lineitem_shipmodesuppkey_part where l_shipdate='1993-12-03' and l_shipmode='SHIP'")
+
+df.queryExecution.toString
+```
+Printing query execution plan where we can see pushed filters for the two partition fields in where clause:
+
+```
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=true
++- == Final Plan ==
+   *(2) HashAggregate(keys=[], functions=[count(1)], output=[count(1)#320])
+   +- ShuffleQueryStage 0
+      +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [id=#198]
+         +- *(1) HashAggregate(keys=[], functions=[partial_count(1)], output=[count#318L])
+            +- *(1) Project
+               +- *(1) ColumnarToRow
+                  +- FileScan orc testdb.lineitem_shipmodesuppkey_part[l_shipdate#313,l_shipmode#314] Batched: true, DataFilters: [], Format: ORC, Location: InMemoryFileIndex[s3://vasveena-test-vanguard/bigtpcparq/lineitem_shipmodesuppkey_part/l_shipdate..., PartitionFilters: [isnotnull(l_shipdate#313), isnotnull(l_shipmode#314), (l_shipdate#313 = 1993-12-03), (l_shipmode..., PushedFilters: [], ReadSchema: struct<>
++- == Initial Plan ==
+   HashAggregate(keys=[], functions=[count(1)], output=[count(1)#320])
+   +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [id=#179]
+      +- HashAggregate(keys=[], functions=[partial_count(1)], output=[count#318L])
+         +- Project
+            +- FileScan orc testdb.lineitem_shipmodesuppkey_part[l_shipdate#313,l_shipmode#314] Batched: true, DataFilters: [], Format: ORC, Location: InMemoryFileIndex[s3://vasveena-test-vanguard/bigtpcparq/lineitem_shipmodesuppkey_part/l_shipdate..., PartitionFilters: [isnotnull(l_shipdate#313), isnotnull(l_shipmode#314), (l_shipdate#313 = 1993-12-03), (l_shipmode..., PushedFilters: [], ReadSchema: struct<>
+```
 
 ## ** BP 5.1.5 -  Tune driver/executor memory, cores and spark.sql.shuffle.partitions to fully utilize cluster resources **
 
@@ -514,18 +540,89 @@ select *, ROW_NUMBER() OVER (partition by l_orderkey order by l_orderkey ) AS ro
 limit 10;
 ```
 If the values are highly skewed, then salting approaches should be used instead since this approach will still send all the skewed keys to a single task. This approach should be used to prevent OOMs quickly rather than to increase performance. The read job is re-computed for the number of sub queries written.
-## ** BP 5.1.16  -   Use right type of join **
 
-There are several types of joins in Spark. Some are more optimal than the other based on certain considerations.
+## ** BP 5.1.16  -  Choose the right type of join **
+
+There are several types of joins in Spark. Some are more optimal than others based on certain considerations. Spark by default does a few join optimizations. However, we can pass join "hints" as well if needed to instruct Spark to use our preferred type of join. For example, in the following SparkSQL queries we supply broadcast and shuffle join hints respectively.
+
+```
+SELECT /*+ BROADCAST(t1) */ * FROM t1 INNER JOIN t2 ON t1.key = t2.key;
+SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1 INNER JOIN t2 ON t1.key = t2.key;
+```
 
 ### Broadcast Join
-Broadcast joins are the most optimal options
+Broadcast join i.e., map-side join is the most optimal join provided one of your tables is small enough - in the order of MBs and you are performing an equi (=) join. All join types are supported except full outer joins. This join type broadcasts the smaller table as a hash table across all the worker nodes in memory. Note that once the small table has been broadcasted, we cannot make changes to it. Now that the hash table is locally in the JVM, it is merged easily with the large table based on the condition using a hash join. High performance while using this join can be attributed to minimal shuffle overhead. From EMR 5.30 and EMR 6.x onwards, by default, while performing a join if one of your tables is <=10 MB, this join strategy is chosen. This is based on the parameter *spark.sql.autoBroadcastJoinThreshold* which is defaulted to 10 MB.
+
+If one of your join tables are larger than 10 MB, you can either modify *spark.sql.autoBroadcastJoinThreshold* or use an explicit broadcast hint. You can verify that your query uses a broadcast join by investigating the live plan from SQL tab of Spark UI.
+
+![BP - 24](images/spark-bp-24.png)
+
+Please note that you should not use this join if your "small" table is not small enough. For eg, when you are joining a 10 GB table with a 10 TB table, your smaller table may still be large enough to not fit into the executor memory and will subsequently lead to OOMs and other type of failures. Also, it is not recommended to pass GBs of data over network to all of the workers which will cause serious network bottlenecks. Only use this join if your table size is <1 GB.
+
+### Sort Merge Join
+This is the most common join used by Spark. If you are joining two large tables (>10 MB by default), your join keys are sortable and your join condition is equi (=), it is highly likely that Spark uses a Sort Merge join which can be verified by looking into the live plan from the Spark UI.
+
+![BP - 25](images/spark-bp-25.png)
+
+Spark configuration *spark.sql.join.preferSortMergeJoin* is defaulted to true from Spark 2.3 onwards. When this join is implemented, data is read from both tables and shuffled. After this shuffle operation, records with the same keys from both datasets are sent to the same partition. Here, the entire dataset is not broadcasted, which means that the data in each partition will be of manageable size after the shuffle operation. After this, records on both sides are sorted by the join key. A join is performed by iterating over the records on the sorted dataset. Since the dataset is sorted the merge or the join operation is stopped for an element as soon as a key mismatch is encountered. So a join attempt is not performed on all keys. After sorting, join operation is performed upon iterating the datasets on both sides which will happen quickly on the sorted datasets.
+
+Continue to use this join type if you are joining two large tables with an equi condition on sortable keys. Do not convert a sort merge join to broadcast unless one of the tables is < 1 GB. All join types are supported.
 
 ### Shuffle Hash Join
-### Sort Merge Join
-### Broadcast Nested Loop Join
+Shuffle Hash Join sends data with the same join keys in the same executor node followed by a Hash Join. The data is shuffled among the executors using the join key. Then, the data is combined using Hash Join since data from the same key will be present in the same executor. In most cases, this join type performs poorly when compared to Sort Merge join since it is more shuffle intensive. Typically, this join type is avoided by Spark unless *spark.sql.join.preferSortMergeJoin* is set to false or the join keys are not sortable. This join also supports only equi conditions. All join types are supported except full outer joins. If you find out from the Spark UI that you are using a Shuffle Hash join, then check your join condition and see if you are using non-sortable keys and cast them into a sortable type to convert it into a Sort Merge join.
 
-## ** BP 5.1.17  - Configuring Spark Executor Blacklist **
+### Broadcast Nested Loop Join
+Broadcast Nested Loop Join broadcasts one of the entire datasets and performs a nested loop to join the data. Some of the results are broadcasted for a better performance. Broadcast Nested Loop Join generally leads to your job performance being negatively impacted and may lead to OOMs or network bottlenecks. This join type is avoided by Spark unless no other options are applicable. This join type supports both equi and non-equi joins (<,>,<=,>=,like conditions,array/list matching etc.). If you see this join being used by Spark upon investigating your query plan, it is possible that it is being caused by a poor coding practice.
+
+![BP - 26](images/spark-bp-26.png)
+
+Best way to eliminate this join is to see if you can change your code to use equi condition instead. For example, if you are joining two tables by matching elements from two arrays, explode the arrays first and do an equi join. However, there are some cases where this join is not avoidable.
+
+For example, below code leads to Broadcast Nested Loop Join.
+
+```
+val df1 = spark.sql("select * from testdb.lineitem_shipmodesuppkey_part where l_shipdate='1993-12-03' and l_shipmode='SHIP'")
+val df2 = spark.sql("select * from testdb.lineitem_shipmodesuppkey_part where l_shipdate='1993-12-04' and l_shipmode='SHIP'")
+val nestedLoopDF = df1.join(df2, df1("l_partkey") === df2("l_partkey") || df1("l_linenumber") === df2("l_linenumber"))
+```
+Instead, you can change the code like below:
+
+```
+val result1 = df1.join(df2, df1("l_partkey") === df2("l_partkey"))
+val result2 = df1.join(df2, df1("l_linenumber") === df2("l_linenumber"))
+val resultDF = result1.union(result2)
+```
+The query plan after optimization looks like below. You can also optionally pass a broadcast hint to ensure that broadcast join happens if any one of your two tables is small enough. In the following case, it picked broadcast join by default since one of the two tables met *spark.sql.autoBroadcastJoinThreshold*.
+
+![BP - 27](images/spark-bp-27.png)
+
+### Cartesian Join
+Cartesian joins or cross joins are typically the worst type of joins. It is chosen if you are running "inner like" queries. This type of join follows the below procedure which as you can see is very inefficient and may lead to OOMs and network bottlenecks.
+
+```
+for l_key in lhs_table:
+  for r_key in rhs_table:
+    #Execute join condition
+```
+If this join type cannot be avoided, consider passing a Broadcast hint on one of the tables if it is small enough which will lead to Spark picking Broadcast Nested Loop Join instead. Broadcast Nested Loop Join may be slightly better than the cartesian joins in some cases since atleast some of the results are broadcasted for better performance.
+
+Following code will lead to a Cartesian product provided the tables do not meet *spark.sql.autoBroadcastJoinThreshold*.
+
+```
+val crossJoinDF = df1.join(df2, df1("l_partkey") >= df2("l_partkey"))
+```
+![BP - 28](images/spark-bp-28.png)
+
+Now, passing a broadcast hint which leads to Broadcast Nested Loop Join
+
+```
+val crossJoinDF = df1.join(broadcast(df2), df1("l_partkey") >= df2("l_partkey"))
+```
+![BP - 29](images/spark-bp-29.png)
+
+## ** BP 5.1.17  - Tune Spark Executor Blacklist **
+
+
 
 ## ** BP 5.1.18 -   Configure observability **
 
@@ -534,12 +631,17 @@ Choose an observability platform based on your requirements.
 
 ## ** BP 5.1.19  - Debugging and monitoring Spark applications **
 
+EMR provides several options to debug and monitor your Spark application.
+
+With regards to Spark UI, you have 3 options.
+
+1.
+You can leverage EMR's persistent UI feature to
 
 ## ** BP 5.1.20  -   Common Errors **
 
-1. **Avoid 503 slow downs**
- * For mitigating S3 throttling errors, consider increasing fs.s3.maxRetries in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs.
- * You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
+1. **S3 503 Slow Down Mitigation**
+For mitigating S3 throttling errors, consider increasing *fs.s3.maxRetries* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it based on your workload needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
 
 ```
 [{
@@ -551,7 +653,7 @@ Choose an observability platform based on your requirements.
     "configurations": []
 }]
 ```
- * Consider using Iceberg tables’ ObjectStoreLocationProvider to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
+Consider using Iceberg format's [ObjectStoreLocationProvider](https://iceberg.apache.org/docs/latest/aws/#object-store-file-layout) to store data under [0*7FFFFF] prefixes and thus, help Amazon S3 learn write pattern to scale accordingly.
 ```
  CREATE TABLE my_catalog.my_ns.my_table
  ( id bigint,
