@@ -8,7 +8,8 @@ Therefore, it's important to ensure the AM is as resilient as possible. Assuming
 
 The following uses "yarn.nodemanager.node-labels.provider.script.path" to run a script that sets node label to the market type - On Demand or Spot. yarn-site is also updated so that application masters are only assigned to the "on_demand" label. Finally, the cluster is updated to include the new node label. 
 
-When provisioning an EMR cluster: 
+This is a good option when you run a mix of On demand and Spot. You can enable this with the following steps:
+
 
 1\. Save getNodeLabels_bootstrap.sh and getNodeLabels.py in S3 and run getNodeLabels_bootstrap.sh as an EMR bootstrap action
 
@@ -61,3 +62,29 @@ Step should be the first step on the EMR cluster. This step adds the new node la
 Once your cluster is provisioned, AM's will only run on On Demand nodes. Other non AM containers will run on all nodes. 
 
 \* EMR 5.19 and later uses the node label feature to assign AMs on core nodes only. Beginning with Amazon EMR 6.x release series, the YARN node labels feature is disabled by default. The application master processes can run on both core and task nodes by default. 
+
+
+## ** BP 4.2.2 Allow application masters (AM) to run on all nodes  **
+
+With EMR 5.x, AM only run on core nodes. Because Spot Instances are often used to run task nodes, it prevents applications from failing in case an AM is assigned to a spot node. 
+
+As a result of this, in scenarios where applications are occupying the full core node capacity, AM's will be in a PENDING state since they can only run on core nodes. The application will have to wait for capacity to be available on the core nodes even if there's capacity on the task  nodes. 
+
+Allowing AM's to run on all nodes is a good option if you are not using Spot, or run a small number of core nodes and do not want your cluster to be limited by Core capacity. You can disable this behavior with the bootstrap action below:
+
+```
+#!/bin/bash 
+echo "backup original init.pp"
+sudo cp cp /var/aws/emr/bigtop-deploy/puppet/modules/hadoop/manifests/init.pp /tmp/
+echo "replacing node label check"
+sudo sed -i '/add-to-cluster-node-labels.*/,+5d' /var/aws/emr/bigtop-deploy/puppet/modules/hadoop/manifests/init.pp
+
+```
+
+Beginning with Amazon EMR 6.x release series, the YARN node labels feature is disabled by default. The AM processes can run on both core and task nodes by default. You can enable the YARN node labels feature by configuring following properties:
+```
+    yarn.node-labels.enabled: true
+    yarn.node-labels.am.default-node-label-expression: 'CORE'
+```
+
+When you allow AM's to run on all nodes and are using managed scaling, consider increasing yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs so AM's are not automatically terminated after the 1hr timeout in the event of a scale down. See BP 4.1.3 for more details. 
