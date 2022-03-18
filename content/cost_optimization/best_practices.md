@@ -1,7 +1,7 @@
 
 # ** 1 - Cost Optimizations **
 
- Best Practices (BP) for running cost optimized workloads on EMR.
+Best Practices (BP) for running cost optimized workloads on EMR.
 
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
@@ -11,7 +11,7 @@ Using Amazon S3 as your persistent data store allows you to grow your storage in
 
 EMR makes using Amazon S3 simple with EMR File System (EMRFS). EMRFS is an implementation of HDFS that all EMR clusters use for accessing data in Amazon S3. 
 
-**Note:** HDFS is still available on the cluster if you need it and can be more performant compared to Amazon S3. HDFS on EMR uses EBS local block store which is faster than Amazon S3 object store. Some amounts of HDFS/EBS may be still be required. You may benefit from using HDFS for intermediate storage or need it to store application jars. However, HDFS is not recommended for persistent storage. Once a cluster is terminated, all HDFS data is lost. 
+**Note:** HDFS is still available on the cluster if you need it and can be more performant compared to Amazon S3. HDFS on EMR uses EBS local block store which is faster than Amazon S3 object store. Some amounts of HDFS/EBS may be still be required. You may bene	fit from using HDFS for intermediate storage or need it to store application jars. However, HDFS is not recommended for persistent storage. Once a cluster is terminated, all HDFS data is lost. 
 
 
 ## ** BP 1.2 Compress, compact and convert your Amazon S3 Objects **
@@ -113,16 +113,9 @@ Spot instances are unused EC2 Capacity that is offered at up to a 90% discount (
 
 ![BP - 11](images/bp-11.png)
 
-Below are the considerations and best practices when using Spot Instances on your EMR cluster. 
+For more information, see the [spot usage best practices section](https://aws.github.io/aws-emr-best-practices/features/spot_usage/best_practices/)
 
-* Use Spot for workloads where they can be interrupted and resumed (interruption rates are extremely low), or workloads that can exceed an SLA
-* Use Spot for testing and development workloads or when testing testing new applications. 
-* Use Spot in combination with On demand as burst capacity to bring down total cluster cost while reducing job run time. See BP 1.11
-* Avoid spot if your workload requires predictable completion time or has service level agreement (SLA) requirements
-* Use instance fleet with allocation strategy while using Spot so that you can diversify across many different instances. Spot capacity pool is unpredictable so diversifying with as many instances that meets your requirements can help increase the likelihood of securing spot instances which in turn, reduces cost. 
-
-
-For more information, see:
+Additionally, 
 AWS Big Data Blog: Best practices for running Apache Spark applications using Amazon EC2 Spot Instances with Amazon EMR 
 
 <https://aws.amazon.com/blogs/big-data/best-practices-for-running-apache-spark-applications-using-amazon-ec2-spot-instances-with-amazon-emr/>
