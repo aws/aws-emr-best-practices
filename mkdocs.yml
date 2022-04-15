@@ -19,13 +19,22 @@ nav:
     - Best Practices: 'security/best_practices.md'    
   - 4 - Features: 
     - 4.1 - Managed Scaling: 'features/managed_scaling/best_practices.md'     
-    - 4.2 - Spot Usage: 'features/spot_usage/best_practices.md'              
+    - 4.2 - Spot Usage: 'features/spot_usagegi/best_practices.md'              
   # - 4 - Performance Efficiency: 'index.md'
   # - 5 - Operational Excellence: 'index.md'
   - 5 - Applications:
       - 5.1 Spark:
         - Introduction: 'applications/spark/introduction.md'
         - Best Practices: 'applications/spark/best_practices.md'
+  - 6 - Architecture:
+      - Batch:
+        - Introduction: 'architecture/batch/introduction.md' 
+      - Ad Hoc:
+        - Introduction: 'architecture/adhoc/introduction.md' 
+      - Notebooks:
+        - Introduction: 'architecture/notebooks/introduction.md'       
+      - Datalake Storage:
+        - Introduction: 'architecture/datalake_storage/introduction.md'         
     # - Hive: 'index.md'      
     # - Introduction: 'index.md'
   # - Performance:
@@ -33,7 +42,7 @@ nav:
   # - Reliability:
   #   - Introduction: 'index.md'
   # - Applications:
-  #   - Spark: 'index.md' 
+  #   - Spark: 'index.md'
   #   - Hive: 'index.md'
   #   - Hbase: 'index.md'
 markdown_extensions:
