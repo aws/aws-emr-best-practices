@@ -66,4 +66,3 @@ Each Amazon EMR release version is "locked" to the Amazon Linux AMI version to m
 
 If you must use an earlier release version of Amazon EMR for compatibility, we recommend that you use the latest release in a series. For example, if you must use the 5.12 series, use 5.12.2 instead of 5.12.0 or 5.12.1. If a new release becomes available in a series, consider migrating your applications to the new release.
 
-

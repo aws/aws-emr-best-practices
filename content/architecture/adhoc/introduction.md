@@ -1,1 +1,3 @@
+In this section, we will review common adhoc use-cases, architecture flow diagrams, sample cloudformation template to solve each adhoc use-case.
+
 coming soon...
