@@ -31,6 +31,7 @@ nav:
         - Introduction: 'architecture/batch/introduction.md' 
       - Ad Hoc:
         - Introduction: 'architecture/adhoc/introduction.md' 
+        - Architecture: 'architecture/adhoc/architecture.md'         
       - Notebooks:
         - Introduction: 'architecture/notebooks/introduction.md'       
       - Datalake Storage:

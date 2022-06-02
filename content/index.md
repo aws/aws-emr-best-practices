@@ -11,6 +11,11 @@ We currently have published guides for the following topics:
 	- Spot Usage
 - Applications
 	- Spark
+- Architecture
+	- Batch
+	- Ad Hoc
+	- Notebooks
+	- Datalake Storage
 
 In the future we will be publishing best practices guidance for Applications (e.g Spark, Hudi), Architecture and other EMR features
 
