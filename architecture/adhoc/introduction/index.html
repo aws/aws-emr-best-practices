@@ -58,6 +58,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#ad-hoc-introduction" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -593,11 +598,55 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Introduction
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         Introduction
       </a>
       
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-between-amazon-athena-and-trino-on-amazon-emr" class="md-nav__link">
+    Choosing between Amazon Athena and Trino on Amazon EMR
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architecture
+      </a>
     </li>
   
 
@@ -699,6 +748,38 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-between-amazon-athena-and-trino-on-amazon-emr" class="md-nav__link">
+    Choosing between Amazon Athena and Trino on Amazon EMR
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
@@ -709,9 +790,25 @@
                   </a>
                 
                 
-                  <h1>Introduction</h1>
-                
-                <p>coming soon...</p>
+                <h1 id="ad-hoc-introduction"><strong> Ad Hoc - Introduction </strong><a class="headerlink" href="#ad-hoc-introduction" title="Permanent link">&para;</a></h1>
+<p>Amazon EMR on EC2 provides a number of engines to support your ad hoc query use cases. Trino, (formely PrestoSQL) has become a popular choice for its low latency, ANSI SQL standard, ease of use and integrations with Amazon EMR feature set. </p>
+<h3 id="choosing-between-amazon-athena-and-trino-on-amazon-emr"><strong> Choosing between Amazon Athena and Trino on Amazon EMR </strong><a class="headerlink" href="#choosing-between-amazon-athena-and-trino-on-amazon-emr" title="Permanent link">&para;</a></h3>
+<p>Amazon Athena is a serverless interactive query engine that executes SQL queries on data that rests in Amazon S3. Many customers use Athena for a wide variety of use cases, including interactive querying of data to exploring data, to powering dashboards on top of operational metrics saved on S3, to powering visualization tools, such as Amazon QuickSight or Tableau. </p>
+<p>We recommend you consider Amazon Athena for these types of workloads. Athena is easy to integrate with, has several features, such as cost management and security controls, and requires little capacity planning. All of these characteristics lead to lower operational burden and costs. </p>
+<p>However, there are some use cases where Trino on Amazon EMR may be better suited than Amazon Athena. For example, consider the following
+priorities:</p>
+<ul>
+<li>
+<p>Cost reduction: If cost reduction is your primary goal, we recommend that you estimate cost based on both approaches. You may find that the load and query patterns are lower in cost with Trino on Amazon EMR. Keep in mind that there is an operational cost associated with managing a Trino EMR environment. You’ll need to weight the cost benefits of Trino on EMR vs its operational overhead. </p>
+</li>
+<li>
+<p>Performance or Specific Tuning requirements: If your use case includes a high sensitivity to performance or you want the ability to fine-tune a Presto cluster to meet the performance requirements then Trino on EMR  may be a better fit.</p>
+</li>
+<li>
+<p>Critical features: If there are features that Amazon Athena does not currently provide, such as the use of custom serializer/deserializers for custom data types, or connectors to data stores other than those currently supported, then Trino on EMR may be a better fit.</p>
+</li>
+</ul>
+<p>The rest of the section will focus on Trino on Amazon EMR. For more details on Amazon Athena, see here: <a href="https://aws.amazon.com/athena/">https://aws.amazon.com/athena/</a></p>
                 
               
               
@@ -745,13 +842,13 @@
         </a>
       
       
-        <a href="../../notebooks/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../architecture/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Architecture
             </div>
           </div>
           <div class="md-footer__button md-icon">
