@@ -61,7 +61,14 @@ This script is run every time a node is provisioned and sets NODE_PARTITION to o
          "yarn.node-labels.am.default-node-label-expression":"ON_DEMAND",
          "yarn.nodemanager.node-labels.provider.configured-node-partition":"ON_DEMAND,SPOT"
       }
-   }
+   },
+   {
+      "classification":"capacity-scheduler",
+      "Properties":{
+         "yarn.scheduler.capacity.root.accessible-node-labels.ON_DEMAND.capacity":"100",
+         "yarn.scheduler.capacity.root.default.accessible-node-labels.ON_DEMAND.capacity":"100"
+      }
+   }   
 ]
 ```
 3\. Add EMR Step 
