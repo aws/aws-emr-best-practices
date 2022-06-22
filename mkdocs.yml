@@ -26,6 +26,9 @@ nav:
       - 5.1 Spark:
         - Introduction: 'applications/spark/introduction.md'
         - Best Practices: 'applications/spark/best_practices.md'
+      - 5.2 Hive:
+        - Introduction: 'applications/hive/introduction.md'
+        - Best Practices: 'applications/hive/best_practices.md'        
   - 6 - Architecture:
       - Batch:
         - Introduction: 'architecture/batch/introduction.md' 
