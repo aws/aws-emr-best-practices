@@ -488,6 +488,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bp-427-adjust-spark-task-size-to-complete-within-2-minutes" class="md-nav__link">
+    BP 4.2.7 Adjust Spark task size to complete within 2 minutes
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -906,6 +913,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bp-427-adjust-spark-task-size-to-complete-within-2-minutes" class="md-nav__link">
+    BP 4.2.7 Adjust Spark task size to complete within 2 minutes
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1042,10 +1056,12 @@ The other option to consider is allowing AM to run on all nodes but OD. I would 
 <ol>
 <li><a href="https://aws.github.io/aws-emr-best-practices/cost_optimization/best_practices/#bp-19-mix-on-demand-and-spot-instances">Mix on demad nodes Spot</a></li>
 <li><a href="https://aws.github.io/aws-emr-best-practices/reliability/best_practices/#bp-25-use-on-demand-for-core-nodes-and-spot-for-task">Use on demand for core nodes and spot for task</a></li>
-<li>Reduce individual task run time - shorter running tasks means the impact of a spot interruption is less because the amount of time to recompute is less. </li>
 <li>Reduce provisioning timeout and switch to on demand - When using Instancefleets, EMR allows you to set a timeout duration for getting spot capacity. Once the duration is hit, you can choose to terminate the cluster or fall back to on demand. The default value is 60min but consider lowering this quickly fall back to on demand when spot is not available</li>
 <li>Checkpoint often - This allows you to retry from a certain part of your pipeline if you ever lose too many spot nodes </li>
 </ol>
+<h2 id="bp-427-adjust-spark-task-size-to-complete-within-2-minutes"><strong> BP 4.2.7 Adjust Spark task size to complete within 2 minutes </strong><a class="headerlink" href="#bp-427-adjust-spark-task-size-to-complete-within-2-minutes" title="Permanent link">&para;</a></h2>
+<p>Consider reducing spark task sizes to minimize the impact of a spot interruption. Smaller task sizes complete faster. These tasks will be less impacted by spot because the amount of time to recompute the failed task is less. There are a number of factors that impact the # of spark tasks and their run time such as spark.sql.files.maxPartitionBytes, spark.default.parallelism, # of objects in s3, or are the objects can be split. See Spark best practices section on how to adjust task run times. </p>
+<p>When using Spot, the optimal task run time is less than 2 minutes. This is because EC2 Spot instances receive a two-minute warning when these instances are about to be reclaimed by Amazon EC2 which means most tasks will be able to finish before the spot node is reclaimed. In addition, EMR does not assign new tasks to nodes that have received the 2 minute warning. </p>
                 
               
               
