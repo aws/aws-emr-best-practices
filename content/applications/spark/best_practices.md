@@ -861,9 +861,9 @@ If you are using EMR Step API to submit your job, you may encounter another issu
 
 Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.
 
-## ** BP 5.1.22  -  How the number of partitions are determined when reading a non-partitioned file **
+## ** BP 5.1.22  -  How the number of partitions are determined when reading a raw file **
 
-When reading a non-partitioned file, that can be a text file, csv, etc. the count behind the number of partitions created from Spark depends from many variables as the methods used to read the file, the default parallelism and so on. Following an overview of how these factors are related between each other so to better understand how files are processed.
+When reading a raw file, that can be a text file, csv, etc. the count behind the number of partitions created from Spark depends from many variables as the methods used to read the file, the default parallelism and so on. Following an overview of how these factors are related between each other so to better understand how files are processed.
 
 Here a brief summary of relationship between core nodes - executors - tasks:
 
@@ -873,7 +873,9 @@ Here a brief summary of relationship between core nodes - executors - tasks:
  - each node can have one or more Executors, depending on the node resources and executor settings
  - each Executor consists of cores and memory whose default is based on the node type. Each executor can only execute one task at time.
 
-So based on that, the number of threads/tasks will be based on the number of partitions while reading .
+So based on that, the number of threads/tasks will be based on the number of partitions while reading. 
+
+Please note that the S3 connector takes some configuration option (e.g. s3a: fs.s3a.block.size) to simulate blocks in Hadoop services, but the concept of blocks in S3 does not really exists. Unlike HDFS that is an implementation of the Hadoop FileSystem API, which models POSIX file system behavior, EMRFS is an object store, not a file system. For more information, see Hadoop documentation for [Object Stores vs. Filesystems](https://hadoop.apache.org/docs/stable2/hadoop-project-dist/hadoop-common/filesystem/introduction.html#Object_Stores_vs._Filesystems).
 
 Now, there are several factors that dictate how a dataset or file is mapped to a partition. First is the method used to read the file (e.g. text file), that changes if you're working with rdds or dataframes: 
 
