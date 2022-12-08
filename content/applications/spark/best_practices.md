@@ -860,3 +860,151 @@ Now you will see that the Spark and Job dependencies are not zipped or uploaded 
 If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s [ShutdownHook](https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227). If this happens, increase *hadoop.service.shutdown.timeout* property from 30s to to a larger value.
 
 Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.
+
+## ** BP 5.1.22  -  How the number of partitions are determined when reading a raw file **
+
+When reading a raw file, that can be a text file, csv, etc. the count behind the number of partitions created from Spark depends from many variables as the methods used to read the file, the default parallelism and so on. Following an overview of how these factors are related between each other so to better understand how files are processed.
+
+Here a brief summary of relationship between core nodes - executors - tasks:
+
+ - each File is composed by blocks that will be parsed according to the InputFormat corresponding to the specific data format, and generally combines several blocks into one input slice, called InputSplit
+ - InputSplit and Task are one-to-one correspondence relationship
+ - each of these specific Tasks will be assigned to one executor of the nodes on the cluster
+ - each node can have one or more Executors, depending on the node resources and executor settings
+ - each Executor consists of cores and memory whose default is based on the node type. Each executor can only execute one task at time.
+
+So based on that, the number of threads/tasks will be based on the number of partitions while reading. 
+
+Please note that the S3 connector takes some configuration option (e.g. s3a: fs.s3a.block.size) to simulate blocks in Hadoop services, but the concept of blocks in S3 does not really exists. Unlike HDFS that is an implementation of the Hadoop FileSystem API, which models POSIX file system behavior, EMRFS is an object store, not a file system. For more information, see Hadoop documentation for [Object Stores vs. Filesystems](https://hadoop.apache.org/docs/stable2/hadoop-project-dist/hadoop-common/filesystem/introduction.html#Object_Stores_vs._Filesystems).
+
+Now, there are several factors that dictate how a dataset or file is mapped to a partition. First is the method used to read the file (e.g. text file), that changes if you're working with rdds or dataframes: 
+
+```
+sc.textFile(...) returns a RDD[String]
+
+   textFile(String path, int minPartitions)
+
+   Read a text file from HDFS, a local file system (available on all nodes), or any Hadoop-supported 
+   file system URI, and return it as an RDD of Strings.
+```
+```
+spark.read.text(...) returns a DataSet[Row] or a DataFrame
+
+   text(String path)
+
+   Loads text files and returns a DataFrame whose schema starts with a string column named "value",
+   and followed by partitioned columns if there are any.
+```
+
+### Spark Core API (RDDs)
+
+When using *sc.textFile* Spark uses the block size set for the filesysytem protocol it's reading from, to calculate the number of partitions in input:
+
+[SparkContext.scala](https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/SparkContext.scala#L819-L832)
+```
+  /**
+   * Read a text file from HDFS, a local file system (available on all nodes), or any
+   * Hadoop-supported file system URI, and return it as an RDD of Strings.
+   * @param path path to the text file on a supported file system
+   * @param minPartitions suggested minimum number of partitions for the resulting RDD
+   * @return RDD of lines of the text file
+   */
+  def textFile(
+      path: String,
+      minPartitions: Int = defaultMinPartitions): RDD[String] = withScope {
+    assertNotStopped()
+    hadoopFile(path, classOf[TextInputFormat], classOf[LongWritable], classOf[Text],
+      minPartitions).map(pair => pair._2.toString).setName(path)
+  }
+```
+[FileInputFormat.java](https://github.com/apache/hadoop/blob/trunk/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapred/FileInputFormat.java#L373)
+```
+        if (isSplitable(fs, path)) {
+          long blockSize = file.getBlockSize();
+          long splitSize = computeSplitSize(goalSize, minSize, blockSize);
+```
+
+When using the *S3A* protocol the block size is set through the *fs.s3a.block.size parameter* (default 32M), and when using *S3* protocol through *fs.s3n.block.size* (default 64M). Important to notice here is that with *S3* protocol the parameter used is *fs.s3n.block.size* and not *fs.s3.block.size* as you would expect. In EMR indeed, when using EMRFS, which means using *s3* with *s3://* prefix, *fs.s3.block.size* will not have any affect on the EMRFS configration.
+
+Following some testing results using these parameters:
+```
+CONF
+Input: 1 file, total size 336 MB
+
+TEST 1 (default)
+ S3A protocol
+- fs.s3a.block.size = 32M (default)
+- Spark no. partitions: 336/32 = 11
+
+ S3 protocol
+- fs.s3n.block.size = 64M (default)
+- Spark no. partitions: 336/64 = 6
+
+TEST 2 (modified)
+ S3A protocol
+- fs.s3a.block.size = 64M (modified)
+- Spark no. partitions: 336/64 = 6
+
+ S3protocol
+- fs.s3n.block.size = 128M (modified)
+- Spark no. partitions: 336/128 = 3
+```
+
+### Spark SQL (DATAFRAMEs) 
+
+When using *spark.read.text* no. of spark tasks/partitions depends on default parallelism:
+
+[DataSourceScanExec.scala](https://github.com/apache/spark/blob/v2.4.8/sql/core/src/main/scala/org/apache/spark/sql/execution/DataSourceScanExec.scala#L423-L430)
+```
+    val defaultMaxSplitBytes =
+      fsRelation.sparkSession.sessionState.conf.filesMaxPartitionBytes
+    val openCostInBytes = fsRelation.sparkSession.sessionState.conf.filesOpenCostInBytes
+    val defaultParallelism = fsRelation.sparkSession.sparkContext.defaultParallelism
+    val totalBytes = selectedPartitions.flatMap(_.files.map (_.getLen + openCostInBytes)).sum
+    val bytesPerCore = totalBytes / defaultParallelism
+
+    val maxSplitBytes = Math.min(defaultMaxSplitBytes, Math.max(openCostInBytes, bytesPerCore))
+```
+
+The default Parallelism is determined via:
+
+[CoarseGrainedSchedulerBackend.scala](https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/scheduler/cluster/CoarseGrainedSchedulerBackend.scala#L457-L459)
+```
+  override def defaultParallelism(): Int = {
+    conf.getInt("spark.default.parallelism", math.max(totalCoreCount.get(), 2))
+  }
+```
+
+If *defaultParallelism* is too large, *bytesPerCore* will be small, and *maxSplitBytes* can be small, which can result in more no. of spark tasks/partitions. So if there're more cores, *spark.default.parallelism* can be large, *defaultMaxSplitBytes* can be small, and no. of spark tasks/partitions can be large.
+
+In order to tweak the input no. of partitions the following parameters need to be set:
+
+|  Classification | Property | Description  |
+|---|---|---|
+|  spark-default | *spark.default.parallelism*   |  default: max(total number of vCores, 2)  |
+|  spark-default | *spark.sql.files.maxPartitionBytes*   | default: 128MB  |
+
+If these parameters are modified, [*maximizeResourceAllocation*](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation) need to be disabled, as it would override *spark.default.parallelism parameter*.
+
+Following some testing results using these parameters:
+```
+CONF
+- Total number of vCores = 16 -> spark.default.parallelism = 16
+- spark.sql.files.maxPartitionBytes = 128MB
+
+TEST 1
+- Input: 1 CSV file, total size 352,3 MB
+- Spark no. partitions: 16
+- Partition size = 352,3/16 = ∼22,09 MB
+
+TEST 2
+- Input: 10 CSV files, total size 3523 MB
+- Spark no. partitions: 30
+- Partition size = 3523/30 = ∼117,43 MB
+```
+
+____________________________________________________________________________________
+
+**Disclaimer**
+
+When writing a file the number of partitions in output will depends from the number of partitions in input that will be maintained if no shuffle operations are applied on the data processed, changed otherwise based on *spark.default.parallelism* for RDDs and *spark.sql.shuffle.partitions* for dataframes.
