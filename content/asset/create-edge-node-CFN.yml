@@ -82,7 +82,7 @@ Resources:
               Args:
                   - "bash"
                   - "-c" 
-                  - !Sub "sudo rm -rf /tmp/emr_edge_node && sudo yum install git -y && git clone https://github.com/knkarthik01/emr_edge_node.git /tmp/emr_edge_node && chmod +x /tmp/emr_edge_node/copy-emr-client-deps.sh && sudo /tmp/emr_edge_node/copy-emr-client-deps.sh --s3-folder s3://${S3BucketForArtifacts}/emr-client-deps/"
+                  - !Sub "sudo rm -rf /tmp/emr_edge_node && sudo yum install git -y && git clone --depth 1 https://github.com/aws/aws-emr-best-practices.git /tmp/emr_edge_node && cd /tmp/emr_edge_node && git filter-branch --prune-empty --subdirectory-filter content/asset HEAD && chmod +x copy-emr-client-deps.sh && sudo copy-emr-client-deps.sh --s3-folder s3://${S3BucketForArtifacts}/emr-client-deps/"
 
   EdgeNode:
     Type: AWS::EC2::Instance
