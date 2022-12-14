@@ -887,6 +887,33 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bp-5122-how-the-number-of-partitions-are-determined-when-reading-a-raw-file" class="md-nav__link">
+    BP 5.1.22  -  How the number of partitions are determined when reading a raw file
+  </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.22  -  How the number of partitions are determined when reading a raw file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spark-core-api-rdds" class="md-nav__link">
+    Spark Core API (RDDs)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-sql-dataframes" class="md-nav__link">
+    Spark SQL (DATAFRAMEs)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1543,6 +1570,33 @@
           <li class="md-nav__item">
   <a href="#precautions-to-take-for-highly-concurrent-workloads" class="md-nav__link">
     Precautions to take for highly concurrent workloads
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bp-5122-how-the-number-of-partitions-are-determined-when-reading-a-raw-file" class="md-nav__link">
+    BP 5.1.22  -  How the number of partitions are determined when reading a raw file
+  </a>
+  
+    <nav class="md-nav" aria-label="BP 5.1.22  -  How the number of partitions are determined when reading a raw file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spark-core-api-rdds" class="md-nav__link">
+    Spark Core API (RDDs)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-sql-dataframes" class="md-nav__link">
+    Spark SQL (DATAFRAMEs)
   </a>
   
 </li>
@@ -2272,6 +2326,147 @@ hdfs dfs -copyFromLocal spark-dependencies.zip /user/hadoop/deps/
 
 <p>If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s <a href="https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227">ShutdownHook</a>. If this happens, increase <em>hadoop.service.shutdown.timeout</em> property from 30s to to a larger value.</p>
 <p>Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.</p>
+<h2 id="bp-5122-how-the-number-of-partitions-are-determined-when-reading-a-raw-file"><strong> BP 5.1.22  -  How the number of partitions are determined when reading a raw file </strong><a class="headerlink" href="#bp-5122-how-the-number-of-partitions-are-determined-when-reading-a-raw-file" title="Permanent link">&para;</a></h2>
+<p>When reading a raw file, that can be a text file, csv, etc. the count behind the number of partitions created from Spark depends from many variables as the methods used to read the file, the default parallelism and so on. Following an overview of how these factors are related between each other so to better understand how files are processed.</p>
+<p>Here a brief summary of relationship between core nodes - executors - tasks:</p>
+<ul>
+<li>each File is composed by blocks that will be parsed according to the InputFormat corresponding to the specific data format, and generally combines several blocks into one input slice, called InputSplit</li>
+<li>InputSplit and Task are one-to-one correspondence relationship</li>
+<li>each of these specific Tasks will be assigned to one executor of the nodes on the cluster</li>
+<li>each node can have one or more Executors, depending on the node resources and executor settings</li>
+<li>each Executor consists of cores and memory whose default is based on the node type. Each executor can only execute one task at time.</li>
+</ul>
+<p>So based on that, the number of threads/tasks will be based on the number of partitions while reading. </p>
+<p>Please note that the S3 connector takes some configuration option (e.g. s3a: fs.s3a.block.size) to simulate blocks in Hadoop services, but the concept of blocks in S3 does not really exists. Unlike HDFS that is an implementation of the Hadoop FileSystem API, which models POSIX file system behavior, EMRFS is an object store, not a file system. For more information, see Hadoop documentation for <a href="https://hadoop.apache.org/docs/stable2/hadoop-project-dist/hadoop-common/filesystem/introduction.html#Object_Stores_vs._Filesystems">Object Stores vs. Filesystems</a>.</p>
+<p>Now, there are several factors that dictate how a dataset or file is mapped to a partition. First is the method used to read the file (e.g. text file), that changes if you're working with rdds or dataframes: </p>
+<div class="codehilite"><pre><span></span><code><span class="n">sc</span><span class="p">.</span><span class="n">textFile</span><span class="p">(...)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">RDD</span><span class="o">[</span><span class="n">String</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">   </span><span class="n">textFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">minPartitions</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="k">Read</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="nc">text</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">HDFS</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">local</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="k">system</span><span class="w"> </span><span class="p">(</span><span class="n">available</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">nodes</span><span class="p">),</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="n">Hadoop</span><span class="o">-</span><span class="n">supported</span><span class="w"> </span>
+<span class="w">   </span><span class="k">file</span><span class="w"> </span><span class="k">system</span><span class="w"> </span><span class="n">URI</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">RDD</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Strings</span><span class="p">.</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">spark</span><span class="p">.</span><span class="k">read</span><span class="p">.</span><span class="nc">text</span><span class="p">(...)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">DataSet</span><span class="o">[</span><span class="n">Row</span><span class="o">]</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">DataFrame</span><span class="w"></span>
+
+<span class="w">   </span><span class="nc">text</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">path</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="n">Loads</span><span class="w"> </span><span class="nc">text</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">DataFrame</span><span class="w"> </span><span class="n">whose</span><span class="w"> </span><span class="k">schema</span><span class="w"> </span><span class="n">starts</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="k">column</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="ss">&quot;value&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="ow">and</span><span class="w"> </span><span class="n">followed</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">partitioned</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="ow">any</span><span class="p">.</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="spark-core-api-rdds">Spark Core API (RDDs)<a class="headerlink" href="#spark-core-api-rdds" title="Permanent link">&para;</a></h3>
+<p>When using <em>sc.textFile</em> Spark uses the block size set for the filesysytem protocol it's reading from, to calculate the number of partitions in input:</p>
+<p><a href="https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/SparkContext.scala#L819-L832">SparkContext.scala</a></p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Read a text file from HDFS, a local file system (available on all nodes), or any</span>
+<span class="cm">   * Hadoop-supported file system URI, and return it as an RDD of Strings.</span>
+<span class="cm">   * @param path path to the text file on a supported file system</span>
+<span class="cm">   * @param minPartitions suggested minimum number of partitions for the resulting RDD</span>
+<span class="cm">   * @return RDD of lines of the text file</span>
+<span class="cm">   */</span><span class="w"></span>
+<span class="w">  </span><span class="n">def</span><span class="w"> </span><span class="n">textFile</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="k">path</span><span class="err">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nl">minPartitions</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaultMinPartitions</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">RDD</span><span class="o">[</span><span class="n">String</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withScope</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">assertNotStopped</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="n">hadoopFile</span><span class="p">(</span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">classOf</span><span class="o">[</span><span class="n">TextInputFormat</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">classOf</span><span class="o">[</span><span class="n">LongWritable</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">classOf</span><span class="o">[</span><span class="n">Text</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">minPartitions</span><span class="p">).</span><span class="k">map</span><span class="p">(</span><span class="n">pair</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">_2</span><span class="p">.</span><span class="n">toString</span><span class="p">).</span><span class="n">setName</span><span class="p">(</span><span class="k">path</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="err">}</span><span class="w"></span>
+</code></pre></div>
+
+<p><a href="https://github.com/apache/hadoop/blob/trunk/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/java/org/apache/hadoop/mapred/FileInputFormat.java#L373">FileInputFormat.java</a></p>
+<div class="codehilite"><pre><span></span><code>        <span class="k">if</span> <span class="ss">(</span><span class="nv">isSplitable</span><span class="ss">(</span><span class="nv">fs</span>, <span class="nv">path</span><span class="ss">))</span> {
+          <span class="nv">long</span> <span class="nv">blockSize</span> <span class="o">=</span> <span class="nv">file</span>.<span class="nv">getBlockSize</span><span class="ss">()</span><span class="c1">;</span>
+          <span class="nv">long</span> <span class="nv">splitSize</span> <span class="o">=</span> <span class="nv">computeSplitSize</span><span class="ss">(</span><span class="nv">goalSize</span>, <span class="nv">minSize</span>, <span class="nv">blockSize</span><span class="ss">)</span><span class="c1">;</span>
+</code></pre></div>
+
+<p>When using the <em>S3A</em> protocol the block size is set through the <em>fs.s3a.block.size parameter</em> (default 32M), and when using <em>S3</em> protocol through <em>fs.s3n.block.size</em> (default 64M). Important to notice here is that with <em>S3</em> protocol the parameter used is <em>fs.s3n.block.size</em> and not <em>fs.s3.block.size</em> as you would expect. In EMR indeed, when using EMRFS, which means using <em>s3</em> with <em>s3://</em> prefix, <em>fs.s3.block.size</em> will not have any affect on the EMRFS configration.</p>
+<p>Following some testing results using these parameters:</p>
+<div class="codehilite"><pre><span></span><code>CONF
+Input: 1 file, total size 336 MB
+
+TEST 1 (default)
+ S3A protocol
+- fs.s3a.block.size = 32M (default)
+- Spark no. partitions: 336/32 = 11
+
+ S3 protocol
+- fs.s3n.block.size = 64M (default)
+- Spark no. partitions: 336/64 = 6
+
+TEST 2 (modified)
+ S3A protocol
+- fs.s3a.block.size = 64M (modified)
+- Spark no. partitions: 336/64 = 6
+
+ S3protocol
+- fs.s3n.block.size = 128M (modified)
+- Spark no. partitions: 336/128 = 3
+</code></pre></div>
+
+<h3 id="spark-sql-dataframes">Spark SQL (DATAFRAMEs)<a class="headerlink" href="#spark-sql-dataframes" title="Permanent link">&para;</a></h3>
+<p>When using <em>spark.read.text</em> no. of spark tasks/partitions depends on default parallelism:</p>
+<p><a href="https://github.com/apache/spark/blob/v2.4.8/sql/core/src/main/scala/org/apache/spark/sql/execution/DataSourceScanExec.scala#L423-L430">DataSourceScanExec.scala</a></p>
+<div class="codehilite"><pre><span></span><code>    val defaultMaxSplitBytes =
+      fsRelation.sparkSession.sessionState.conf.filesMaxPartitionBytes
+    val openCostInBytes = fsRelation.sparkSession.sessionState.conf.filesOpenCostInBytes
+    val defaultParallelism = fsRelation.sparkSession.sparkContext.defaultParallelism
+    val totalBytes = selectedPartitions.flatMap(_.files.map (_.getLen + openCostInBytes)).sum
+    val bytesPerCore = totalBytes / defaultParallelism
+
+    val maxSplitBytes = Math.min(defaultMaxSplitBytes, Math.max(openCostInBytes, bytesPerCore))
+</code></pre></div>
+
+<p>The default Parallelism is determined via:</p>
+<p><a href="https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/scheduler/cluster/CoarseGrainedSchedulerBackend.scala#L457-L459">CoarseGrainedSchedulerBackend.scala</a></p>
+<div class="codehilite"><pre><span></span><code>  override def defaultParallelism(): Int = {
+    conf.getInt(&quot;spark.default.parallelism&quot;, math.max(totalCoreCount.get(), 2))
+  }
+</code></pre></div>
+
+<p>If <em>defaultParallelism</em> is too large, <em>bytesPerCore</em> will be small, and <em>maxSplitBytes</em> can be small, which can result in more no. of spark tasks/partitions. So if there're more cores, <em>spark.default.parallelism</em> can be large, <em>defaultMaxSplitBytes</em> can be small, and no. of spark tasks/partitions can be large.</p>
+<p>In order to tweak the input no. of partitions the following parameters need to be set:</p>
+<table>
+<thead>
+<tr>
+<th>Classification</th>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark-default</td>
+<td><em>spark.default.parallelism</em></td>
+<td>default: max(total number of vCores, 2)</td>
+</tr>
+<tr>
+<td>spark-default</td>
+<td><em>spark.sql.files.maxPartitionBytes</em></td>
+<td>default: 128MB</td>
+</tr>
+</tbody>
+</table>
+<p>If these parameters are modified, <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation"><em>maximizeResourceAllocation</em></a> need to be disabled, as it would override <em>spark.default.parallelism parameter</em>.</p>
+<p>Following some testing results using these parameters:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">CONF</span>
+<span class="o">-</span> <span class="n">Total</span> <span class="n">number</span> <span class="kr">of</span> <span class="n">vCores</span> <span class="o">=</span> <span class="mi">16</span> <span class="o">-&gt;</span> <span class="n">spark</span><span class="p">.</span><span class="n">default</span><span class="p">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="o">-</span> <span class="n">spark</span><span class="p">.</span><span class="kr">sql</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="n">maxPartitionBytes</span> <span class="o">=</span> <span class="mi">128</span><span class="n">MB</span>
+
+<span class="n">TEST</span> <span class="mi">1</span>
+<span class="o">-</span> <span class="n">Input</span><span class="o">:</span> <span class="mi">1</span> <span class="kr">CSV</span> <span class="n">file</span><span class="p">,</span> <span class="n">total</span> <span class="n">size</span> <span class="mi">352</span><span class="p">,</span><span class="mi">3</span> <span class="n">MB</span>
+<span class="o">-</span> <span class="n">Spark</span> <span class="n">no</span><span class="p">.</span> <span class="n">partitions</span><span class="o">:</span> <span class="mi">16</span>
+<span class="o">-</span> <span class="kr">Partition</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">352</span><span class="p">,</span><span class="mi">3</span><span class="o">/</span><span class="mi">16</span> <span class="o">=</span> <span class="err">∼</span><span class="mi">22</span><span class="p">,</span><span class="mi">09</span> <span class="n">MB</span>
+
+<span class="n">TEST</span> <span class="mi">2</span>
+<span class="o">-</span> <span class="n">Input</span><span class="o">:</span> <span class="mi">10</span> <span class="kr">CSV</span> <span class="n">files</span><span class="p">,</span> <span class="n">total</span> <span class="n">size</span> <span class="mi">3523</span> <span class="n">MB</span>
+<span class="o">-</span> <span class="n">Spark</span> <span class="n">no</span><span class="p">.</span> <span class="n">partitions</span><span class="o">:</span> <span class="mi">30</span>
+<span class="o">-</span> <span class="kr">Partition</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3523</span><span class="o">/</span><span class="mi">30</span> <span class="o">=</span> <span class="err">∼</span><span class="mi">117</span><span class="p">,</span><span class="mi">43</span> <span class="n">MB</span>
+</code></pre></div>
+
+<hr />
+<p><strong>Disclaimer</strong></p>
+<p>When writing a file the number of partitions in output will depends from the number of partitions in input that will be maintained if no shuffle operations are applied on the data processed, changed otherwise based on <em>spark.default.parallelism</em> for RDDs and <em>spark.sql.shuffle.partitions</em> for dataframes.</p>
                 
               
               
