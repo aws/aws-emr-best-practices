@@ -12,6 +12,7 @@ We currently have published guides for the following topics:
 - Applications
 	- Spark
 	- Hive
+	- HBase
 - Architecture
 	- Batch
 	- Ad Hoc
