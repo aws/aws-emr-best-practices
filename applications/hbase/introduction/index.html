@@ -14,7 +14,7 @@
     
     
       
-        <title>Best Practices - EMR Best Practices Guides</title>
+        <title>Introduction - EMR Best Practices Guides</title>
       
     
     
@@ -59,7 +59,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#52-hive" class="md-skip">
+        <a href="#introduction" class="md-skip">
           Skip to content
         </a>
       
@@ -89,7 +89,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Best Practices
+              Introduction
             
           </span>
         </div>
@@ -498,14 +498,12 @@
             
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
       
       <label class="md-nav__link" for="__nav_6_2">
         5.2 Hive
@@ -523,12 +521,53 @@
   
   
     <li class="md-nav__item">
-      <a href="../introduction/" class="md-nav__link">
+      <a href="../../hive/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
   
 
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
             
   
@@ -545,12 +584,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Best Practices
+          Introduction
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Best Practices
+        Introduction
       </a>
       
         
@@ -568,8 +607,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#which-storage-layer-should-i-use" class="md-nav__link">
+    Which storage layer should I use?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-instance-should-i-use" class="md-nav__link">
+    Which instance should I use?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#number-of-hbase-regions" class="md-nav__link">
+    Number of HBase Regions
   </a>
   
 </li>
@@ -582,51 +635,12 @@
   
 
           
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" >
-      
-      <label class="md-nav__link" for="__nav_6_3">
-        5.3 HBase
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
-        <label class="md-nav__title" for="__nav_6_3">
-          <span class="md-nav__icon md-icon"></span>
-          5.3 HBase
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
             
   
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/introduction/" class="md-nav__link">
-        Introduction
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice/" class="md-nav__link">
+      <a href="../best_practice/" class="md-nav__link">
         Best Practice
       </a>
     </li>
@@ -638,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/best_practice_hdfs/" class="md-nav__link">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
         Best Practice for HDFS
       </a>
     </li>
@@ -650,7 +664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/best_practice_s3/" class="md-nav__link">
+      <a href="../best_practice_s3/" class="md-nav__link">
         Best Practice for Amazon S3
       </a>
     </li>
@@ -662,7 +676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/data_integrity/" class="md-nav__link">
+      <a href="../data_integrity/" class="md-nav__link">
         Data Integrity
       </a>
     </li>
@@ -674,7 +688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/data_migration/" class="md-nav__link">
+      <a href="../data_migration/" class="md-nav__link">
         Data Migration
       </a>
     </li>
@@ -686,7 +700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/management/" class="md-nav__link">
+      <a href="../management/" class="md-nav__link">
         Management
       </a>
     </li>
@@ -698,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         Observability
       </a>
     </li>
@@ -710,7 +724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/performance_tests/" class="md-nav__link">
+      <a href="../performance_tests/" class="md-nav__link">
         Performance Tests
       </a>
     </li>
@@ -722,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/security/" class="md-nav__link">
+      <a href="../security/" class="md-nav__link">
         Security
       </a>
     </li>
@@ -965,8 +979,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#which-storage-layer-should-i-use" class="md-nav__link">
+    Which storage layer should I use?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-instance-should-i-use" class="md-nav__link">
+    Which instance should I use?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#number-of-hbase-regions" class="md-nav__link">
+    Number of HBase Regions
   </a>
   
 </li>
@@ -983,73 +1011,49 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hive/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/introduction.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="52-hive"><strong> 5.2 - Hive </strong><a class="headerlink" href="#52-hive" title="Permanent link">&para;</a></h1>
-<h2 id="bp-521-upgrading-hive-metastore"><strong> BP 5.2.1  -  Upgrading Hive Metastore </strong><a class="headerlink" href="#bp-521-upgrading-hive-metastore" title="Permanent link">&para;</a></h2>
-<p>When upgrading from EMR 5.x (hive 2.x) to EMR 6.x (hive 3.x), hive metastore requires a schema upgrade to support changes and new features in Hive 3.x The following steps assumes hive metastore is running on Amazon RDS. Upgrading hive metastore is backwards compatible. Once hive metastore is upgraded, both hive 2x and hive 3.x clients/clusters can use the same hive metastore. </p>
-<p>1. Take a snapshot of current Hive Metastore on Amazon RDS</p>
-<p>2. Provision a new Amazon RDS with the snapshot that was created in step 1</p>
-<p>3. Provision target EMR 6.x version without configuring an external hive metastore</p>
-<p>4. SSH into EMR 6 cluster and update the below in hive-site.xml to point to new RDS from the previous step</p>
-<div class="codehilite"><pre><span></span><code>&quot;javax.jdo.option.ConnectionURL&quot;: &quot;jdbc:mysql://hostname:3306/hive?createDatabaseIfNotExist=true&quot;,
-&quot;javax.jdo.option.ConnectionDriverName&quot;: &quot;org.mariadb.jdbc.Driver&quot;,
-&quot;javax.jdo.option.ConnectionUserName&quot;: &quot;username&quot;,
-&quot;javax.jdo.option.ConnectionPassword&quot;: &quot;password&quot;
+                <h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
+<p>When working with Amazon EMR on EC2, you have the ability to choose between two deployment options for the underlying storage layer used by HBase: the <a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">Hadoop HDFS</a> or <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html">Amazon S3</a>. </p>
+<p>Although there are no restrictions in the use of these storage options, they serve different purposes, and they both have pros and cons with related performance implications. In this document, we are going to review the main aspects of each storage option.</p>
+<h2 id="which-storage-layer-should-i-use">Which storage layer should I use?<a class="headerlink" href="#which-storage-layer-should-i-use" title="Permanent link">&para;</a></h2>
+<p>Typically, to understand which storage layer you should use in your HBase cluster, you must determine what are your application requirements and decide what is most important between these two main decision drivers: performance or costs. Generally speaking, on a large cluster setup, HDFS provides better performance in most cases, while Amazon S3 provides better cost savings due to the reduced amount of storage required to persist all your data, and is the right option when you want to decouple your storage from compute.</p>
+<p>Using HDFS allows you to achieve the best performance for latency responses. This is true if you need milliseconds / sub-milliseconds read responses from HBase. You can also achieve similar results using Amazon S3 as storage layer, but this will require to rely on HBase caching features. Depending on your tables sizes, this can increase costs when provisioning resources for cache, as you’ll have to provision more EBS volumes or use bigger instances to cache your data locally on the nodes, thus losing the main advantages of using Amazon S3. This requires to fine tune HBase to find the right balance between performance and cost for your workload. </p>
+<p>Another common use case to choose HDFS over S3 is a data migration from an on premise cluster. This is typically recommended as first migration step, as this solution provides similar performance compared to your existing cluster. You can more easily migrate your infrastructure to the cloud, and later decide if it makes sense to use Amazon S3. 
+Besides, using the HDFS for a data migration can be a requirement before moving to Amazon S3. Specifically this can help to optimize the underlying layout of your HBase tables if they have a considerable amount of small HBase regions, and you want to merge them. This operation can be more quickly be performed on an HDFS cluster, and you can later migrate the data to Amazon S3. For more details, see the sections <a href="../management/#reduce-number-of-regions">Reduce number of Regions</a> and <a href="../data_migration/">Data Migration</a>.</p>
+<p>Finally, using HDFS is also the right choice if you have a cluster that is mostly used for write intensive workloads. This is  because write intensive clusters are subject to intensive compaction and region splitting operations that are performed internally by HBase to manage the underlying data storage. In these cases, using Amazon S3 might not be the right option, because of data movements that occur between Amazon S3 and the cluster to perform compaction processes. This increases the time required to perform such operations, thus impacting the overall cluster performance resulting in higher latencies. </p>
+<p>On the other side, Amazon S3 is a good option for read-intensive HBase clusters. One of the best use cases where S3 excels is when the data that is most frequently accessed (read or modified) is the most recent, while old data is rarely modified. You can use the pre-configured bucket cache, to store a hot copy of the most recent data on local disks of your cluster, thus maintaining a good compromise in terms of costs and performance. For more details, see <a href="../best_practice_s3/#hbase---bucket-cache">Bucket Cache</a>. </p>
+<p>Another good use case for using Amazon S3 is when you have tables that rarely change over time, and you need to serve a large amount of read requests. In this case, you can opt for Amazon S3 in combination with the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hbase-s3.html#emr-hbase-s3-read-replica">EMR HBase read-replica</a>, to distribute your read requests across multiple clusters. For more details about this approach kindly see <a href="../data_integrity/#amazon-emr-read-replica">Data Integrity</a>. Moreover, Amazon S3 provides stronger SLA for data durability and availability transparently at the storage level and will not be impacted by failures on EMR instances.</p>
+<p>Finally, one major benefit of relying on S3 for storage is cost saving. If you have significant costs in your cluster due to large amount of data stored on EBS volumes, moving to S3 can reduce costs drastically. Moreover, HDFS uses block replication to provide fault tolerance, which increases the footprint of data stored locally in your cluster. In Amazon EMR, the default <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html">HDFS replication</a> factor is defined automatically when launching the cluster (or you can override it manually using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-configure-apps.html">EMR configuration API</a>). For large tables size this can drastically increase EBS storage costs, so you might want to leverage S3 where replication is handled natively by the service for a more convenient cost. </p>
+<h2 id="which-instance-should-i-use">Which instance should I use?<a class="headerlink" href="#which-instance-should-i-use" title="Permanent link">&para;</a></h2>
+<p>When talking about hardware requirements for HBase, it is very important to choose the right EC2 instance type when using HDFS as storage layer, as it might be prohibitive to change it once you have a live production cluster. On the other side, changing instances for an HBase cluster running on Amazon S3 is much easier as data is persisted on S3. This allows us to more easily terminate an EMR cluster without losing data and launch a new one using a different instance type. Below you can find some details that can help you to choose the right instances based on your use case / workloads requirements. </p>
+<p>HBase typically performs better with small instances and when you spread the overall requests across multiple instances. This is because there are some limitations in the number of HBase regions a single Region Server can handle, and having a huge amount of regions on a single node can lead to issues and unexpected behavior. For more details on determining the right number of regions for a specific instance, see the section <a href="#number-of-hbase-regions">Number of HBase Regions</a>.</p>
+<p>Generally speaking, if you want to achieve the best possible performance in your HBase cluster, it’s highly recommended to use EC2 instances powered with an <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html">Instance Store</a> volume. This is especially true for write intensive / mixed (50% writes 50% reads) workloads. For such use cases, if you have significant write requests, you’ll need disks that can provide a large amount of IOPS in order to accommodate all background operations performed by HBase (compaction, WAL writes). Using disk optimized instances allows you to sustain high volumes of write operations either if HBase is performing compaction or other background operations on disks. Some example of instances that are recommended for such workloads are: </p>
+<ul>
+<li><a href="https://aws.amazon.com/ec2/instance-types/i3/">i3</a> / <a href="https://aws.amazon.com/ec2/instance-types/i3en/">i3en</a> provide dense SSD storage for data-intensive workloads. They provide the best performance for write intensive workloads but can be prohibitive depending on the amount of storage you want to use. They are recommended if you want to achieve the best possible performance, and if you want to cache several data in memory.</li>
+<li><a href="https://aws.amazon.com/ec2/instance-types/m5/">m5d</a> / <a href="https://aws.amazon.com/ec2/instance-types/r5/">r5d</a> / <a href="https://aws.amazon.com/ec2/instance-types/c5/">c5d</a> all these families provide NVMe SSD disks to deliver high random I/O performance. They can be used in different ways to exploit HBase features. For example, r5d can be used in combination with HBase off heap caching to maintain a significant amount of data cached in a performant memory (instead of reading data from the disks). On the other side, c5d comes with a higher proportion of vCPU compared to the memory, so they can be a better match if you need to serve huge volumes of requests on a single region server. </li>
+</ul>
+<p>To decide the right instance size, it’s important to understand how many regions you’re going to serve on a single region server. As general rule however, for large HBase tables, it’s recommended to choose an instance type that can provide at least 32GB of memory dedicated for the HBase services (HMaster and Region Servers). Please note that by default Amazon EMR split the available memory of an instance between the YARN Node Manager and the HBase Region Server. For a list of default memory settings, see <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html#emr-hadoop-task-jvm">Default values for task configuration settings</a>. You can always override the default EMR behavior using the EMR Configuration API. For more details see <a href="../best_practice/#hbase-heap-memory">Modify Heap Memory</a>.</p>
+<h2 id="number-of-hbase-regions">Number of HBase Regions<a class="headerlink" href="#number-of-hbase-regions" title="Permanent link">&para;</a></h2>
+<p>As described in the <a href="https://hbase.apache.org/book.html#ops.capacity.regions.count">HBase documentation</a>, you can use the following formula to compute the number of HBase regions that should be hosted on a single region server. You should note that this is gives more of guideline about number of regions, but you should investigate and experiment on your workload to tune the number of regions: </p>
+<div class="codehilite"><pre><span></span><code>(REGION_SERVER_MEM_SIZE * MEMSTORE_FRACTION) / (MEMSTORE_SIZE * NUM_COLUMN_FAMILIES)
 </code></pre></div>
 
-<p>5.  Run the following to check current hms schema version:</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
+<ul>
+<li><strong>REGION_SERVER_MEM_SIZE</strong> Memory allocated for the Region Server, as defined by the parameter -Xmx in <em>hbase-env.sh</em></li>
+<li><strong>MEMSTORE_FRACTION</strong> Memstore memory fraction, defined by <em>hbase.regionserver.global.memstore.size</em> (default 0.4)</li>
+<li><strong>MEMSTORE_SIZE</strong> Memstore flush size (default 128MB)</li>
+<li><strong>NUM_COLUMN_FAMILIES</strong> Number of column families defined for the table</li>
+</ul>
+<p>For example for a Region Server configured with 32GB of Heap memory and hosting a table with a single column family with the default HBase settings, we'll have an ideal allocation of regions equals to:</p>
+<div class="codehilite"><pre><span></span><code># Number Recommended Regions
+(32GB * 0.4) / (128MB * 1) = 100 
 </code></pre></div>
 
-<p>You should see the below. Make note of the current metastore schema version (2.3.0 in this case)</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:              3.1.0
-Metastore schema version:          2.3.0
-org.apache.hadoop.hive.metastore.HiveMetaException: Metastore schema version is not compatible. Hive Version: 3.1.0, Database Schema Version: 2.3.0
-Use --verbose for detailed stacktrace.
-*** schemaTool failed \***
-</code></pre></div>
-
-<p>6. Change directory to the hive metastore upgrade scripts location</p>
-<div class="codehilite"><pre><span></span><code>cd /usr/lib/hive/scripts/metastore/upgrade/mysql
-</code></pre></div>
-
-<p>Doing these steps on EMR 6.x is required because you need need the target hive distribution version (hive 3.1) and the upgrade scripts inorder to ugprade the schema.</p>
-<p>7. Connect to mysql using below command and upgrade the schema as per the hive version. For example, if you are upgrading from 2.3.0 to 3.1.0, you would need to source the 2 scripts. Scripts can also be found in this location: <a href="https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql">https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span><span class="o">&lt;</span><span class="n">HIVEUSER</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">h</span><span class="o">&lt;</span><span class="n">ENDPOINT</span><span class="o">-</span><span class="n">RDS</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">p</span><span class="s">&#39;PASSWORD&#39;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">use</span> <span class="n">hive</span><span class="p">;</span> 
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">2.3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.1</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-</code></pre></div>
-
-<p>8. Verify the upgrade was succesful </p>
-<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">schematool</span> <span class="o">-</span><span class="n">dbType</span> <span class="n">mysql</span> <span class="o">-</span><span class="n">info</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">URL</span><span class="p">:</span>    <span class="n">jdbc</span><span class="p">:</span><span class="n">mysql</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="p">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">hive</span><span class="err">?</span><span class="n">createDatabaseIfNotExist</span><span class="o">=</span><span class="bp">true</span>
-<span class="n">Metastore</span> <span class="n">Connection</span> <span class="n">Driver</span> <span class="p">:</span>    <span class="n">org</span><span class="o">.</span><span class="n">mariadb</span><span class="o">.</span><span class="n">jdbc</span><span class="o">.</span><span class="n">Driver</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">User</span><span class="p">:</span>   <span class="n">admin</span>
-<span class="n">Hive</span> <span class="n">distribution</span> <span class="n">version</span><span class="p">:</span>   <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">Metastore</span> <span class="n">schema</span> <span class="n">version</span><span class="p">:</span>    <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">schemaTool</span> <span class="n">completed</span>
-</code></pre></div>
-
-<p>9. After all commands are run, terminate the cluster.</p>
-<p>10. Further validation:
-Provision new 5.x and 6.x cluster with updated hive-site.xml that points to new RDS. In both version, you can run</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
-</code></pre></div>
-
-<p>In 5.x you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         2.3.0
-Metastore schema version:          3.1.0
-</code></pre></div>
-
-<p>and in 6.x, you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         3.1.0
-Metastore schema version:          3.1.0
-</code></pre></div>
+<p>As previosly mentioned, this is a recommended setting that you can use as a starting point. For example, is not unfrequent to have a region server with 3 / 4 times the recommended value. However, to avoid impacting the performance it’s better that you’re not extensively using these extra regions for write operations to avoid extensive GC operations that might degrade performance or in worst cases failures that will force a Region Server restart.</p>
                 
               
               
@@ -1068,7 +1072,7 @@ Metastore schema version:          3.1.0
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../introduction/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../../hive/best_practices/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1077,19 +1081,19 @@ Metastore schema version:          3.1.0
               <span class="md-footer__direction">
                 Previous
               </span>
-              Introduction
+              Best Practices
             </div>
           </div>
         </a>
       
       
-        <a href="../../hbase/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../best_practice/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Best Practice
             </div>
           </div>
           <div class="md-footer__button md-icon">

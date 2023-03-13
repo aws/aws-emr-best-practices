@@ -14,7 +14,7 @@
     
     
       
-        <title>Best Practices - EMR Best Practices Guides</title>
+        <title>Best Practice for Amazon S3 - EMR Best Practices Guides</title>
       
     
     
@@ -59,7 +59,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#52-hive" class="md-skip">
+        <a href="#best-practice-for-amazon-s3" class="md-skip">
           Skip to content
         </a>
       
@@ -89,7 +89,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Best Practices
+              Best Practice for Amazon S3
             
           </span>
         </div>
@@ -498,14 +498,12 @@
             
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
       
       <label class="md-nav__link" for="__nav_6_2">
         5.2 Hive
@@ -523,8 +521,85 @@
   
   
     <li class="md-nav__item">
+      <a href="../../hive/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../introduction/" class="md-nav__link">
         Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice/" class="md-nav__link">
+        Best Practice
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
+        Best Practice for HDFS
       </a>
     </li>
   
@@ -545,12 +620,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Best Practices
+          Best Practice for Amazon S3
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Best Practices
+        Best Practice for Amazon S3
       </a>
       
         
@@ -568,8 +643,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#hbase-speed-up-region-assignment-opening-closing" class="md-nav__link">
+    HBase - Speed up region assignment / opening / closing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-bucket-cache" class="md-nav__link">
+    HBase - Bucket Cache
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-memstore-flush-size" class="md-nav__link">
+    HBase - Memstore flush size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-region-split-policy" class="md-nav__link">
+    HBase - Region Split Policy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-persistent-file-tracking" class="md-nav__link">
+    HBase - Persistent File Tracking
   </a>
   
 </li>
@@ -582,87 +685,12 @@
   
 
           
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" >
-      
-      <label class="md-nav__link" for="__nav_6_3">
-        5.3 HBase
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
-        <label class="md-nav__title" for="__nav_6_3">
-          <span class="md-nav__icon md-icon"></span>
-          5.3 HBase
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
             
   
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/introduction/" class="md-nav__link">
-        Introduction
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice/" class="md-nav__link">
-        Best Practice
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_hdfs/" class="md-nav__link">
-        Best Practice for HDFS
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_s3/" class="md-nav__link">
-        Best Practice for Amazon S3
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/data_integrity/" class="md-nav__link">
+      <a href="../data_integrity/" class="md-nav__link">
         Data Integrity
       </a>
     </li>
@@ -674,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/data_migration/" class="md-nav__link">
+      <a href="../data_migration/" class="md-nav__link">
         Data Migration
       </a>
     </li>
@@ -686,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/management/" class="md-nav__link">
+      <a href="../management/" class="md-nav__link">
         Management
       </a>
     </li>
@@ -698,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         Observability
       </a>
     </li>
@@ -710,7 +738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/performance_tests/" class="md-nav__link">
+      <a href="../performance_tests/" class="md-nav__link">
         Performance Tests
       </a>
     </li>
@@ -722,7 +750,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/security/" class="md-nav__link">
+      <a href="../security/" class="md-nav__link">
         Security
       </a>
     </li>
@@ -965,8 +993,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#hbase-speed-up-region-assignment-opening-closing" class="md-nav__link">
+    HBase - Speed up region assignment / opening / closing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-bucket-cache" class="md-nav__link">
+    HBase - Bucket Cache
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-memstore-flush-size" class="md-nav__link">
+    HBase - Memstore flush size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-region-split-policy" class="md-nav__link">
+    HBase - Region Split Policy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-persistent-file-tracking" class="md-nav__link">
+    HBase - Persistent File Tracking
   </a>
   
 </li>
@@ -983,73 +1039,118 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hive/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/best_practice_s3.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="52-hive"><strong> 5.2 - Hive </strong><a class="headerlink" href="#52-hive" title="Permanent link">&para;</a></h1>
-<h2 id="bp-521-upgrading-hive-metastore"><strong> BP 5.2.1  -  Upgrading Hive Metastore </strong><a class="headerlink" href="#bp-521-upgrading-hive-metastore" title="Permanent link">&para;</a></h2>
-<p>When upgrading from EMR 5.x (hive 2.x) to EMR 6.x (hive 3.x), hive metastore requires a schema upgrade to support changes and new features in Hive 3.x The following steps assumes hive metastore is running on Amazon RDS. Upgrading hive metastore is backwards compatible. Once hive metastore is upgraded, both hive 2x and hive 3.x clients/clusters can use the same hive metastore. </p>
-<p>1. Take a snapshot of current Hive Metastore on Amazon RDS</p>
-<p>2. Provision a new Amazon RDS with the snapshot that was created in step 1</p>
-<p>3. Provision target EMR 6.x version without configuring an external hive metastore</p>
-<p>4. SSH into EMR 6 cluster and update the below in hive-site.xml to point to new RDS from the previous step</p>
-<div class="codehilite"><pre><span></span><code>&quot;javax.jdo.option.ConnectionURL&quot;: &quot;jdbc:mysql://hostname:3306/hive?createDatabaseIfNotExist=true&quot;,
-&quot;javax.jdo.option.ConnectionDriverName&quot;: &quot;org.mariadb.jdbc.Driver&quot;,
-&quot;javax.jdo.option.ConnectionUserName&quot;: &quot;username&quot;,
-&quot;javax.jdo.option.ConnectionPassword&quot;: &quot;password&quot;
+                <h1 id="best-practice-for-amazon-s3">Best Practice for Amazon S3<a class="headerlink" href="#best-practice-for-amazon-s3" title="Permanent link">&para;</a></h1>
+<p>This section highlights some of the features / best practice that you can use to improve the performance in your cluster when using Amazon S3 as storage layer for HBase. For additional best practice / tuning parameters, see <a href="https://docs.aws.amazon.com/whitepapers/latest/migrate-apache-hbase-s3/identifying-apache-hbase-and-emrfs-tuning-options.html">Apache HBase on Amazon S3 configuration properties</a>.</p>
+<h2 id="hbase-speed-up-region-assignment-opening-closing">HBase - Speed up region assignment / opening / closing<a class="headerlink" href="#hbase-speed-up-region-assignment-opening-closing" title="Permanent link">&para;</a></h2>
+<p><strong>HBase 1.x</strong> </p>
+<p>Set the below configurations to speed up region assignment, opening and closure on HBase 1.x clusters. These configurations specifically disable the use of zookeeper for the region assignment by setting to false the property <strong>hbase.assignment.usezk</strong>. Additionally, you can increase the thread pools the Region Servers use for opening the assigned regions. For Regions Servers handling many regions (in the order of thousands), you can set the thread pools up to 10 times the available number of vCpu on the Region Server. Below, an example EMR Configuration:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;Classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hbase.assignment.usezk&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.regionserver.executor.openregion.threads&quot;</span><span class="p">:</span> <span class="s2">&quot;120&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.regionserver.executor.closeregion.threads&quot;</span><span class="p">:</span> <span class="s2">&quot;120&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
 
-<p>5.  Run the following to check current hms schema version:</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
+<p><strong>HBase 2.x</strong> </p>
+<p>HBase 2.x introduced a more robust and efficient workflow to manage regions transitions which leverage the ProcedureV2 introduced in <a href="https://issues.apache.org/jira/browse/HBASE-14614">HBASE-14614</a>. In this case, it is only sufficient to increase the default region server thread pools to speed up the initialization of the regions. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;Classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hbase.regionserver.executor.openregion.threads&quot;</span><span class="p">:</span> <span class="s2">&quot;120&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.regionserver.executor.closeregion.threads&quot;</span><span class="p">:</span> <span class="s2">&quot;120&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
 
-<p>You should see the below. Make note of the current metastore schema version (2.3.0 in this case)</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:              3.1.0
-Metastore schema version:          2.3.0
-org.apache.hadoop.hive.metastore.HiveMetaException: Metastore schema version is not compatible. Hive Version: 3.1.0, Database Schema Version: 2.3.0
-Use --verbose for detailed stacktrace.
-*** schemaTool failed \***
+<h2 id="hbase-bucket-cache">HBase - Bucket Cache<a class="headerlink" href="#hbase-bucket-cache" title="Permanent link">&para;</a></h2>
+<p>When using Amazon S3 as storage layer for HBase, EMR configures the service to use a Bucket Cache for persisting data blocks on the L2 Cache of each region server. The default cache implementation used for Amazon S3 persists blocks on the local volumes of the node as defined by the <strong>hbase.bucketcache.ioengine</strong> property. This parameter defines the location of the files used to store the cached data. For example, the following snippet shows the default configurations for a node with 4 EBS volumes attached. </p>
+<div class="codehilite"><pre><span></span><code>  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>hbase.bucketcache.ioengine<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>files:/mnt1/hbase/bucketcache,/mnt2/hbase/bucketcache,/mnt3/hbase/bucketcache<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 
-<p>6. Change directory to the hive metastore upgrade scripts location</p>
-<div class="codehilite"><pre><span></span><code>cd /usr/lib/hive/scripts/metastore/upgrade/mysql
+<p>By default, EMR configures N - 1 volumes for caching data, so in our example only 3 volumes out of 4 will be used for the cache. This feature can be useful to persist HOT data on the local disks of the cluster to reduce the latency introduced when accessing HFiles stored on S3. However, by default the cache size is set as 8GB, so you might need to increase it depending on the amount of data you want to store on each node. To modify the default cache value, you can set the following property: </p>
+<div class="codehilite"><pre><span></span><code>hbase.bucketcache.size: 98304 # defined as MB
 </code></pre></div>
 
-<p>Doing these steps on EMR 6.x is required because you need need the target hive distribution version (hive 3.1) and the upgrade scripts inorder to ugprade the schema.</p>
-<p>7. Connect to mysql using below command and upgrade the schema as per the hive version. For example, if you are upgrading from 2.3.0 to 3.1.0, you would need to source the 2 scripts. Scripts can also be found in this location: <a href="https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql">https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span><span class="o">&lt;</span><span class="n">HIVEUSER</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">h</span><span class="o">&lt;</span><span class="n">ENDPOINT</span><span class="o">-</span><span class="n">RDS</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">p</span><span class="s">&#39;PASSWORD&#39;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">use</span> <span class="n">hive</span><span class="p">;</span> 
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">2.3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.1</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
+<p>In the above example, we set the cache size for each node to 98GB. In each volume only 32GB (98304 / 3) are used, as the total cache size will be evenly distributed across the volumes defined in the <strong>hbase.bucketcache.ioengine</strong>.</p>
+<p>Besides, when using S3 it might be convenient to pre-warm the cache during the region opening to avoid performance degradation when the cache is still not fully initialized. In this case to enable blocks prefetch, you should enable the following configuration.</p>
+<div class="codehilite"><pre><span></span><code>hbase.rs.prefetchblocksonopen: true
 </code></pre></div>
 
-<p>8. Verify the upgrade was succesful </p>
-<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">schematool</span> <span class="o">-</span><span class="n">dbType</span> <span class="n">mysql</span> <span class="o">-</span><span class="n">info</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">URL</span><span class="p">:</span>    <span class="n">jdbc</span><span class="p">:</span><span class="n">mysql</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="p">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">hive</span><span class="err">?</span><span class="n">createDatabaseIfNotExist</span><span class="o">=</span><span class="bp">true</span>
-<span class="n">Metastore</span> <span class="n">Connection</span> <span class="n">Driver</span> <span class="p">:</span>    <span class="n">org</span><span class="o">.</span><span class="n">mariadb</span><span class="o">.</span><span class="n">jdbc</span><span class="o">.</span><span class="n">Driver</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">User</span><span class="p">:</span>   <span class="n">admin</span>
-<span class="n">Hive</span> <span class="n">distribution</span> <span class="n">version</span><span class="p">:</span>   <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">Metastore</span> <span class="n">schema</span> <span class="n">version</span><span class="p">:</span>    <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">schemaTool</span> <span class="n">completed</span>
+<p>This configuration can also be set for individual Column Family of an HBase table. In this case you should specify the configuration through the HBase shell using the following command:</p>
+<div class="codehilite"><pre><span></span><code>hbase&gt; create &#39;MyTable&#39;, { NAME =&gt; &#39;myCF&#39;, PREFETCH_BLOCKS_ON_OPEN =&gt; &#39;true&#39; }
 </code></pre></div>
 
-<p>9. After all commands are run, terminate the cluster.</p>
-<p>10. Further validation:
-Provision new 5.x and 6.x cluster with updated hive-site.xml that points to new RDS. In both version, you can run</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
+<p>Finally, in write intensive use cases, it might be useful to also enable the following configurations to automatically persist blocks in the cache as they are written, and to repopulate the cache following a compaction (compaction operations invalidate cache blocks). In this case we can set the following additional properties: </p>
+<div class="codehilite"><pre><span></span><code>hbase.rs.cacheblocksonwrite: true
+hbase.rs.cachecompactedblocksonwrite: true
 </code></pre></div>
 
-<p>In 5.x you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         2.3.0
-Metastore schema version:          3.1.0
+<p>Below a sample configuration to tune the Bucket Cache in an Amazon EMR cluster:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;Classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hbase.bucketcache.size&quot;</span><span class="p">:</span> <span class="s2">&quot;98304&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.rs.prefetchblocksonopen&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.rs.cacheblocksonwrite&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.rs.cachecompactedblocksonwrite&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
 
-<p>and in 6.x, you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         3.1.0
-Metastore schema version:          3.1.0
+<h2 id="hbase-memstore-flush-size">HBase - Memstore flush size<a class="headerlink" href="#hbase-memstore-flush-size" title="Permanent link">&para;</a></h2>
+<p>When using Amazon S3 in HBase, it might be convenient to increase the default memstore flush size to avoid performance degradation, or an excessive number of small compaction operations in write intensive clusters. This can be useful if you have manually disabled the <a href="#hbase-persistent-file-tracking">HBase - Persistent File Tracking</a> feature that is enabled on EMR greater than 6.2.0 or if you're using an EMR 5.x cluster. </p>
+<p>In this case, you can increase the memstore flush size to 256MB or 512MB (default 128MB). Below an example of how you can change this configuration in an Amazon EMR cluster:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;Classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hbase.hregion.memstore.flush.size&quot;</span><span class="p">:</span> <span class="s2">&quot;268435456&quot;</span> <span class="err">#</span> <span class="mi">256</span> <span class="err">*</span> <span class="mi">1024</span> <span class="err">*</span> <span class="mi">1024</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
+
+<h2 id="hbase-region-split-policy">HBase - Region Split Policy<a class="headerlink" href="#hbase-region-split-policy" title="Permanent link">&para;</a></h2>
+<p>Depending on the HBase version that you’re using, you will use different region split policies. By default, you’ll have:</p>
+<ul>
+<li><strong>HBase 1.x</strong> <em>org.apache.hadoop.hbase.regionserver.IncreasingToUpperBoundRegionSplitPolicy</em></li>
+<li><strong>HBase 2.x</strong>  <em>org.apache.hadoop.hbase.regionserver.SteppingSplitPolicy</em></li>
+</ul>
+<p>These specific implementations aims to quickly increase the number of regions when you have a fresh new table that wasn’t pre-partitioned. This might be a good strategy for new tables in a cluster. </p>
+<p>However, it might be more convenient for a cluster using S3 as storage layer to use the old split strategy <em>org.apache.hadoop.hbase.regionserver.ConstantSizeRegionSplitPolicy</em> that performs a split operation only when the overall size of a region goes above a threshold as defined by the parameter:  <strong>hbase.hregion.max.filesize</strong> (default: 10GB)</p>
+<p>This can help if you want to have more control on the number of regions, as it will allow you to control the growth of the number of regions by a fixed size that you specify. Additionally, this can also be handy in case you’re leveraging Apache Phoenix to query HBase and you have a constant flow of new data. Setting a constant size region split policy will prevent excessive splitting operations. These operations can cause temporary region cache boundaries exceptions while using Phoenix, due to the time required to refresh internal metadata about regions boundaries. This problem might be more frequent when using S3 as storage layer than when using HDFS.</p>
+<p>Below an example to modify the Region Server split logic on an Amazon EMR cluster: </p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;Classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hbase.regionserver.region.split.policy&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.hadoop.hbase.regionserver.ConstantSizeRegionSplitPolicy&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;hbase.hregion.max.filesize&quot;</span><span class="p">:</span> <span class="s2">&quot;10737418240&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<h2 id="hbase-persistent-file-tracking">HBase - Persistent File Tracking<a class="headerlink" href="#hbase-persistent-file-tracking" title="Permanent link">&para;</a></h2>
+<p>When using EMR versions greater than 6.2.0, EMR will enable a feature called Persistent File Tracking when using Amazon S3 as storage layer. This specific feature, is enabled by default and provides performance benefits as it avoids HFile rename operations that might delay write operations due to S3 latencies. However, please note that this feature does not support the native <a href="https://hbase.apache.org/book.html#_cluster_replication">HBase replication</a> feature. So if you want to use replication to implement a Highly Available setup when using Amazon S3, you’ll have to disable this feature. This applies only to S3 and is not required when using HDFS as storage layer. </p>
+<p>For more details on this feature, see <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hbase-s3.html#emr-hbase-s3-hfile-tracking">Persistent HFile tracking</a>.</p>
                 
               
               
@@ -1068,7 +1169,7 @@ Metastore schema version:          3.1.0
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../introduction/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../best_practice_hdfs/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1077,19 +1178,19 @@ Metastore schema version:          3.1.0
               <span class="md-footer__direction">
                 Previous
               </span>
-              Introduction
+              Best Practice for HDFS
             </div>
           </div>
         </a>
       
       
-        <a href="../../hbase/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../data_integrity/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Data Integrity
             </div>
           </div>
           <div class="md-footer__button md-icon">

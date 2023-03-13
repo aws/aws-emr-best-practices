@@ -1,0 +1,1450 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-7.1.4">
+    
+    
+      
+        <title>Data Integrity - EMR Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bde7dde4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ef6f36e2.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-integrity-disaster-recovery-high-availability" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Integrity
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/aws/aws-emr-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EMR Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws/aws-emr-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        1 - Cost Optimizations
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="1 - Cost Optimizations" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1 - Cost Optimizations
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost_optimization/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost_optimization/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        2 - Reliability
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="2 - Reliability" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2 - Reliability
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reliability/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reliability/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        3 - Security
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="3 - Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3 - Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        4 - Features
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="4 - Features" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4 - Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/managed_scaling/best_practices/" class="md-nav__link">
+        4.1 - Managed Scaling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/spot_usage/best_practices/" class="md-nav__link">
+        4.2 - Spot Usage
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      <label class="md-nav__link" for="__nav_6">
+        5 - Applications
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5 - Applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5 - Applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" >
+      
+      <label class="md-nav__link" for="__nav_6_1">
+        5.1 Spark
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.1 Spark" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          5.1 Spark
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spark/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spark/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
+      
+      <label class="md-nav__link" for="__nav_6_2">
+        5.2 Hive
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.2 Hive" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          5.2 Hive
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice/" class="md-nav__link">
+        Best Practice
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
+        Best Practice for HDFS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_s3/" class="md-nav__link">
+        Best Practice for Amazon S3
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Data Integrity
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Data Integrity
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    Best Practice
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-on-hdfs" class="md-nav__link">
+    HBase on HDFS
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase on HDFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hbase-snapshots" class="md-nav__link">
+    HBase - Snapshots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-cluster-replication" class="md-nav__link">
+    HBase - Cluster Replication
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase - Cluster Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#active-active-architecture" class="md-nav__link">
+    Active - Active architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-passive-architecture" class="md-nav__link">
+    Active - Passive architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-region-architecture" class="md-nav__link">
+    Multi Region architecture
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-on-amazon-s3" class="md-nav__link">
+    HBase on Amazon S3
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase on Amazon S3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-classes" class="md-nav__link">
+    Storage Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-snapshots_1" class="md-nav__link">
+    HBase - Snapshots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-cluster-replication_1" class="md-nav__link">
+    HBase - Cluster Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-emr-read-replica" class="md-nav__link">
+    Amazon EMR - Read Replica
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-object-replication" class="md-nav__link">
+    Amazon S3 - Object Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-wals" class="md-nav__link">
+    HBase WALs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_migration/" class="md-nav__link">
+        Data Migration
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../management/" class="md-nav__link">
+        Management
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        Observability
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance_tests/" class="md-nav__link">
+        Performance Tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        6 - Architecture
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="6 - Architecture" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          6 - Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_1" type="checkbox" id="__nav_7_1" >
+      
+      <label class="md-nav__link" for="__nav_7_1">
+        Batch
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Batch" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_1">
+          <span class="md-nav__icon md-icon"></span>
+          Batch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/batch/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_2" type="checkbox" id="__nav_7_2" >
+      
+      <label class="md-nav__link" for="__nav_7_2">
+        Ad Hoc
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ad Hoc" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ad Hoc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/adhoc/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/adhoc/architecture/" class="md-nav__link">
+        Architecture
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_3" type="checkbox" id="__nav_7_3" >
+      
+      <label class="md-nav__link" for="__nav_7_3">
+        Notebooks
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notebooks" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          Notebooks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/notebooks/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_4" type="checkbox" id="__nav_7_4" >
+      
+      <label class="md-nav__link" for="__nav_7_4">
+        Datalake Storage
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Datalake Storage" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_4">
+          <span class="md-nav__icon md-icon"></span>
+          Datalake Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/datalake_storage/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice" class="md-nav__link">
+    Best Practice
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-on-hdfs" class="md-nav__link">
+    HBase on HDFS
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase on HDFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hbase-snapshots" class="md-nav__link">
+    HBase - Snapshots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-cluster-replication" class="md-nav__link">
+    HBase - Cluster Replication
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase - Cluster Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#active-active-architecture" class="md-nav__link">
+    Active - Active architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-passive-architecture" class="md-nav__link">
+    Active - Passive architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-region-architecture" class="md-nav__link">
+    Multi Region architecture
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-on-amazon-s3" class="md-nav__link">
+    HBase on Amazon S3
+  </a>
+  
+    <nav class="md-nav" aria-label="HBase on Amazon S3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-classes" class="md-nav__link">
+    Storage Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-snapshots_1" class="md-nav__link">
+    HBase - Snapshots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-cluster-replication_1" class="md-nav__link">
+    HBase - Cluster Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-emr-read-replica" class="md-nav__link">
+    Amazon EMR - Read Replica
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-object-replication" class="md-nav__link">
+    Amazon S3 - Object Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hbase-wals" class="md-nav__link">
+    HBase WALs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/data_integrity.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="data-integrity-disaster-recovery-high-availability">Data Integrity / Disaster Recovery / High Availability<a class="headerlink" href="#data-integrity-disaster-recovery-high-availability" title="Permanent link">&para;</a></h1>
+<p>The following document illustrates architectures and service features that can be combined to implement Highly Available architectures and Disaster Recovery solutions for HBase clusters running on Amazon EMR. The document also describes additional best practices for data recovery in case of integrity issues you might face when using HBase.</p>
+<h2 id="best-practice">Best Practice<a class="headerlink" href="#best-practice" title="Permanent link">&para;</a></h2>
+<p>When working with HBase on Amazon EMR, it is good practice to enable the <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-ha.html">EMR Multimaster</a> feature that allows you to launch three EMR master nodes. This functionality allows the HBase cluster to tolerate impairments that might occur if a single master goes down. Please note that EMR on EC2 launches all the nodes of the cluster within the same Availability Zone, so this solution is not sufficient to create a robust setup for high available clusters. </p>
+<p>Nevertheless, this functionality is highly recommended both when using HDFS or Amazon S3 as storage layer. Enabling this, allows you to serve HBase requests (both writes and reads) in case of a master failure. Please note that if you launch the EMR cluster with a single master and this node is terminated for any reason, it will not be possible to recover any data from the HDFS storage of the cluster as the HDFS metadata will be lost after the termination of the EMR master.</p>
+<p>Moreover, it is also recommended to specify a SPREAD placement group strategy that places the master instances across separate underlying hardware to guard against the loss of multiple master nodes in the event of a hardware failure. For additional details see <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-ha-placementgroup.html">Amazon EMR integration with EC2 placement groups</a></p>
+<p>In terms of cluster scale in / out, it’s not recommended to enable the <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html">EMR Managed Scaling</a> or the <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-automatic-scaling.html">EMR scaling with custom policies</a> when using HBase. These features are designed to operate with YARN workloads, so they might cause data integrity issues if some nodes are terminated by the scaling policies. In case you need to scale your HBase cluster size, you can follow the below procedures: </p>
+<ul>
+<li>Scale Out - Use the EMR Web Console or API to increase the number of nodes. New nodes are automatically recognized once they join the cluster, and the HBase balancer will automatically spread regions across new nodes. </li>
+<li>Scale In - Disable the HBase tables and use the EMR Web Console or API to decrease the number of nodes in the cluster.</li>
+</ul>
+<h2 id="hbase-on-hdfs">HBase on HDFS<a class="headerlink" href="#hbase-on-hdfs" title="Permanent link">&para;</a></h2>
+<p>Within this section you can find additional information to secure your data when launching an Amazon EMR cluster using HDFS as storage layer. </p>
+<p>As best practice is recommended to launch the EMR cluster using at least 4 CORE nodes. When you launch an EMR cluster with at least 4 CORE nodes, the default HDFS replication factor will be automatically set to 2 by the EMR service. This prevents to lose data in case some CORE nodes get terminated. Please note that you cannot recover a HDFS block if all its replicas are lost (e.g. all CORE nodes containing a specific HDFS block and its replica are terminated). If you want a stronger guarantee about the availability of your data, launch the EMR cluster with at least 10 CORE nodes (this will set the default replication factor to 3), or manually specify the HDFS replication factor using the EMR Configuration API. </p>
+<p>If you specify the HDFS replication manually, please make sure to have a sufficient number of CORE nodes to allocate all the replica of your data. For more details see <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html">HDFS configuration</a> in the Amazon EMR documentation. </p>
+<h3 id="hbase-snapshots">HBase - Snapshots<a class="headerlink" href="#hbase-snapshots" title="Permanent link">&para;</a></h3>
+<p>HBase snapshots should be considered the first line of defense against data integrity issues that might cause a service disruption in your HBase cluster. To prevent any kind of data loss, is highly recommended to perform daily snapshots of your HBase tables. Please note that taking a snapshot of a table does not involve any data copy operation, so this operation doesn’t generate any additional data in your HDFS storage. 
+However, it is not recommended to maintain a high number of snapshots for a table, especially if its data change frequently. Modified regions that are used by old snapshots are preserved in the <strong>archive</strong> folder within the HBase root directory, so this can have a significant impact on the amount of data retained in the HDFS. </p>
+<p>Besides, please note that HBase snapshots are by default persisted in the same storage layer configured when launching the cluster (in this case HDFS), so they should not be considered a strong disaster recovery mechanism if you want to protect your data in case of a cluster termination. In this case, you can export the snapshots in an Amazon S3 bucket to persist all your data on a reliable storage layer.  </p>
+<p>Please note that periodic snapshots exports to S3 are recommended only if your tables have a small size (less than few TB) as an HBase export will copy all the data belonging to the snapshot in the S3 bucket using a Map Reduce job.
+For sample scripts and commands see the related examples in the <a href="../data_migration/">Data Migration</a> guide.</p>
+<p><strong>Additional Tips</strong></p>
+<ul>
+<li>Use a time identifier in the snapshot name that can help you identify when the snapshot was created. The creation time is also present in the snapshot metadata, but using this convention in the name can save some time while restoring an impaired cluster. </li>
+</ul>
+<h3 id="hbase-cluster-replication">HBase - Cluster Replication<a class="headerlink" href="#hbase-cluster-replication" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://hbase.apache.org/book.html#_cluster_replication">HBase cluster replication</a> allows you to keep one or more HBase clusters synchronized between each other. Depending on how you set up the replication and peering between the clusters you can achieve different configurations to establish both a Disaster Recovery or a Highly Available setup depending on your needs.  </p>
+<p>The following sections describe typical architectures that can be achieved with this feature.</p>
+<h4 id="active-active-architecture">Active - Active architecture<a class="headerlink" href="#active-active-architecture" title="Permanent link">&para;</a></h4>
+<p>This first approach describes a setup that is suitable to provide Highly Available clusters that can both serve read and write requests. In this case is required to set up a two-way replication peering between the Primary and Secondary cluster as described in the below figure. In this architecture both reads and writes will be routed across the two clusters by the Elastic Load Balancer and data written in a cluster will also be replicated in the other one. </p>
+<p><img alt="HBase - Cluster Replication" src="../img/hbase_replication_simple.png" title="HBase - Cluster Replication" /></p>
+<p>To setup this architecture you should performed the following steps: </p>
+<ul>
+<li>
+<p>Create two HBase clusters in different AWS Availability Zones</p>
+</li>
+<li>
+<p>Create an <a href="https://aws.amazon.com/elasticloadbalancing/">Elastic Load Balancer</a> using an <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html">EC2 Target Group</a> configured with the following specifications: </p>
+<ul>
+<li><strong>Target Type</strong>: IP addresses. EMR master IP for the Primary and Secondary cluster</li>
+<li><strong>Protocol</strong>: TCP</li>
+<li><strong>Port:</strong> 2181. Default port used by the Zookeeper service</li>
+</ul>
+</li>
+<li>
+<p>Establish a Two Way replication peering between the two clusters. To enable the replication, you can run the following commands on each master node. While running these commands, please make sure to replace <strong>MASTER_NODE_IP</strong> with the IP address of the other master node. For example, if running the commands on the Primary the <strong>MASTER_IP</strong> should be set with the Secondary IP address.</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">MASTER_IP</span><span class="o">=</span><span class="s2">&quot;MASTER_NODE_IP&quot;</span>
+<span class="nv">PEER_NAME</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span>
+
+<span class="c1">## Create peering with the destination cluster</span>
+<span class="nb">echo</span> <span class="s2">&quot;add_peer &#39;</span><span class="nv">$PEER_NAME</span><span class="s2">&#39;, CLUSTER_KEY =&gt; &#39;</span><span class="nv">$MASTER_IP</span><span class="s2">:2181:/hbase&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1">## List peers in the source cluster</span>
+<span class="nb">echo</span> <span class="s2">&quot;list_peers&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+</code></pre></div>
+
+<ul>
+<li>
+<p>Make sure the HBase tables you want to replicate are already available in both EMR clusters, If your tables need to be initialized with the same data use the HBase snapshots to make sure they contain the same data. </p>
+</li>
+<li>
+<p>Enable the table replication using the following snippet for each table you want to replicate on both clusters</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="c1">## Enable replication</span>
+<span class="nv">TABLE_NAME</span><span class="o">=</span><span class="s2">&quot;YOUR_TABLE_NAME&quot;</span>
+<span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;enable_table_replication &#39;</span><span class="nv">$TABLE_NAME</span><span class="s2">&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+</code></pre></div>
+
+<ul>
+<li>To leverage this setup, specify the Network Load Balancer endpoint in the <strong>hbase.zookeeper.quorum</strong> property used by your client applications. </li>
+</ul>
+<p>This setup can tolerate impairments of an Availability Zone within the same Region and provides the best performance if you need milliseconds / sub milliseconds responses from your clusters. Please note that by default the HBase replication is an asynchronous process executed in background, and replicates WAL data across the clusters for which the replication is enabled. This means that this feature does not guarantee strong consistency when reading data. So carefully evaluate if this meet your business needs.</p>
+<p>In case one of the two cluster is terminated or needs to be upgraded, you have to re-create the HBase peering for the new cluster and restore the table’s data and metadata in the new cluster.</p>
+<h4 id="active-passive-architecture">Active - Passive architecture<a class="headerlink" href="#active-passive-architecture" title="Permanent link">&para;</a></h4>
+<p>In a similar way as before, you can set up an Active / Passive architecture that can serve DR purposes. This can be useful if you want to have a backup cluster you can switch to in case of issues on the Primary one. The following picture highlights the overall architecture setup and components.</p>
+<p><img alt="HBase - Cluster Replication - OneWay" src="../img/hbase_replication_oneway.png" title="HBase - Cluster Replication - OneWay" /></p>
+<p>In order to implement the following architecture, you can perform the steps below: </p>
+<ul>
+<li>
+<p>Create two EMR clusters in separate Availability Zones</p>
+</li>
+<li>
+<p>Create a <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-creating.html">Route53 Private Hosted Zone</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html">create an A record</a> pointing to the EMR Master you want to act as Primary. If using the EMR Multi-Master feature, it is recommended to add all the 3 Master nodes in the record set</p>
+</li>
+<li>
+<p>Establish a One Way HBase replication from the EMR Primary to EMR Secondary to replicate data to the Secondary cluster. In this case, you can use the commands previously shared and execute them on the EMR Primary cluster only. </p>
+</li>
+<li>
+<p>Once done, specify the Route53 A record previously defined to route your client applications to the EMR Primary cluster. </p>
+</li>
+</ul>
+<p>This architecture serves mainly to implement a DR strategy for your HBase data. However, you can still leverage the Secondary cluster as a read replica of your data to reduce read requests on the Primary EMR Cluster. However, if you want to implement this scenario, please make sure that only client applications that have to perform READ operations (e.g. SCAN, GET) connect to the Secondary EMR cluster.</p>
+<p>In case of failures on the EMR Primary cluster, you’ll be able to route your client application traffic to the Secondary EMR cluster by changing the IP address in the A record defined in the Route55 Private Hosted Zone. Please note that your client applications might face some failures while the A record update takes place. </p>
+<h4 id="multi-region-architecture">Multi Region architecture<a class="headerlink" href="#multi-region-architecture" title="Permanent link">&para;</a></h4>
+<p>If you have a business requirement that requires to replicate HBase data in different AWS Regions, you can still leverage the HBase cluster replication feature to synchronize data between two clusters. The setup is very similar to what previously described, but requires to establish an inter-region <a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html">VPC peering</a> between the two AWS Regions, so that HBase clusters can exchange data between each other. An example multi region Active / Active setup is depicted in the below figure.</p>
+<p><img alt="HBase - Cluster Replication - Cross" src="../img/hbase_replication_cross.png" title="HBase - Cluster Replication - Cross" /></p>
+<h2 id="hbase-on-amazon-s3">HBase on Amazon S3<a class="headerlink" href="#hbase-on-amazon-s3" title="Permanent link">&para;</a></h2>
+<p>The following section provides architectures and best practices that you can use to implement Disaster Recovery (DR) strategies and Highly Available clusters when using Amazon S3 as storage layer for your HBase clusters.</p>
+<h3 id="storage-classes">Storage Classes<a class="headerlink" href="#storage-classes" title="Permanent link">&para;</a></h3>
+<p>When using Amazon S3 as storage layer for your HBase cluster, all the objects created in the bucket by HBase will be created using the default <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html">S3 Standard</a> storage class. In this case your data will be redundantly stored on a minimum of three Availability Zones within the same AWS Region. This ensures that your data is still available in your HBase cluster, either if there is an impairment in one Availability Zone. </p>
+<p>If you want to maintain this level of data availability in case of AZ failures, it is not recommended to set any <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html">S3 Lifecycle configuration</a> that might transition HBase files in a storage class that will reduce the internal S3 data replication (e.g. S3 One Zone-IA).</p>
+<p><strong>Additional Tips</strong></p>
+<ul>
+<li>Always use dedicated S3 Buckets for your HBase on S3 clusters. This minimize chances of API throttling in case other processes or applications (e.g. Spark ETL jobs) are also using the same HBase bucket. </li>
+</ul>
+<h3 id="hbase-snapshots_1">HBase - Snapshots<a class="headerlink" href="#hbase-snapshots_1" title="Permanent link">&para;</a></h3>
+<p>Although Amazon S3 already provides native functionalities to replicate objects across multiple Availability Zones, this doesn’t protect you in case of application issues that might corrupt your HBase data. </p>
+<p>In this case, is good practice to leverage HBase existing capabilities to create periodic snapshots of your tables so that you can recover / restore tables in case of HBase inconsistencies or similar data integrity issues. Apache HBase stores snapshot data (store files and metadata) in the <code>archive</code> and <code>.hbase-snapshot</code> folders within the HBase root path. When using Amazon S3 as storage layer, this data will be replicated across multiple Availability Zones as well, as their content will be stored by default in the S3 bucket.</p>
+<p>We recommend to create HBase snapshots using the same S3 bucket used while launching the cluster (default behavior). In this way, snapshots will leverage incremental capabilities during the snapshot creation thus minimizing the footprint of data stored in the bucket. Please note that exporting a HBase snapshot in a different S3 bucket or prefix, will force HBase to copy all data required by the snapshot. For this reason, if you manage large clusters (hundred of TB or PB data), it’s not recommended to export snapshots in different AWS Regions or S3 Buckets using this approach.</p>
+<h3 id="hbase-cluster-replication_1">HBase - Cluster Replication<a class="headerlink" href="#hbase-cluster-replication_1" title="Permanent link">&para;</a></h3>
+<p>As previously described in the HDFS section, the HBase Cluster Replication can be used to create a Highly Available cluster, or to implement different DR solutions depending on your business requirements.</p>
+<p>When using Amazon S3 as storage layer, it’s important to remember that two HBase clusters cannot share the same S3 root directory, when they both receive write requests, as this might lead to data inconsistencies. For this reason, you should always use separate buckets for each individual HBase cluster, or as alternative use different prefixes within the same S3 bucket. This latest solution however is not ideal as it might increase the chances to face S3 throttling issues. </p>
+<h3 id="amazon-emr-read-replica">Amazon EMR - Read Replica<a class="headerlink" href="#amazon-emr-read-replica" title="Permanent link">&para;</a></h3>
+<p>The EMR HBase Read Replica feature can be used to provide High Available reads for your HBase clusters using S3 as storage layer. Although this feature does not provide additional benefits for a DR recovery mechanism, it can still be useful to serve HBase read requests, in case you want to perform a Blue / Green deployment to modify a cluster configuration on the primary Amazon EMR cluster that requires the termination of the cluster (e.g. EMR release version upgrade)</p>
+<p>For additional details see <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hbase-s3.html#emr-hbase-s3-read-replica">Using a read-replica cluster</a> in the Amazon EMR documentation. </p>
+<h3 id="amazon-s3-object-replication">Amazon S3 - Object Replication<a class="headerlink" href="#amazon-s3-object-replication" title="Permanent link">&para;</a></h3>
+<p>If you want to replicate your HBase data on a backup region for DR purposes, you might leverage the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html">Amazon S3 Object Replication</a> feature. This can be used to replicate objects within the same AWS Region (Same-Region Replication) or in a different region (Cross-Region Replication). This approach can be used to implement a DR mechanism that allows you to launch a Secondary cluster in a different AWS Region in case you have an impairment in your Primary one. </p>
+<p>The overall architecture is described in the below figure.</p>
+<p><img alt="HBase - S3 Object Replication" src="../img/hbase_s3_replication.png" title="S3 Object Replication" /></p>
+<p>This architecture requires you to use a DNS mechanism (for example using Route 53 hosted zones) so that you can switch between the AWS Regions in case of failures. This approach requires the following components: </p>
+<ul>
+<li>Primary Amazon EMR cluster with his own dedicated S3 Bucket.</li>
+<li>Secondary Amazon EMR cluster that will only be launched in case of failures, with his own dedicated S3 bucket. The secondary cluster can be launched in the same AWS Region as the primary or in a different one depending on the requirements. </li>
+<li>Active S3 Replication between the Primary and the Secondary S3 buckets to replicate S3 objects </li>
+<li>A DNS setup that allows you to switch your HBase clients from the primary to the secondary in case of failures. For example this might be achieved using a <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html">Route 53 private hosted zones</a></li>
+</ul>
+<p>As previously described, the Secondary cluster should only be launched in case of an impairment in the Primary Region or Availability Zone failure. The cluster can be launched with the same configurations and sizes as the primary, but should point to a different S3 bucket. We also recommend to launch the secondary cluster using the Amazon EMR HBase read replica feature to be sure that no new data will be written on the secondary cluster. This prevent the secondary cluster to receive new data, but simplify the recovery after an impairment. </p>
+<p>In order to enable the S3 Object Replication, you should follow the steps below:</p>
+<ul>
+<li>Create two Amazon S3 buckets that will be respectively used to store production and replicated data. Make sure to enable the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html">Amazon S3 Versioning</a>, as this functionality is required to enable the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-what-is-isnot-replicated.html">S3 replication</a>. </li>
+<li>In the primary bucket, create a new S3 replication rule to replicate data generated by the primary cluster. You can follow the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-example-walkthroughs.html">example</a> in the Amazon S3 documentation to enable the replication in the bucket. While creating the replication rule, make sure to adhere the following best practices:<ul>
+<li>Enable the S3 Object Replication only for the HBase root prefix specified when launching the cluster. This help mitigating delay problems that might occur if you also have objects outside the HBase root prefix that should be replicated.</li>
+<li>Enable the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-walkthrough-5.html">Replication Time Control (RTC)</a>capabilities. This feature is designed to replicate 99.99% of objects within 15 minutes after upload. Enabling this feature will also automatically enable the S3 replication metrics that are review the pending replication objects. </li>
+<li>Enable the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/delete-marker-replication.html">Delete Marker Replication</a></li>
+</ul>
+</li>
+</ul>
+<p>Additionally, is also recommend to create a <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html">Lifecycle Rule</a> to delete expired object delete markers, incomplete multipart uploads, and non current version of files.</p>
+<p>This architecture serves mainly to implement a cost effective DR strategy for your HBase data as only one active cluster will be running. In case of failover, before switching to the secondary cluster, check the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-metrics.html">S3 replication metrics</a> to verify there are no pending objects to be replicated.</p>
+<p><strong>Additional Considerations</strong></p>
+<p>Amazon EMR implements internal features that prevents the clusters to be terminated in case of Availability Zone or service issues. If your primary cluster cannot be reached, you might want to launch another cluster pointing to the same Amazon S3 bucket in a different AZ. However, this might lead to inconsistencies in case your Primary HBase cluster is not terminated as you might end up in a situation where two active HBase clusters are pointing to the same S3 root bucket. For this reason, you might want to implement the following safety measures in case of service issues: </p>
+<ul>
+<li>If you only require to continue supporting HBase read operations, you can launch a backup cluster pointing to the same S3 root directory until we solve the problem. As alternative, if you’re not able to determine if your cluster instances are terminated (e.g. the failure also impact your ability to use the EC2 service) you might contact our Support to verify if the cluster was terminated to decide launching a new active cluster instead of just launch a HBase read replica. </li>
+<li>If you want to continue to support HBase write requests within the same Region, you’ll have to leverage a backup S3 bucket where data have been replicated using the S3 Object Replication or HBase cluster replication to avoid data inconsistencies if the Primary EMR cluster has not been yet terminated. As in the previous scenario, you can also contact our Support to determine if the Primary cluster was already terminated, but this might delay the recovery time. </li>
+</ul>
+<h3 id="hbase-wals">HBase WALs<a class="headerlink" href="#hbase-wals" title="Permanent link">&para;</a></h3>
+<p>When using Amazon S3 as storage layer, HBase still stores WALs on the local HDFS of the cluster. WALs are used internally by HBase to replay mutate operations in case of a region failure. Please note that every mutation request on HBase is first written on a WAL file, then in the HBase memstore and only after a Memstore flush this data will be persisted on S3. If the Amazon EMR cluster is terminated due to an incident, you might lose the latest data not yet persisted on S3. </p>
+<p>In this case is a good practice to leverage a persistent event store solution, like <a href="https://aws.amazon.com/msk/">Amazon MSK</a> or <a href="https://aws.amazon.com/kinesis/">Amazon Kinesis</a> to retain the latest ingested data, so that you’ll be able to replay any missing data from the moment of the service interruption. </p>
+<p>As alternative, you can configure your HBase cluster to store WALs on a persistent storage layer as an external HDFS cluster, or an <a href="https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html">Amazon EFS</a> filesystem. This last solution might increase the latency of your write operations on HBase so you might want to verify if this solution met your SLA requirements. To configure WALs on Amazon EFS you can use the procedure described <a href="https://github.com/aws-samples/aws-emr-utilities/tree/main/applications/hbase-wal-efs">here</a>. </p>
+<p>If you prefer to simply leverage another HDFS cluster, you can configure the new path using the following EMR Classification when launching your HBase Cluster. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;classification&quot;</span><span class="p">:</span> <span class="s2">&quot;hbase-site&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;hbase.wal.dir&quot;</span><span class="p">:</span> <span class="s2">&quot;hdfs://HDFS_MASTER_NODE:8020/PATH&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<p>Please note that the <strong>PATH</strong> used in the external HDFS cluster should be pre-created before launching the cluster and should be writable by the following user and group: <strong>hbase</strong>:<strong>hbase</strong>. Additionally, if your external HDFS cluster is secured with Kerberos authentication, you also need to configure your HBase cluster with Kerberos, and both clusters should leverage the same Kerberos REALM to be able to communicate between each other. For additional information, see <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-kerberos-options.html#emr-kerberos-extkdc-summary">External KDC</a> in the Amazon EMR documentation.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../best_practice_s3/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Best Practice for Amazon S3
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../data_migration/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Data Migration
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "search": "../../../assets/javascripts/workers/search.4fa0e4ee.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1d3bfcf1.min.js"></script>
+      
+    
+  </body>
+</html>

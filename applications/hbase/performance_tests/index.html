@@ -14,7 +14,7 @@
     
     
       
-        <title>Best Practices - EMR Best Practices Guides</title>
+        <title>Performance Tests - EMR Best Practices Guides</title>
       
     
     
@@ -59,7 +59,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#52-hive" class="md-skip">
+        <a href="#performance-tests" class="md-skip">
           Skip to content
         </a>
       
@@ -89,7 +89,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Best Practices
+              Performance Tests
             
           </span>
         </div>
@@ -498,14 +498,12 @@
             
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
       
       <label class="md-nav__link" for="__nav_6_2">
         5.2 Hive
@@ -523,8 +521,145 @@
   
   
     <li class="md-nav__item">
+      <a href="../../hive/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../introduction/" class="md-nav__link">
         Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice/" class="md-nav__link">
+        Best Practice
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
+        Best Practice for HDFS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_s3/" class="md-nav__link">
+        Best Practice for Amazon S3
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_integrity/" class="md-nav__link">
+        Data Integrity
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_migration/" class="md-nav__link">
+        Data Migration
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../management/" class="md-nav__link">
+        Management
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        Observability
       </a>
     </li>
   
@@ -545,12 +680,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Best Practices
+          Performance Tests
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Best Practices
+        Performance Tests
       </a>
       
         
@@ -568,8 +703,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#evaluation-framework" class="md-nav__link">
+    Evaluation Framework
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-tool" class="md-nav__link">
+    Performance Evaluation Tool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ycsb" class="md-nav__link">
+    YCSB
   </a>
   
 </li>
@@ -582,147 +731,12 @@
   
 
           
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" >
-      
-      <label class="md-nav__link" for="__nav_6_3">
-        5.3 HBase
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
-        <label class="md-nav__title" for="__nav_6_3">
-          <span class="md-nav__icon md-icon"></span>
-          5.3 HBase
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
             
   
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/introduction/" class="md-nav__link">
-        Introduction
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice/" class="md-nav__link">
-        Best Practice
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_hdfs/" class="md-nav__link">
-        Best Practice for HDFS
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_s3/" class="md-nav__link">
-        Best Practice for Amazon S3
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/data_integrity/" class="md-nav__link">
-        Data Integrity
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/data_migration/" class="md-nav__link">
-        Data Migration
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/management/" class="md-nav__link">
-        Management
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/observability/" class="md-nav__link">
-        Observability
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/performance_tests/" class="md-nav__link">
-        Performance Tests
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/security/" class="md-nav__link">
+      <a href="../security/" class="md-nav__link">
         Security
       </a>
     </li>
@@ -965,8 +979,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#evaluation-framework" class="md-nav__link">
+    Evaluation Framework
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-tool" class="md-nav__link">
+    Performance Evaluation Tool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ycsb" class="md-nav__link">
+    YCSB
   </a>
   
 </li>
@@ -983,73 +1011,75 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hive/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/performance_tests.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="52-hive"><strong> 5.2 - Hive </strong><a class="headerlink" href="#52-hive" title="Permanent link">&para;</a></h1>
-<h2 id="bp-521-upgrading-hive-metastore"><strong> BP 5.2.1  -  Upgrading Hive Metastore </strong><a class="headerlink" href="#bp-521-upgrading-hive-metastore" title="Permanent link">&para;</a></h2>
-<p>When upgrading from EMR 5.x (hive 2.x) to EMR 6.x (hive 3.x), hive metastore requires a schema upgrade to support changes and new features in Hive 3.x The following steps assumes hive metastore is running on Amazon RDS. Upgrading hive metastore is backwards compatible. Once hive metastore is upgraded, both hive 2x and hive 3.x clients/clusters can use the same hive metastore. </p>
-<p>1. Take a snapshot of current Hive Metastore on Amazon RDS</p>
-<p>2. Provision a new Amazon RDS with the snapshot that was created in step 1</p>
-<p>3. Provision target EMR 6.x version without configuring an external hive metastore</p>
-<p>4. SSH into EMR 6 cluster and update the below in hive-site.xml to point to new RDS from the previous step</p>
-<div class="codehilite"><pre><span></span><code>&quot;javax.jdo.option.ConnectionURL&quot;: &quot;jdbc:mysql://hostname:3306/hive?createDatabaseIfNotExist=true&quot;,
-&quot;javax.jdo.option.ConnectionDriverName&quot;: &quot;org.mariadb.jdbc.Driver&quot;,
-&quot;javax.jdo.option.ConnectionUserName&quot;: &quot;username&quot;,
-&quot;javax.jdo.option.ConnectionPassword&quot;: &quot;password&quot;
+                <h1 id="performance-tests">Performance Tests<a class="headerlink" href="#performance-tests" title="Permanent link">&para;</a></h1>
+<p>One of the most important operations to perform before start using an HBase cluster is to perform a stress test to verify if the provisioned infrastructure meets the requirements in terms of latency and throughput for your applications.</p>
+<p>In this section, we’re going to explore some tools that can help to validate the provisioned infrastructure in terms of performance. For optimal results, it’s recommended to setup a monitoring tool as described in the <a href="../observability/#monitoring-hbase">Observability</a> section to collect advanced metrics from the tests.</p>
+<h2 id="evaluation-framework">Evaluation Framework<a class="headerlink" href="#evaluation-framework" title="Permanent link">&para;</a></h2>
+<p>Typically, there are different aspects you want to check depending on how your cluster will be used. However, there are two major metrics that are important to define a baseline for the cluster performance: operation throughput (number of requests we can serve for a specific operation in a given period of time, e.g. GET) and operation latency (time required to acknowledge a client request). </p>
+<p>It’s very important to baseline these metrics in a production cluster. They will give you hints on when to scale nodes based on clients requests during the day, and they can suggest configuration tuning if it is not matching expected performance. </p>
+<p>Typically, you can perform a benchmark in an HBase cluster following the steps below: </p>
+<ul>
+<li>
+<p><strong>Write / data load</strong> This is always the first step in the process as you should populate some tables with mock data to perform read tests or simply to evaluate the maximum throughput you can achieve during write operations. For this test, it is important to mimic as much as possible the average payload size of the data that will be ingested in the cluster. This can help to evaluate the number of compactions performed with the ingested volume and see the performance degradation that you might expect during these operations. Besides, this will also give you an idea of the maximum number of write requests you can serve with the specified cluster topology. </p>
+</li>
+<li>
+<p><strong>Read / latency / cache</strong> This is the next step to define our baseline. The major aim of this test should be to verify the max throughput that the cluster can serve and understand how well you are leveraging the HBase cache to improve response latency. </p>
+</li>
+</ul>
+<p>As best practice for running these tests, you can follow the following rules:</p>
+<ul>
+<li>
+<p>Separate the clients from the HBase cluster. The goal is to collect metrics without having to care about resources used in our cluster. So as best practice, you should run your client fleet on a separate cluster.</p>
+</li>
+<li>
+<p>If your clients are on a separate cluster, make sure that your fleet is co-located on the same subnet of the cluster. This will improve response latency and avoid extra costs you might incur for data trasfer across Availability Zones. </p>
+</li>
+<li>
+<p>Use <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-configure-apps.html">EMR Configurations</a> defined as JSON files that are stored on an Amazon S3 bucket to launch your test clusters. This will help you to more easily export configurations used in your QA environment to production. Moreover, it will be easier to track specific configurations used in a test cluster, rather than setting them manually while launching the cluster.</p>
+</li>
+</ul>
+<p>The following section describes some tools that can be used to baseline an HBase cluster. </p>
+<h2 id="performance-evaluation-tool">Performance Evaluation Tool<a class="headerlink" href="#performance-evaluation-tool" title="Permanent link">&para;</a></h2>
+<p>The first tool we’re going to use is the HBase Performance Evaluation utility that is already available in your Amazon EMR cluster. This utility can be invoked using the following syntax from the EMR master node:</p>
+<div class="codehilite"><pre><span></span><code>hbase pe &lt;OPTIONS&gt; &lt;command&gt; &lt;nclients&gt;
 </code></pre></div>
 
-<p>5.  Run the following to check current hms schema version:</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
+<p>The tool allow us to perform both write and read operations specifying different options to control several aspects of our tests (e.g. create a partitioned table, disable WAL flush, etc.) </p>
+<p>For example, the following command allows us to create a table called <em>MyWriteTest</em> that will be pre-partitioned with 200 regions (--presplit) and we’re going to write 2GB (--size) of data using a single client. We also enable the <em>latency</em> parameter to report operation latencies that help us to identify if the response time met our requirements. </p>
+<div class="codehilite"><pre><span></span><code>hbase pe --table<span class="o">=</span>MyWriteTest --presplit<span class="o">=</span><span class="m">200</span> --size<span class="o">=</span><span class="m">2</span> --latency --nomapred randomWrite <span class="m">1</span>
 </code></pre></div>
 
-<p>You should see the below. Make note of the current metastore schema version (2.3.0 in this case)</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:              3.1.0
-Metastore schema version:          2.3.0
-org.apache.hadoop.hive.metastore.HiveMetaException: Metastore schema version is not compatible. Hive Version: 3.1.0, Database Schema Version: 2.3.0
-Use --verbose for detailed stacktrace.
-*** schemaTool failed \***
+<p>As described in the <a href="../observability/#logs">Log</a> section, the log output will be stored in the <strong>/var/log/hbase/hbase.log</strong> file. Please make sure to run the previous command as <strong>hbase</strong> user, or you’ll not have the permissions to modify this file using the standard <strong>hadoop</strong> user. The following shows a sample output for the previous command: </p>
+<div class="codehilite"><pre><span></span><code><span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">Latency</span> <span class="p">(</span><span class="n">us</span><span class="p">)</span> <span class="o">:</span> <span class="n">mean</span><span class="o">=</span><span class="mf">21.45</span><span class="p">,</span> <span class="n">min</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">max</span><span class="o">=</span><span class="mf">480941.00</span><span class="p">,</span> <span class="n">stdDev</span><span class="o">=</span><span class="mf">992.53</span><span class="p">,</span> <span class="mi">50</span><span class="n">th</span><span class="o">=</span><span class="mf">2.00</span><span class="p">,</span> <span class="mi">75</span><span class="n">th</span><span class="o">=</span><span class="mf">2.00</span><span class="p">,</span> <span class="mi">95</span><span class="n">th</span><span class="o">=</span><span class="mf">2.00</span><span class="p">,</span> <span class="mi">99</span><span class="n">th</span><span class="o">=</span><span class="mf">3.00</span><span class="p">,</span> <span class="mf">99.9</span><span class="n">th</span><span class="o">=</span><span class="mf">24.00</span><span class="p">,</span> <span class="mf">99.99</span><span class="n">th</span><span class="o">=</span><span class="mf">37550.00</span><span class="p">,</span> <span class="mf">99.999</span><span class="n">th</span><span class="o">=</span><span class="mf">46364.23</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">Num</span> <span class="n">measures</span> <span class="p">(</span><span class="n">latency</span><span class="p">)</span> <span class="o">:</span> <span class="mi">2097151</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">Mean</span> <span class="o">=</span> <span class="mf">21.45</span>
+<span class="p">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">No</span> <span class="n">valueSize</span> <span class="n">statistics</span> <span class="n">available</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">Finished</span> <span class="k">class</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">PerformanceEvaluation$RandomWriteTest</span> <span class="k">in</span> <span class="mi">42448</span><span class="n">ms</span> <span class="n">at</span> <span class="n">offset</span> <span class="mi">0</span> <span class="k">for</span> <span class="mi">2097152</span> <span class="n">rows</span> <span class="p">(</span><span class="mf">48.62</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span><span class="p">)</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">TestClient</span><span class="mi">-0</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="n">Finished</span> <span class="n">TestClient</span><span class="mi">-0</span> <span class="k">in</span> <span class="mi">42448</span><span class="n">ms</span> <span class="n">over</span> <span class="mi">2097152</span> <span class="n">rows</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="p">[</span><span class="n">RandomWriteTest</span><span class="p">]</span> <span class="n">Summary</span> <span class="n">of</span> <span class="n">timings</span> <span class="p">(</span><span class="n">ms</span><span class="p">)</span><span class="o">:</span> <span class="p">[</span><span class="mi">42448</span><span class="p">]</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="p">[</span><span class="n">RandomWriteTest</span> <span class="n">duration</span> <span class="p">]</span> <span class="nl">Min</span><span class="p">:</span> <span class="mi">42448</span><span class="n">ms</span> <span class="nl">Max</span><span class="p">:</span> <span class="mi">42448</span><span class="n">ms</span> <span class="nl">Avg</span><span class="p">:</span> <span class="mi">42448</span><span class="n">ms</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="p">[</span> <span class="n">Avg</span> <span class="n">latency</span> <span class="p">(</span><span class="n">us</span><span class="p">)]</span> <span class="mi">21</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span> <span class="n">hbase</span><span class="p">.</span><span class="nl">PerformanceEvaluation</span><span class="p">:</span> <span class="p">[</span> <span class="n">Avg</span> <span class="n">TPS</span><span class="o">/</span><span class="n">QPS</span><span class="p">]</span> <span class="mi">49405</span> <span class="n">row</span> <span class="n">per</span> <span class="n">second</span>
 </code></pre></div>
 
-<p>6. Change directory to the hive metastore upgrade scripts location</p>
-<div class="codehilite"><pre><span></span><code>cd /usr/lib/hive/scripts/metastore/upgrade/mysql
+<p>As you can see this will report min, max and avg response latency for our write requests, along with throughput information about the max number of calls served by the cluster. Please note that in our example we used the <em>nomapred</em> parameter that will use a local thread to perform the test (in this case client resides on the EMR master node).</p>
+<p>If we want to generate a higher number of requests is better to remove this option, so that the utility will use a Map Reduce (MR) job to perform the test. In this last scenario, it might be convenient to run the MR job on a separate cluster, to avoid using resources (cpu, network bandwidth) from our HBase cluster and gather more realistic results. </p>
+<p>For example, the same tests can performed from a separate EMR cluster adding the following parameter: <strong>-Dhbase.zookeeper.quorum=TARGET_HBASE_MASTER_DNS</strong>, and replacing TARGET_HBASE_MASTER_DNS with the EMR master hostname we want to test.</p>
+<div class="codehilite"><pre><span></span><code>hbase pe -Dhbase.zookeeper.quorum<span class="o">=</span>ip-xxx-xx-x-xxx.compute.internal --table<span class="o">=</span>MyWriteTestTwo --presplit<span class="o">=</span><span class="m">200</span> --size<span class="o">=</span><span class="m">2</span> --latency  randomWrite <span class="m">1</span>
 </code></pre></div>
 
-<p>Doing these steps on EMR 6.x is required because you need need the target hive distribution version (hive 3.1) and the upgrade scripts inorder to ugprade the schema.</p>
-<p>7. Connect to mysql using below command and upgrade the schema as per the hive version. For example, if you are upgrading from 2.3.0 to 3.1.0, you would need to source the 2 scripts. Scripts can also be found in this location: <a href="https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql">https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span><span class="o">&lt;</span><span class="n">HIVEUSER</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">h</span><span class="o">&lt;</span><span class="n">ENDPOINT</span><span class="o">-</span><span class="n">RDS</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">p</span><span class="s">&#39;PASSWORD&#39;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">use</span> <span class="n">hive</span><span class="p">;</span> 
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">2.3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.1</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-</code></pre></div>
-
-<p>8. Verify the upgrade was succesful </p>
-<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">schematool</span> <span class="o">-</span><span class="n">dbType</span> <span class="n">mysql</span> <span class="o">-</span><span class="n">info</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">URL</span><span class="p">:</span>    <span class="n">jdbc</span><span class="p">:</span><span class="n">mysql</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="p">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">hive</span><span class="err">?</span><span class="n">createDatabaseIfNotExist</span><span class="o">=</span><span class="bp">true</span>
-<span class="n">Metastore</span> <span class="n">Connection</span> <span class="n">Driver</span> <span class="p">:</span>    <span class="n">org</span><span class="o">.</span><span class="n">mariadb</span><span class="o">.</span><span class="n">jdbc</span><span class="o">.</span><span class="n">Driver</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">User</span><span class="p">:</span>   <span class="n">admin</span>
-<span class="n">Hive</span> <span class="n">distribution</span> <span class="n">version</span><span class="p">:</span>   <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">Metastore</span> <span class="n">schema</span> <span class="n">version</span><span class="p">:</span>    <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">schemaTool</span> <span class="n">completed</span>
-</code></pre></div>
-
-<p>9. After all commands are run, terminate the cluster.</p>
-<p>10. Further validation:
-Provision new 5.x and 6.x cluster with updated hive-site.xml that points to new RDS. In both version, you can run</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
-</code></pre></div>
-
-<p>In 5.x you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         2.3.0
-Metastore schema version:          3.1.0
-</code></pre></div>
-
-<p>and in 6.x, you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         3.1.0
-Metastore schema version:          3.1.0
-</code></pre></div>
+<p>In the same way we can perform Read test operations. For a detailed list of all options and tests available in the utility, please check the help section of the tool from ther command line. </p>
+<h2 id="ycsb">YCSB<a class="headerlink" href="#ycsb" title="Permanent link">&para;</a></h2>
+<p>Another popular tool to benchmark your HBase cluster is <a href="https://github.com/brianfrankcooper/YCSB">YCSB</a> (Yahoo Cloud Serving Benchmark). This utility is not available on Amazon EMR, so it should be manually installed on the EMR master itself, or on a separate EC2 instance. </p>
+<p>This tool, unlike the previous one, is more focused on testing workloads patterns. In fact, in doesn’t provide several options as the HBase PE utility, but allows you to define different types of workloads (typically called workload A,B,C,D, etc.) where you can mix different volumes of write/read/mutate operations, along with sizes of the data that are going to be read or modified. </p>
+<p>By default, the tool comes with pre-defined templates to tests some standard workloads patterns. For example, <a href="https://github.com/brianfrankcooper/YCSB/blob/master/workloads/workloada">workload A</a> performs 50% of read operations and 50% of update operations using 1KB payloads for each row.</p>
+<p>This tool is especially useful, when you know exactly your workloads patterns, and you want to simulate more realistic use cases. However, please note that the tool can only launch multithreaded clients on the same node. So if you have a large cluster that you want to test, you’ll have to configure a fleet of EC2 instances and run the clients from each node using some automation scripts.</p>
                 
               
               
@@ -1068,7 +1098,7 @@ Metastore schema version:          3.1.0
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../introduction/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../observability/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1077,19 +1107,19 @@ Metastore schema version:          3.1.0
               <span class="md-footer__direction">
                 Previous
               </span>
-              Introduction
+              Observability
             </div>
           </div>
         </a>
       
       
-        <a href="../../hbase/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../security/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Security
             </div>
           </div>
           <div class="md-footer__button md-icon">

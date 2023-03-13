@@ -14,7 +14,7 @@
     
     
       
-        <title>Best Practices - EMR Best Practices Guides</title>
+        <title>Management - EMR Best Practices Guides</title>
       
     
     
@@ -59,7 +59,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#52-hive" class="md-skip">
+        <a href="#management" class="md-skip">
           Skip to content
         </a>
       
@@ -89,7 +89,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Best Practices
+              Management
             
           </span>
         </div>
@@ -498,14 +498,12 @@
             
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
       
       <label class="md-nav__link" for="__nav_6_2">
         5.2 Hive
@@ -523,8 +521,121 @@
   
   
     <li class="md-nav__item">
+      <a href="../../hive/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../introduction/" class="md-nav__link">
         Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice/" class="md-nav__link">
+        Best Practice
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
+        Best Practice for HDFS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_s3/" class="md-nav__link">
+        Best Practice for Amazon S3
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_integrity/" class="md-nav__link">
+        Data Integrity
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_migration/" class="md-nav__link">
+        Data Migration
       </a>
     </li>
   
@@ -545,12 +656,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Best Practices
+          Management
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Best Practices
+        Management
       </a>
       
         
@@ -568,8 +679,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#create-command-alias" class="md-nav__link">
+    Create command alias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#determine-average-row-size" class="md-nav__link">
+    Determine average row size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reduce-number-of-regions" class="md-nav__link">
+    Reduce number of Regions
   </a>
   
 </li>
@@ -582,123 +707,12 @@
   
 
           
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" >
-      
-      <label class="md-nav__link" for="__nav_6_3">
-        5.3 HBase
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
-        <label class="md-nav__title" for="__nav_6_3">
-          <span class="md-nav__icon md-icon"></span>
-          5.3 HBase
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
             
   
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/introduction/" class="md-nav__link">
-        Introduction
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice/" class="md-nav__link">
-        Best Practice
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_hdfs/" class="md-nav__link">
-        Best Practice for HDFS
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/best_practice_s3/" class="md-nav__link">
-        Best Practice for Amazon S3
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/data_integrity/" class="md-nav__link">
-        Data Integrity
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/data_migration/" class="md-nav__link">
-        Data Migration
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/management/" class="md-nav__link">
-        Management
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../hbase/observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         Observability
       </a>
     </li>
@@ -710,7 +724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/performance_tests/" class="md-nav__link">
+      <a href="../performance_tests/" class="md-nav__link">
         Performance Tests
       </a>
     </li>
@@ -722,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hbase/security/" class="md-nav__link">
+      <a href="../security/" class="md-nav__link">
         Security
       </a>
     </li>
@@ -965,8 +979,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bp-521-upgrading-hive-metastore" class="md-nav__link">
-    BP 5.2.1  -  Upgrading Hive Metastore
+  <a href="#create-command-alias" class="md-nav__link">
+    Create command alias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#determine-average-row-size" class="md-nav__link">
+    Determine average row size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reduce-number-of-regions" class="md-nav__link">
+    Reduce number of Regions
   </a>
   
 </li>
@@ -983,73 +1011,50 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hive/best_practices.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/management.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="52-hive"><strong> 5.2 - Hive </strong><a class="headerlink" href="#52-hive" title="Permanent link">&para;</a></h1>
-<h2 id="bp-521-upgrading-hive-metastore"><strong> BP 5.2.1  -  Upgrading Hive Metastore </strong><a class="headerlink" href="#bp-521-upgrading-hive-metastore" title="Permanent link">&para;</a></h2>
-<p>When upgrading from EMR 5.x (hive 2.x) to EMR 6.x (hive 3.x), hive metastore requires a schema upgrade to support changes and new features in Hive 3.x The following steps assumes hive metastore is running on Amazon RDS. Upgrading hive metastore is backwards compatible. Once hive metastore is upgraded, both hive 2x and hive 3.x clients/clusters can use the same hive metastore. </p>
-<p>1. Take a snapshot of current Hive Metastore on Amazon RDS</p>
-<p>2. Provision a new Amazon RDS with the snapshot that was created in step 1</p>
-<p>3. Provision target EMR 6.x version without configuring an external hive metastore</p>
-<p>4. SSH into EMR 6 cluster and update the below in hive-site.xml to point to new RDS from the previous step</p>
-<div class="codehilite"><pre><span></span><code>&quot;javax.jdo.option.ConnectionURL&quot;: &quot;jdbc:mysql://hostname:3306/hive?createDatabaseIfNotExist=true&quot;,
-&quot;javax.jdo.option.ConnectionDriverName&quot;: &quot;org.mariadb.jdbc.Driver&quot;,
-&quot;javax.jdo.option.ConnectionUserName&quot;: &quot;username&quot;,
-&quot;javax.jdo.option.ConnectionPassword&quot;: &quot;password&quot;
+                <h1 id="management">Management<a class="headerlink" href="#management" title="Permanent link">&para;</a></h1>
+<p>This section highlights some commands and best practices, that can help you to manage your HBase clusters on Amazon EMR. </p>
+<h2 id="create-command-alias">Create command alias<a class="headerlink" href="#create-command-alias" title="Permanent link">&para;</a></h2>
+<p>If you administrate your HBase cluster mainly from the shell of the EMR master, it might be convenient to define a command alias to avoid permission issues you might incur by typing erroneous commands using a different user (e.g. root). </p>
+<p>As best practice, you should always run HBase commands as <code>hbase</code> user. In order to do that, you can add the following alias in the <code>~/.bashrc</code> profile for the user that you use to administrate your cluster (e.g. hadoop)</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">alias</span> <span class="nv">hbase</span><span class="o">=</span><span class="s1">&#39;sudo -u hbase hbase&#39;</span>
 </code></pre></div>
 
-<p>5.  Run the following to check current hms schema version:</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
+<p>Once done, you can safely run HBase commands as usual</p>
+<div class="codehilite"><pre><span></span><code>hbase shell
 </code></pre></div>
 
-<p>You should see the below. Make note of the current metastore schema version (2.3.0 in this case)</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:              3.1.0
-Metastore schema version:          2.3.0
-org.apache.hadoop.hive.metastore.HiveMetaException: Metastore schema version is not compatible. Hive Version: 3.1.0, Database Schema Version: 2.3.0
-Use --verbose for detailed stacktrace.
-*** schemaTool failed \***
+<h2 id="determine-average-row-size">Determine average row size<a class="headerlink" href="#determine-average-row-size" title="Permanent link">&para;</a></h2>
+<p>If you want to determine the average size of a row stored in a HBase table, you can use the following commands to retrieve the payload from a storefile of the table. For example: </p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Simple notation</span>
+hbase hfile -m -f <span class="nv">$HBASE_PATH</span>
+
+<span class="c1"># Extended notation</span>
+hbase org.apache.hadoop.hbase.io.hfile.HFile -m -f <span class="nv">$HBASE_PATH</span>
 </code></pre></div>
 
-<p>6. Change directory to the hive metastore upgrade scripts location</p>
-<div class="codehilite"><pre><span></span><code>cd /usr/lib/hive/scripts/metastore/upgrade/mysql
+<p><img alt="Average Payload Size" src="../img/management_avg_payload.png" title="Average Payload Size" /></p>
+<p>The class <code>org.apache.hadoop.hbase.io.hfile.HFile</code> allows you to analyze HBase store files that are persisted on HDFS or S3. The option <code>-m</code> returns the metadata for the file analyzed that reports the average size (bytes) of the Row Key in that particular file, and the average size (bytes) of the values stored in that file. </p>
+<p>To get a rough estimation of the average payload of a single row, you can sum the parameters <strong>avgKeyLen</strong> and <strong>avgValueLen</strong> that are returned in the previous command, to get the average size in bytes of a row. For example: </p>
+<div class="codehilite"><pre><span></span><code># row_avg_size = avgKeyLen + avgValueLen
+row_avg_size = 19 + 7 = 26
 </code></pre></div>
 
-<p>Doing these steps on EMR 6.x is required because you need need the target hive distribution version (hive 3.1) and the upgrade scripts inorder to ugprade the schema.</p>
-<p>7. Connect to mysql using below command and upgrade the schema as per the hive version. For example, if you are upgrading from 2.3.0 to 3.1.0, you would need to source the 2 scripts. Scripts can also be found in this location: <a href="https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql">https://github.com/apache/hive/tree/master/standalone-metastore/metastore-server/src/main/sql/mysql</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span><span class="o">&lt;</span><span class="n">HIVEUSER</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">h</span><span class="o">&lt;</span><span class="n">ENDPOINT</span><span class="o">-</span><span class="n">RDS</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">p</span><span class="s">&#39;PASSWORD&#39;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">use</span> <span class="n">hive</span><span class="p">;</span> 
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">2.3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
-<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="n">upgrade</span><span class="o">-</span><span class="mf">3.0</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="mf">3.1</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="n">mysql</span><span class="p">.</span><span class="n">sql</span><span class="p">;</span>
+<p>This command might be useful to get a rough estimate of your data payload when you are not sure about it. You can later on use this value to fine-tuning your cluster (e.g. <a href="../best_practice/#hbase-rpc-listeners">increase/decrease RPC Listeners</a>)</p>
+<h2 id="reduce-number-of-regions">Reduce number of Regions<a class="headerlink" href="#reduce-number-of-regions" title="Permanent link">&para;</a></h2>
+<p>The HBase community introduced a new utility in the <a href="https://github.com/apache/hbase-operator-tools/blob/master/hbase-tools/">hbase-tools</a> package that helps to reduce the number of regions for tables stored in HBase. This utility is available in the class <code>org.apache.hbase.RegionsMerger</code> and can help you to automatically merge the number of regions to a value that you define, if you have a high count in your cluster (e.g. wrong table pre-split, or high split rate due to incorrect settings) </p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># copy library in classpath</span>
+sudo cp /usr/lib/hbase-operator-tools/hbase-tools-*.jar /usr/lib/hbase/lib/
+
+<span class="c1"># merge regions</span>
+hbase org.apache.hbase.RegionsMerger &lt;TABLE_NAME&gt; &lt;TARGET_NUMBER_OF_REGIONS&gt;
 </code></pre></div>
 
-<p>8. Verify the upgrade was succesful </p>
-<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">schematool</span> <span class="o">-</span><span class="n">dbType</span> <span class="n">mysql</span> <span class="o">-</span><span class="n">info</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">URL</span><span class="p">:</span>    <span class="n">jdbc</span><span class="p">:</span><span class="n">mysql</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="p">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">hive</span><span class="err">?</span><span class="n">createDatabaseIfNotExist</span><span class="o">=</span><span class="bp">true</span>
-<span class="n">Metastore</span> <span class="n">Connection</span> <span class="n">Driver</span> <span class="p">:</span>    <span class="n">org</span><span class="o">.</span><span class="n">mariadb</span><span class="o">.</span><span class="n">jdbc</span><span class="o">.</span><span class="n">Driver</span>
-<span class="n">Metastore</span> <span class="n">connection</span> <span class="n">User</span><span class="p">:</span>   <span class="n">admin</span>
-<span class="n">Hive</span> <span class="n">distribution</span> <span class="n">version</span><span class="p">:</span>   <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">Metastore</span> <span class="n">schema</span> <span class="n">version</span><span class="p">:</span>    <span class="mf">3.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">schemaTool</span> <span class="n">completed</span>
-</code></pre></div>
-
-<p>9. After all commands are run, terminate the cluster.</p>
-<p>10. Further validation:
-Provision new 5.x and 6.x cluster with updated hive-site.xml that points to new RDS. In both version, you can run</p>
-<div class="codehilite"><pre><span></span><code>hive --service schemaTool -dbType mysql -info
-</code></pre></div>
-
-<p>In 5.x you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         2.3.0
-Metastore schema version:          3.1.0
-</code></pre></div>
-
-<p>and in 6.x, you'll see</p>
-<div class="codehilite"><pre><span></span><code>Hive distribution version:         3.1.0
-Metastore schema version:          3.1.0
-</code></pre></div>
+<p>This tool is available in HBase versions &gt;= 2.x.x and should only be used with these versions. </p>
                 
               
               
@@ -1068,7 +1073,7 @@ Metastore schema version:          3.1.0
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../introduction/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../data_migration/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1077,19 +1082,19 @@ Metastore schema version:          3.1.0
               <span class="md-footer__direction">
                 Previous
               </span>
-              Introduction
+              Data Migration
             </div>
           </div>
         </a>
       
       
-        <a href="../../hbase/introduction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../observability/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Observability
             </div>
           </div>
           <div class="md-footer__button md-icon">

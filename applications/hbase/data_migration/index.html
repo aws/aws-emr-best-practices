@@ -1,0 +1,1405 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-7.1.4">
+    
+    
+      
+        <title>Data Migration - EMR Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bde7dde4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ef6f36e2.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-migration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Migration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/aws/aws-emr-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EMR Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws/aws-emr-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        1 - Cost Optimizations
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="1 - Cost Optimizations" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1 - Cost Optimizations
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost_optimization/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost_optimization/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        2 - Reliability
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="2 - Reliability" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2 - Reliability
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reliability/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reliability/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        3 - Security
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="3 - Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3 - Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        4 - Features
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="4 - Features" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4 - Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/managed_scaling/best_practices/" class="md-nav__link">
+        4.1 - Managed Scaling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/spot_usage/best_practices/" class="md-nav__link">
+        4.2 - Spot Usage
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      <label class="md-nav__link" for="__nav_6">
+        5 - Applications
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5 - Applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5 - Applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" >
+      
+      <label class="md-nav__link" for="__nav_6_1">
+        5.1 Spark
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.1 Spark" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          5.1 Spark
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spark/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spark/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_2" type="checkbox" id="__nav_6_2" >
+      
+      <label class="md-nav__link" for="__nav_6_2">
+        5.2 Hive
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.2 Hive" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          5.2 Hive
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hive/best_practices/" class="md-nav__link">
+        Best Practices
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_3" type="checkbox" id="__nav_6_3" checked>
+      
+      <label class="md-nav__link" for="__nav_6_3">
+        5.3 HBase
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="5.3 HBase" data-md-level="2">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          5.3 HBase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice/" class="md-nav__link">
+        Best Practice
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_hdfs/" class="md-nav__link">
+        Best Practice for HDFS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best_practice_s3/" class="md-nav__link">
+        Best Practice for Amazon S3
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_integrity/" class="md-nav__link">
+        Data Integrity
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Data Migration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Data Migration
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-snapshots" class="md-nav__link">
+    HBase snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-with-incremental-export" class="md-nav__link">
+    Snapshots with Incremental Export
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-with-hbase-replication" class="md-nav__link">
+    Snapshots with HBase Replication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrate-hbase-1x-to-hbase-2x" class="md-nav__link">
+    Migrate HBase 1.x to HBase 2.x
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrate HBase 1.x to HBase 2.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-using-hdfs" class="md-nav__link">
+    When using HDFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-using-amazon-s3" class="md-nav__link">
+    When using Amazon S3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../management/" class="md-nav__link">
+        Management
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        Observability
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance_tests/" class="md-nav__link">
+        Performance Tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        6 - Architecture
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="6 - Architecture" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          6 - Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_1" type="checkbox" id="__nav_7_1" >
+      
+      <label class="md-nav__link" for="__nav_7_1">
+        Batch
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Batch" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_1">
+          <span class="md-nav__icon md-icon"></span>
+          Batch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/batch/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_2" type="checkbox" id="__nav_7_2" >
+      
+      <label class="md-nav__link" for="__nav_7_2">
+        Ad Hoc
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ad Hoc" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ad Hoc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/adhoc/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/adhoc/architecture/" class="md-nav__link">
+        Architecture
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_3" type="checkbox" id="__nav_7_3" >
+      
+      <label class="md-nav__link" for="__nav_7_3">
+        Notebooks
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notebooks" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          Notebooks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/notebooks/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_4" type="checkbox" id="__nav_7_4" >
+      
+      <label class="md-nav__link" for="__nav_7_4">
+        Datalake Storage
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Datalake Storage" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_4">
+          <span class="md-nav__icon md-icon"></span>
+          Datalake Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/datalake_storage/introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hbase-snapshots" class="md-nav__link">
+    HBase snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-with-incremental-export" class="md-nav__link">
+    Snapshots with Incremental Export
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-with-hbase-replication" class="md-nav__link">
+    Snapshots with HBase Replication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrate-hbase-1x-to-hbase-2x" class="md-nav__link">
+    Migrate HBase 1.x to HBase 2.x
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrate HBase 1.x to HBase 2.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-using-hdfs" class="md-nav__link">
+    When using HDFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-using-amazon-s3" class="md-nav__link">
+    When using Amazon S3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/hbase/data_migration.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="data-migration">Data Migration<a class="headerlink" href="#data-migration" title="Permanent link">&para;</a></h1>
+<p>This document describes possible migrations paths you can follow when migrating data from an existing HBase cluster (e.g. on premise, or self-managed cluster on EC2) to Amazon EMR.</p>
+<h2 id="hbase-snapshots">HBase snapshots<a class="headerlink" href="#hbase-snapshots" title="Permanent link">&para;</a></h2>
+<p>This is the most straight forward approach that doesn't require a complex setup and can easily be achieved using simple bash scripts. This approach is suitable if your data does not change frequently or when you can tolerate downtimes in your production systems to perform the data migration.</p>
+<p>Below a list of steps that can be used to create a HBase Snapshot and transfer it to an Amazon S3 bucket. Please note that you can use the same approach to store snapshots on an HDFS cluster. If this is the case, replace the S3 target path in the following commands with the destination HDFS path (e.g. hdfs://NN_TARGET:8020/user/hbase) where you want to store the snapshots.</p>
+<p><strong>Create a snapshot of a single HBase table</strong></p>
+<p>When creating a snapshot, it’s good practice to also add an identifier in the snapshot name to have a reference date of when the snapshot was created. Before launching this command please replace the variable <code>TABLE_NAME</code> with the corresponding table you want to generate the snapshot for. If the table is in a namespace different from <code>default</code> use the following convention <code>NAMESPACE:TABLE_NAME</code>. From the SOURCE cluster submit the following commands:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span>date +<span class="s2">&quot;%Y%m%d&quot;</span><span class="sb">`</span>
+<span class="nv">TABLE_NAME</span><span class="o">=</span><span class="s2">&quot;YOUR_TABLE_NAME&quot;</span>
+hbase snapshot create -n <span class="s2">&quot;</span><span class="si">${</span><span class="nv">TABLE_NAME</span><span class="p">/:/_</span><span class="si">}</span><span class="s2">-</span><span class="nv">$DATE</span><span class="s2">&quot;</span> -t <span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span>
+</code></pre></div>
+
+<p>To verify the snapshot just created, use the following command</p>
+<div class="codehilite"><pre><span></span><code>hbase snapshot info -list-snapshots
+</code></pre></div>
+
+<p><strong>Copy the snapshot to an Amazon S3 bucket</strong></p>
+<p><strong>Note</strong>
+When migrating from an on premise cluster, make sure that you have Hadoop YARN installed in your cluster, as the commands rely on MR jobs to perform the copy to S3. Besides, you need to make sure that your Hadoop installation provides the <a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html">hadoop-aws</a> module that is required to communicate with Amazon S3.</p>
+<p><strong>Note</strong> If you're planning to use HBase with Amazon S3 as storage layer, you should use as <code>TARGET_BUCKET</code> the same S3 path that will be used as HBase S3 Root Directory while launching the EMR cluster. This minimize copies on S3 that are required when restoring the snapshots, thus reducing the restore time of your tables. To avoid any conflict during the snapshot copy, you should not start the EMR cluster (if using Amazon S3 as storage layer) before the end of the snapshot copy.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">TARGET_BUCKET</span><span class="o">=</span><span class="s2">&quot;s3://BUCKET/PREFIX/&quot;</span>
+hbase snapshot <span class="nb">export</span> -snapshot <span class="si">${</span><span class="nv">TABLE_NAME</span><span class="p">/:/_</span><span class="si">}</span>-<span class="nv">$DATE</span> -copy-to <span class="nv">$TARGET_BUCKET</span>
+</code></pre></div>
+
+<p><strong>Restore Table when using Amazon S3 as storage layer for HBase</strong> </p>
+<p>If you followed the notes in the previous step, you'll find the snapshot already available in HBase after launching the cluster. </p>
+<p><strong>Note</strong> If your snapshot was created from a namespace different from the <code>default</code> one, make sure to pre create it, to avoid failures while restoring the snapshot. From the EMR master node:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Verify snapshot availability</span>
+<span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">$HBASE_CMD</span> snapshot info -list-snapshots
+
+<span class="c1"># Review snapshot info and details</span>
+<span class="nv">SNAPSHOT_NAME</span><span class="o">=</span><span class="s2">&quot;YOUR_SNAPSHOT_NAME&quot;</span>
+<span class="nv">$HBASE_CMD</span> snapshot info -snapshot <span class="nv">$SNAPSHOT_NAME</span> -size-in-bytes -files -stats -schema
+
+<span class="c1"># Optional - Create namespaces required by the snapshot</span>
+<span class="nb">echo</span> <span class="s2">&quot;create_namespace \&quot;</span><span class="nv">$NAMESPACE_NAME</span><span class="s2">\&quot;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1"># Restore table from snapshot</span>
+<span class="nb">echo</span> <span class="s2">&quot;restore_snapshot \&quot;</span><span class="nv">$SNAPSHOT_NAME</span><span class="s2">\&quot;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+</code></pre></div>
+
+<p><strong>Scripts</strong></p>
+<p>The following scripts allows you to migrate and restore HBase tables an namespaces using the snapshot procedure previously described.</p>
+<ul>
+<li><a href="../scripts/hbase-snapshot-export.sh">Snapshot export</a> - Generate HBase snapshots for all the tables stored in all the namespaces, and copy them on an Amazon S3 bucket.</li>
+<li><a href="../scripts/hbase-snapshot-import.sh">Snapshot import</a> - Restore all the snapshots stored in an Amazon S3 bucket.</li>
+</ul>
+<h2 id="snapshots-with-incremental-export">Snapshots with Incremental Export<a class="headerlink" href="#snapshots-with-incremental-export" title="Permanent link">&para;</a></h2>
+<p>This approach might help in those situations where you want to migrate your data but at the same time you cannot tolerate much downtime in your production system. This approach helps to perform an initial bulk migration using the HBase snapshot procedure previously described, and then reconcile data received after the HBase snapshot generating incremental exports from the SOURCE table. </p>
+<p>This approach works when the volume of ingested data is not high, as the procedure to reconcile the data in the DESTINATION cluster might require multiple iterations to synchronize the two clusters, along with the fact that might be error prone. The following highlights the overall migration procedure. </p>
+<p>In the SOURCE cluster:</p>
+<ul>
+<li>
+<p>Create a snapshot of the HBase table you want to migrate. Collect the epoch time when the snapshot was taken, as this will be used to determine new data ingested in the cluster.</p>
+</li>
+<li>
+<p>Export the snapshot on Amazon S3 <code>org.apache.hadoop.hbase.snapshot.ExportSnapshot</code></p>
+</li>
+</ul>
+<p>In the DESTINATION cluster:</p>
+<ul>
+<li>Import the snapshot in the cluster and restore the table</li>
+</ul>
+<p>In the SOURCE cluster:</p>
+<ul>
+<li>Generate an incremental export to S3 for data arrived in the cluster after taking the snapshot using the HBase utility <code>org.apache.hadoop.hbase.mapreduce.Export</code></li>
+</ul>
+<p>In the DESTINATION cluster:</p>
+<ul>
+<li>Restore the missing data in the destination cluster using the HBase utility <code>org.apache.hadoop.hbase.mapreduce.Import</code></li>
+</ul>
+<p><strong>Example Export Commands</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">## Configurations</span>
+<span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">BUCKET_NAME</span><span class="o">=</span><span class="s2">&quot;YOUR_BUCKET_NAME&quot;</span>
+<span class="nv">SNAPSHOT_PATH</span><span class="o">=</span><span class="s2">&quot;s3://</span><span class="nv">$BUCKET_NAME</span><span class="s2">/hbase-snapshots/&quot;</span>
+<span class="nv">TABLE_NAME</span><span class="o">=</span><span class="s2">&quot;TestTable&quot;</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># (Simulate) Create TestTable with 1000 rows</span>
+<span class="c1"># ==============================================================================</span>
+<span class="nv">$HBASE_CMD</span> pe --table<span class="o">=</span><span class="nv">$TABLE_NAME</span> --rows<span class="o">=</span><span class="m">1000</span> --nomapred sequentialWrite <span class="m">1</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Take initial table snapshot and copy it to S3</span>
+<span class="c1"># ==============================================================================</span>
+<span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span>date +<span class="s2">&quot;%Y%m%d&quot;</span><span class="sb">`</span>
+<span class="nv">EPOCH_MS</span><span class="o">=</span><span class="sb">`</span>date +%s%N <span class="p">|</span> cut -b1-13<span class="sb">`</span>
+<span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DATE</span><span class="s2">-</span><span class="nv">$EPOCH_MS</span><span class="s2">&quot;</span>
+
+<span class="c1"># snapshot creation</span>
+<span class="c1"># Note: HBase performs a FLUSH by default when creating a snapshot</span>
+<span class="c1">#       You can change this behaviour specifying the -s parameter</span>
+<span class="nv">$HBASE_CMD</span> snapshot create -n <span class="s2">&quot;</span><span class="si">${</span><span class="nv">LABEL</span><span class="si">}</span><span class="s2">-</span><span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span><span class="s2">&quot;</span> -t <span class="nv">$TABLE_NAME</span>
+
+<span class="c1"># copy to S3</span>
+<span class="nv">$HBASE_CMD</span> org.apache.hadoop.hbase.snapshot.ExportSnapshot -snapshot <span class="s2">&quot;</span><span class="si">${</span><span class="nv">LABEL</span><span class="si">}</span><span class="s2">-</span><span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span><span class="s2">&quot;</span> -copy-to <span class="nv">$SNAPSHOT_PATH</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># (Simulate) Data mutations to simulate data arrived after taking the snapshot</span>
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># overwrite the first 100 elements of the table</span>
+<span class="nv">$HBASE_CMD</span> pe --rows<span class="o">=</span><span class="m">100</span> --nomapred sequentialWrite <span class="m">1</span>
+<span class="c1"># check first 100 rows will have an higher timestamp compared to the 101 element</span>
+<span class="nb">echo</span> <span class="s2">&quot;scan &#39;</span><span class="nv">$TABLE_NAME</span><span class="s2">&#39;, {LIMIT =&gt; 101}&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Generate incremental data export</span>
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Retrieve the epoch time from the snapshot name that was previously created.</span>
+<span class="c1"># This allow us to only export data modified since that moment in time.</span>
+<span class="nv">$HBASE_CMD</span> snapshot info -list-snapshots
+
+<span class="c1"># Incremental updates</span>
+<span class="nv">LATEST_SNAPSHOT_EPOCH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$EPOCH_MS</span><span class="s2">&quot;</span>
+<span class="nv">NEW_EPOCH_MS</span><span class="o">=</span><span class="sb">`</span>date +%s%N <span class="p">|</span> cut -b1-13<span class="sb">`</span>
+<span class="nv">INCREMENTAL_PATH</span><span class="o">=</span><span class="s2">&quot;s3://</span><span class="nv">$BUCKET_NAME</span><span class="s2">/hbase-delta/</span><span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">NEW_EPOCH_MS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nv">$HBASE_CMD</span> org.apache.hadoop.hbase.mapreduce.Export <span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span> <span class="nv">$INCREMENTAL_PATH</span> <span class="m">1</span> <span class="nv">$LATEST_SNAPSHOT_EPOCH</span>
+</code></pre></div>
+
+<p><strong>Example Import Commands</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">## Configurations</span>
+<span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">BUCKET_NAME</span><span class="o">=</span><span class="s2">&quot;YOUR_BUCKET_NAME&quot;</span>
+<span class="nv">SNAPSHOT_PATH</span><span class="o">=</span><span class="s2">&quot;s3://</span><span class="nv">$BUCKET_NAME</span><span class="s2">/hbase-snapshots/&quot;</span>
+
+<span class="nv">HBASE_CONF</span><span class="o">=</span><span class="s2">&quot;/etc/hbase/conf/hbase-site.xml&quot;</span>
+<span class="nv">HBASE_ROOT</span><span class="o">=</span><span class="k">$(</span>xmllint --xpath <span class="s2">&quot;//configuration/property/*[text()=&#39;hbase.rootdir&#39;]/../value/text()&quot;</span> <span class="nv">$HBASE_CONF</span><span class="k">)</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Import and Restore HBase snapshot</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="c1">## List Snapshots on S3 and take note of the snapshot you want to restore</span>
+<span class="nv">$HBASE_CMD</span> snapshot info -list-snapshots -remote-dir <span class="nv">$SNAPSHOT_PATH</span>
+<span class="nv">SNAPSHOT_NAME</span><span class="o">=</span><span class="s2">&quot;SNAPSHOT_NAME&quot;</span> <span class="c1"># e.g. &quot;20220817-1660726018359-TestTable&quot;</span>
+
+<span class="c1">## Copy snapshot on the cluster</span>
+<span class="nv">$HBASE_CMD</span> snapshot <span class="nb">export</span> <span class="se">\</span>
+    -D hbase.rootdir<span class="o">=</span><span class="nv">$SNAPSHOT_PATH</span> <span class="se">\</span>
+    -snapshot <span class="nv">$SNAPSHOT_NAME</span> <span class="se">\</span>
+    -copy-to <span class="nv">$HBASE_ROOT</span>
+
+<span class="c1"># Restore initial snapshot</span>
+<span class="nb">echo</span> <span class="s2">&quot;restore_snapshot &#39;</span><span class="nv">$SNAPSHOT_NAME</span><span class="s2">&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Replay incremental updates</span>
+<span class="c1"># ==============================================================================</span>
+<span class="nv">TABLE_NAME</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$SNAPSHOT_NAME</span> <span class="p">|</span> awk -F- <span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
+<span class="nv">INCREMENTAL_PATH</span><span class="o">=</span><span class="s2">&quot;s3://</span><span class="nv">$BUCKET_NAME</span><span class="s2">/hbase-delta/</span><span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">NEW_EPOCH_MS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nv">$HBASE_CMD</span> org.apache.hadoop.hbase.mapreduce.Import <span class="si">${</span><span class="nv">TABLE_NAME</span><span class="si">}</span> <span class="si">${</span><span class="nv">INCREMENTAL_PATH</span><span class="si">}</span>
+</code></pre></div>
+
+<h2 id="snapshots-with-hbase-replication">Snapshots with HBase Replication<a class="headerlink" href="#snapshots-with-hbase-replication" title="Permanent link">&para;</a></h2>
+<p>This approach describes how to migrate data using the <a href="https://hbase.apache.org/book.html#_cluster_replication">HBase cluster replication</a> feature that allows you to establish a peering between two (or more) HBase clusters so that they can replicate incoming data depending on how the peering was established.</p>
+<p>In order to use this approach, a network connection between the SOURCE and DESTINATION cluster should be present. If you're transferring data from an on premise cluster and you have large volumes of data to replicate, you might establish the connection between the two clusters using <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> or you can establish a VPN connection if this is a one time migration. </p>
+<p>The below section highlight the overall procedure to establish the replication. </p>
+<ul>
+<li>In the SOURCE cluster, create a HBase peering with the DESTINATION cluster and then disable the peering so that data is accumulated in the HBase WALs.</li>
+<li>In the SOURCE cluster, take a snapshot of the table you want to migrate and export it to S3.</li>
+<li>In the DESTINATION cluster, import and restore the snapshot. This creates the metadata (table description) required for the replication and also restore the data present in the snapshot.</li>
+<li>In the SOURCE cluster, re-enable the HBase peering with the DESTINATION cluster, so that data modified up to that moment will start to be replicated in the DESTINATION cluster.</li>
+<li>Monitor the replication process from the HBase shell to verify the lag of replication before completely switch on the DESTINATION cluster, and shutdown the SOURCE cluster.</li>
+</ul>
+<p><strong>Create one-way peering: SOURCE → DESTINATION</strong></p>
+<p><strong>Note</strong> The configuration for the replication should be enabled by default in HBase. To double check, verify <code>hbase.replication</code> is set to true in the <em>hbase-site.xml</em> in the SOURCE cluster.</p>
+<p>To create the HBase peering, you need to know the DESTINATION ip or hostname of the node where the Zookeeper ensemble used by HBase is located. If the destination cluster is an Amazon EMR cluster this coincides with the EMR master node.</p>
+<p>Once collected this information, from the SOURCE cluster execute the following commands to enable the peering with the destination cluster and start accumulating new data in the HBase WALs:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># The HBase command might be different in your Hadoop environment depending on</span>
+<span class="c1"># how HBase was installed and which user is used to properly launch the cli.</span>
+<span class="c1"># In most installations, it&#39;s sufficient to use the `hbase` command only.</span>
+<span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">MASTER_IP</span><span class="o">=</span><span class="s2">&quot;**YOUR_MASTER_IP**&quot;</span> <span class="c1"># e.g. ip-xxx-xx-x-xx.eu-west-1.compute.internal</span>
+<span class="nv">PEER_NAME</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span>
+<span class="nv">TABLE_NAME</span><span class="o">=</span><span class="s2">&quot;**YOUR_TABLE_NAME**&quot;</span>
+
+<span class="c1">## Create peering with the destination cluster</span>
+<span class="nb">echo</span> <span class="s2">&quot;add_peer &#39;</span><span class="nv">$PEER_NAME</span><span class="s2">&#39;, CLUSTER_KEY =&gt; &#39;</span><span class="nv">$MASTER_IP</span><span class="s2">:2181:/hbase&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1">## List peers in the source cluster</span>
+<span class="nb">echo</span> <span class="s2">&quot;list_peers&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1">## Disable the peer just created, so that we can keep new data in the LOG (HBase WALs) until the snapshots are restored in the DESTINATION cluster</span>
+<span class="nb">echo</span> <span class="s2">&quot;disable_peer &#39;</span><span class="nv">$PEER_NAME</span><span class="s2">&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+
+<span class="c1">## enable replication for the tables to replicate</span>
+<span class="nb">echo</span> <span class="s2">&quot;enable_table_replication &#39;</span><span class="nv">$TABLE_NAME</span><span class="s2">&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+</code></pre></div>
+
+<p>Now you can switch to the DESTINATION cluster and restore the initial snapshot taken for the table. Once the restore is complete, switch again on the SOURCE cluster and enable the HBase peering to start replicating new data ingested in the SOURCE cluster since the initial SNAPSHOT was taken.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">HBASE_CMD</span><span class="o">=</span><span class="s2">&quot;sudo -u hbase hbase&quot;</span>
+<span class="nv">PEER_NAME</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;enable_peer &#39;</span><span class="nv">$PEER_NAME</span><span class="s2">&#39;&quot;</span> <span class="p">|</span> <span class="nv">$HBASE_CMD</span> shell
+</code></pre></div>
+
+<p>To monitor the replication status you could use the hbase command <strong>status 'replication'</strong> from the HBase shell on the SOURCE cluster.</p>
+<h2 id="migrate-hbase-1x-to-hbase-2x">Migrate HBase 1.x to HBase 2.x<a class="headerlink" href="#migrate-hbase-1x-to-hbase-2x" title="Permanent link">&para;</a></h2>
+<h3 id="when-using-hdfs">When using HDFS<a class="headerlink" href="#when-using-hdfs" title="Permanent link">&para;</a></h3>
+<p>The migration path from HBase 1.x to HBase 2.x, can be accomplished using HBase snapshots if you're using HDFS as storage layer. In this case you can take a snapshot on the HBase 1.x cluster and then restore it on the HBase 2.x one. Although it is highly recommended to migrate to the latest version of HBase 1.4.x before migrating to HBase 2.x, it is still possible to migrate from older version of the 1.x branch (1.0.x, 1.1.x, 1.2.x, etc). </p>
+<h3 id="when-using-amazon-s3">When using Amazon S3<a class="headerlink" href="#when-using-amazon-s3" title="Permanent link">&para;</a></h3>
+<p>If you're using Amazon S3 as storage layer for HBase, you can directly migrate any EMR cluster using an HBase version &gt;= 1.x to an Amazon EMR release using HBase &lt;= 2.2.x. </p>
+<p><strong>Note</strong> If you try to update to a more recent version of HBase (e.g. HBase 2.4.4 from HBase 1.x), the HBase master will fail to correctly start due to some breaking changes in the way HBase load the meta table information in newest releases. You might see a similar error in your HMaster logs:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Caused</span> <span class="nl">by:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">ipc</span><span class="p">.</span><span class="n">RemoteWithExtrasException</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">regionserver</span><span class="p">.</span><span class="n">NoSuchColumnFamilyException</span><span class="p">)</span><span class="o">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">regionserver</span><span class="p">.</span><span class="nl">NoSuchColumnFamilyException:</span> <span class="n">Column</span> <span class="n">family</span> <span class="k">table</span> <span class="n">does</span> <span class="k">not</span> <span class="n">exist</span> <span class="n">in</span> <span class="n">region</span> <span class="nl">hbase:</span><span class="n">meta</span><span class="p">,,</span><span class="mf">1.1588230740</span> <span class="n">in</span> <span class="k">table</span> <span class="mh">&#39;hba</span><span class="nl">se:</span><span class="n">meta</span><span class="p">&#39;,</span> <span class="p">{</span><span class="n">TABLE_ATTRIBUTES</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="n">IS_META</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">true</span><span class="p">&#39;,</span> <span class="n">coprocessor</span><span class="err">$</span><span class="mh">1</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="o">|</span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">coprocessor</span><span class="p">.</span><span class="n">MultiRowMutationEndpoint</span><span class="o">|</span><span class="mh">536870911</span><span class="o">|</span><span class="p">&#39;}},</span> <span class="p">{</span><span class="n">NAME</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">info</span><span class="p">&#39;,</span> <span class="n">VERSIONS</span> <span class="o">=&gt;</span> <span class="sc">&#39;3&#39;</span><span class="p">,</span> <span class="n">KEEP_DELETED_CELLS</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">FALSE</span><span class="p">&#39;,</span> <span class="n">DATA_BLOCK_ENCODING</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">NONE</span><span class="p">&#39;,</span> <span class="n">TTL</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">FOREVER</span><span class="p">&#39;,</span> <span class="n">MIN_VERSIONS</span> <span class="o">=&gt;</span> <span class="sc">&#39;0&#39;</span><span class="p">,</span> <span class="n">REPLICATION_SCOPE</span> <span class="o">=&gt;</span> <span class="sc">&#39;0&#39;</span><span class="p">,</span> <span class="n">BLOOMFILTER</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">NONE</span><span class="p">&#39;,</span> <span class="n">IN_MEMORY</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">true</span><span class="p">&#39;,</span> <span class="n">COMPRESSION</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">NONE</span><span class="p">&#39;,</span> <span class="n">BLOCKCACHE</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">true</span><span class="p">&#39;,</span> <span class="n">BLOCKSIZE</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="mh">8192</span><span class="p">&#39;,</span> <span class="n">METADATA</span> <span class="o">=&gt;</span> <span class="p">{&#39;</span><span class="n">CACHE_DATA_IN_L1</span><span class="p">&#39;</span> <span class="o">=&gt;</span> <span class="p">&#39;</span><span class="n">true</span><span class="p">&#39;}}</span>
+    <span class="n">at</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">regionserver</span><span class="p">.</span><span class="n">HRegion</span><span class="p">.</span><span class="n">checkFamily</span><span class="p">(</span><span class="n">HRegion</span><span class="p">.</span><span class="nl">java:</span><span class="mh">8685</span><span class="p">)</span>
+    <span class="n">at</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">regionserver</span><span class="p">.</span><span class="n">HRegion</span><span class="p">.</span><span class="n">getScanner</span><span class="p">(</span><span class="n">HRegion</span><span class="p">.</span><span class="nl">java:</span><span class="mh">3125</span><span class="p">)</span>
+    <span class="n">at</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hbase</span><span class="p">.</span><span class="n">regionserver</span><span class="p">.</span><span class="n">HRegion</span><span class="p">.</span><span class="n">getScanner</span><span class="p">(</span><span class="n">HRegion</span><span class="p">.</span><span class="nl">java:</span><span class="mh">3110</span><span class="p">)</span>
+</code></pre></div>
+
+<p>In this case to migrate to the latest version, you can perform a two step migration:</p>
+<ul>
+<li>First, disable all your HBase tables in the Amazon EMR cluster using HBase 1.x. Once all the tables are disabled, terminate this cluster.</li>
+<li>Launch a new Amazon EMR cluster using EMR 6.3.0 as release and wait for all the tables/regions to be assigned. Once completed, disable all the tables again and shutdown the cluster.</li>
+<li>Finally, launch the latest EMR Version you want to use.</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>When to use?</th>
+<th>Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Batch - HBase Snapshots</td>
+<td>Data doesn't change frequently or when you can tolerate high service downtime</td>
+<td>Easy</td>
+</tr>
+<tr>
+<td>Incremental - HBase Snapshots + Export</td>
+<td>The data doesn't change frequently and you have large tables</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Online - HBase Snapshots + Replication</td>
+<td>Data changes frequently and high service downtime cannot be tolerated</td>
+<td>Advanced</td>
+</tr>
+</tbody>
+</table>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../data_integrity/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Data Integrity
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../management/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Management
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "search": "../../../assets/javascripts/workers/search.4fa0e4ee.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1d3bfcf1.min.js"></script>
+      
+    
+  </body>
+</html>
