@@ -28,7 +28,18 @@ nav:
         - Best Practices: 'applications/spark/best_practices.md'
       - 5.2 Hive:
         - Introduction: 'applications/hive/introduction.md'
-        - Best Practices: 'applications/hive/best_practices.md'        
+        - Best Practices: 'applications/hive/best_practices.md'
+      - 5.3 HBase:
+        - Introduction: 'applications/hbase/introduction.md'
+        - Best Practice: 'applications/hbase/best_practice.md'
+        - Best Practice for HDFS: 'applications/hbase/best_practice_hdfs.md'
+        - Best Practice for Amazon S3: 'applications/hbase/best_practice_s3.md'
+        - Data Integrity: 'applications/hbase/data_integrity.md'        
+        - Data Migration: 'applications/hbase/data_migration.md'
+        - Management: 'applications/hbase/management.md'
+        - Observability: 'applications/hbase/observability.md'
+        - Performance Tests: 'applications/hbase/performance_tests.md'
+        - Security: 'applications/hbase/security.md'
   - 6 - Architecture:
       - Batch:
         - Introduction: 'architecture/batch/introduction.md' 
