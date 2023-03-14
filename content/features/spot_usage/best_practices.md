@@ -13,6 +13,10 @@ Spot is a great way to help reduce costs. However, there are certain scenarios w
 
 Instancefleets provides clusters with Instance flexibility. Instead of relying on a single instance to reach your target capacity, you can specify up to 30 instances. This is a best practice when using Spot because EMR will automatically provision instances from the most-available Spot capacity pools when allocation strategy is enabled. Because your Spot Instance capacity is sourced from pools with optimal capacity, this decreases the possibility that your Spot Instances are reclaimed. A good rule of thumb is to be flexible across at least 10 instance types for each workload. In addition, make sure that all Availability Zones are configured for use in your VPC and selected for your workload. An EMR cluster will only be provisioned in a single AZ but will look across all for the initial provisioning. 
 
+When using Instancefleets, it is recommended you diversify across instances and family. For more details, see here:
+
+<https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-flexibility.html>
+
 ## ** BP 4.2.2 Ensure Application Masters only run on an On Demand Node **
 
 When a job is submitted to EMR, the Application Master (AM) can run on any of the nodes\*. The AM is is the main container requesting, launching and monitoring application specific resources. Each job launches a single AM and if the AM is assigned to a spot node, and that spot node is interrupted, your job will fail. 

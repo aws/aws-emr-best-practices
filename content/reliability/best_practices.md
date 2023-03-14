@@ -99,9 +99,9 @@ For more information, see:
 
 ## ** BP 2.7 With instance fleet, diversify with instances in the same family and across generations first **
 
-When deciding which instances to include in your instance fleet, it is recommend to first diversify across the same family. For example, if you are using m5.4xlarge, you should first add m5.8xlarge and then m5.12xlarge. Instances within the same family are identical and your job should perform consistent across the different instances. Ensure your application container (spark executors, tez container) is not larger than the smallest instance in your fleet.  Next, you should diversify across generations, for example, including m6.4xlarge and m4.8xlarge. 
+Best practices for instance and availablity zone flexibility can be found, here:
 
-Diversifying your instance fleet across families should be considered last e.g r5 and m5 due to difference in core to memory ratios resulting in potential underutilization depending on your application container sizes. 
+<https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-flexibility.html> 
 
 ## ** BP 2.8 With instance fleet, ensure the unit/weight matches the instance size or is proportional to the rest of the instances in your fleet **
 
