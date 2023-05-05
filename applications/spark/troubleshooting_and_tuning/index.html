@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
     
     
       
-        <title>EMR Best Practices Guides</title>
+        <title>Troubleshooting and Tuning - EMR Best Practices Guides</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.69437709.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.69437709.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cbb835fc.min.css">
         
       
       
@@ -36,7 +36,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -60,7 +60,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction" class="md-skip">
+        <a href="#52-spark-troubleshooting-and-performance-tuning" class="md-skip">
           Skip to content
         </a>
       
@@ -74,7 +74,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="EMR Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -93,7 +93,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              Troubleshooting and Tuning
             
           </span>
         </div>
@@ -172,7 +172,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="EMR Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
+    <a href="../../.." title="EMR Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Best Practices Guides" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -201,52 +201,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Introduction
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
         Introduction
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
-    Contributing
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -285,7 +244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cost_optimization/introduction/" class="md-nav__link">
+      <a href="../../../cost_optimization/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -299,7 +258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cost_optimization/best_practices/" class="md-nav__link">
+      <a href="../../../cost_optimization/best_practices/" class="md-nav__link">
         Best Practices
       </a>
     </li>
@@ -347,7 +306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reliability/introduction/" class="md-nav__link">
+      <a href="../../../reliability/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -361,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reliability/best_practices/" class="md-nav__link">
+      <a href="../../../reliability/best_practices/" class="md-nav__link">
         Best Practices
       </a>
     </li>
@@ -409,7 +368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="security/introduction/" class="md-nav__link">
+      <a href="../../../security/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -423,7 +382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="security/best_practices/" class="md-nav__link">
+      <a href="../../../security/best_practices/" class="md-nav__link">
         Best Practices
       </a>
     </li>
@@ -471,7 +430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="features/managed_scaling/best_practices/" class="md-nav__link">
+      <a href="../../../features/managed_scaling/best_practices/" class="md-nav__link">
         4.1 - Managed Scaling
       </a>
     </li>
@@ -485,7 +444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="features/spot_usage/best_practices/" class="md-nav__link">
+      <a href="../../../features/spot_usage/best_practices/" class="md-nav__link">
         4.2 - Spot Usage
       </a>
     </li>
@@ -505,12 +464,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
@@ -531,12 +492,14 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6_1" type="checkbox" id="__nav_6_1" checked>
       
       
       
@@ -559,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/spark/introduction/" class="md-nav__link">
+      <a href="../introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -573,7 +536,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/spark/best_practices/" class="md-nav__link">
+      <a href="../best_practices/" class="md-nav__link">
         Best Practices
       </a>
     </li>
@@ -585,11 +548,59 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="applications/spark/troubleshooting_and_tuning/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Troubleshooting and Tuning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Troubleshooting and Tuning
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#521-spark-structured-streaming-applications-have-high-connection-create-rate-to-amazon-msk" class="md-nav__link">
+    5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#522-sparkdrivermaxresultsize-error-on-an-emr-heterogeneous-cluster-but-the-driver-is-not-collecting-data" class="md-nav__link">
+    5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -634,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hive/introduction/" class="md-nav__link">
+      <a href="../../hive/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -648,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hive/best_practices/" class="md-nav__link">
+      <a href="../../hive/best_practices/" class="md-nav__link">
         Best Practices
       </a>
     </li>
@@ -695,7 +706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/introduction/" class="md-nav__link">
+      <a href="../../hbase/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -709,7 +720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/best_practice/" class="md-nav__link">
+      <a href="../../hbase/best_practice/" class="md-nav__link">
         Best Practice
       </a>
     </li>
@@ -723,7 +734,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/best_practice_hdfs/" class="md-nav__link">
+      <a href="../../hbase/best_practice_hdfs/" class="md-nav__link">
         Best Practice for HDFS
       </a>
     </li>
@@ -737,7 +748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/best_practice_s3/" class="md-nav__link">
+      <a href="../../hbase/best_practice_s3/" class="md-nav__link">
         Best Practice for Amazon S3
       </a>
     </li>
@@ -751,7 +762,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/data_integrity/" class="md-nav__link">
+      <a href="../../hbase/data_integrity/" class="md-nav__link">
         Data Integrity
       </a>
     </li>
@@ -765,7 +776,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/data_migration/" class="md-nav__link">
+      <a href="../../hbase/data_migration/" class="md-nav__link">
         Data Migration
       </a>
     </li>
@@ -779,7 +790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/management/" class="md-nav__link">
+      <a href="../../hbase/management/" class="md-nav__link">
         Management
       </a>
     </li>
@@ -793,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/observability/" class="md-nav__link">
+      <a href="../../hbase/observability/" class="md-nav__link">
         Observability
       </a>
     </li>
@@ -807,7 +818,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/performance_tests/" class="md-nav__link">
+      <a href="../../hbase/performance_tests/" class="md-nav__link">
         Performance Tests
       </a>
     </li>
@@ -821,7 +832,7 @@
   
   
     <li class="md-nav__item">
-      <a href="applications/hbase/security/" class="md-nav__link">
+      <a href="../../hbase/security/" class="md-nav__link">
         Security
       </a>
     </li>
@@ -902,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/batch/introduction/" class="md-nav__link">
+      <a href="../../../architecture/batch/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -949,7 +960,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/adhoc/introduction/" class="md-nav__link">
+      <a href="../../../architecture/adhoc/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -963,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/adhoc/architecture/" class="md-nav__link">
+      <a href="../../../architecture/adhoc/architecture/" class="md-nav__link">
         Architecture
       </a>
     </li>
@@ -1010,7 +1021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/notebooks/introduction/" class="md-nav__link">
+      <a href="../../../architecture/notebooks/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -1057,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/datalake_storage/introduction/" class="md-nav__link">
+      <a href="../../../architecture/datalake_storage/introduction/" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -1105,8 +1116,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
-    Contributing
+  <a href="#521-spark-structured-streaming-applications-have-high-connection-create-rate-to-amazon-msk" class="md-nav__link">
+    5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#522-sparkdrivermaxresultsize-error-on-an-emr-heterogeneous-cluster-but-the-driver-is-not-collecting-data" class="md-nav__link">
+    5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data
   </a>
   
 </li>
@@ -1123,41 +1141,98 @@
             <article class="md-content__inner md-typeset">
               
                 
-  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/aws/aws-emr-best-practices/edit/master/docs/applications/spark/troubleshooting_and_tuning.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
 
-<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
-<p>Welcome to the EMR Best Practices Guides.  The goal of this project is to offer a set of best practices, templates and guides for operating Amazon EMR. We elected to publish this guidance to GitHub so we could iterate quickly, provide timely and effective recommendations for variety of concerns, and easily incorporate suggestions from the broader community.  </p>
-<p>We currently have published guides for the following topics: </p>
+<h1 id="52-spark-troubleshooting-and-performance-tuning"><strong> 5.2 - Spark troubleshooting and performance tuning </strong><a class="headerlink" href="#52-spark-troubleshooting-and-performance-tuning" title="Permanent link">&para;</a></h1>
+<h2 id="521-spark-structured-streaming-applications-have-high-connection-create-rate-to-amazon-msk"><strong> 5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK </strong><a class="headerlink" href="#521-spark-structured-streaming-applications-have-high-connection-create-rate-to-amazon-msk" title="Permanent link">&para;</a></h2>
+<p><strong> Symptom </strong>: Amazon MSK cluster has high CPU usage and MSK metrics indicate high connection create rate to the cluster.</p>
+<p><strong> Analysis </strong>: By default, Spark Structured Streaming Kafka connector has a 1:1 mapping relation of MSK TopicPartitions to Spark tasks. Between micro batches, Spark tries to (best effort) assign the same MSK TopicPartitions to the same executors which in turn reuses the Kafka consumers and connections. </p>
+<p>Spark Structured Streaming Kafka connector has an option <code>minPartitions</code> which can divide large TopicPartitions to smaller pieces. When <code>minPartitions</code> is set to a value larger than the number of TopicPartitions,  Spark creates tasks based on <code>minPartitions</code> to increase parallelism (the number of Spark tasks will be approximately <code>minPartition</code>). </p>
 <ul>
-<li>Cost Optimizations</li>
-<li>Reliability</li>
-<li>Security</li>
-<li>Features<ul>
-<li>Managed Scaling</li>
-<li>Spot Usage</li>
+<li>As 1:1 mapping doesn't exist anymore, Spark executors are randomly assigned to process any TopicPartition OffsetRanges. An executor processed TopicPartition X can be assigned to process TopicPartition Y in next micro batch.  A new Kafka consumer/connection needs to be created if Y is on another MSK broker.</li>
+<li>One Spark executor can be assigned to process multiple Spark tasks with the same MSK TopicPartition on different OffsetRanges.  And in Spark 2.x, Kafka consumer cache is disabled when multiple tasks in the same executor read the same TopicPartitions . </li>
 </ul>
+<p>Setting <code>minPartitions</code> comes at a cost of initializing Kakfa consumers at each micro batch. This may impact performance especially when using SSL. </p>
+<p>A test was run with following test environment:</p>
+<p><strong> Kafka version 2.8.1 </strong></p>
+<ul>
+<li>3 kafka.m5.xlarge instances</li>
+<li>test kafka topic has 10 partitions</li>
+<li>only SASL/SCRAM authentication enabled</li>
+</ul>
+<p><strong> EMR 5.36 (Spark 2.4.8)  cluster </strong></p>
+<ul>
+<li>30 core nodes - EC2 m5.4xlarge</li>
+</ul>
+<p>Spark Structured Streaming test application has 5 cores 5G memory for each executor.</p>
+<p>Below figure shows the test result of different <code>minPartitions</code> values with MSK’s ConnectionCreationRate and CPUUser usages. As shown in the test result, higher ConnectionCreationRate is related to higher CPU usage.</p>
+<p>Test1: 50 minPartitions 16:40-17:30<br />
+Test2: 100 minPartitions 18:00-18:35<br />
+Test3: 200 minPartitions 19:00-19:35<br />
+Test4: no minPartitions 20:06 - 20:30  </p>
+<p><img alt="ConnectionCreationRate" src="../images/spark-tt-1.png" /></p>
+<p><strong> Recommendation </strong>: </p>
+<ol>
+<li>
+<p>Upgrade to the latest EMR version (spark 3.x) to use Sparks <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html#consumer-caching">consumer pool cache</a> feature. This feature allows Spark to cache more than one Kafka consumer with same MSK TopicPartition at each executor, and reuse the consumers in later micro batches. This will allow you to set <code>minPartitions</code> while reduce the ConnectionCreationRate.</p>
 </li>
-<li>Applications<ul>
-<li>Spark</li>
-<li>Hive</li>
-<li>HBase</li>
-</ul>
+<li>
+<p>On EMR 5.x (Spark 2.x), only set min partitions when needed - for example, if you have data skew or if your stream is falling behind. Min partitions will allow you to increase parallelism and process records faster but at the expense of high connection rates and CPU.  </p>
 </li>
-<li>Architecture<ul>
-<li>Batch</li>
-<li>Ad Hoc</li>
-<li>Notebooks</li>
-<li>Datalake Storage</li>
-</ul>
-</li>
-<li>Amazon EMR utilities github <a href="https://github.com/aws-samples/aws-emr-utilities">here</a></li>
-</ul>
-<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
-<p>We encourage you to contribute to these guides. If you have implemented a practice that has proven to be effective, please share it with us by opening an issue or a pull request. Similarly, if you discover an error or flaw in the guidance we've already published, please submit a PR to correct it.</p>
+</ol>
+<h2 id="522-sparkdrivermaxresultsize-error-on-an-emr-heterogeneous-cluster-but-the-driver-is-not-collecting-data"><strong> 5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data</strong><a class="headerlink" href="#522-sparkdrivermaxresultsize-error-on-an-emr-heterogeneous-cluster-but-the-driver-is-not-collecting-data" title="Permanent link">&para;</a></h2>
+<p><strong> Symptom </strong>: Spark jobs fail from time to time and below error is seen in the log:</p>
+<p><code>22/08/22 14:14:24 ERROR FileFormatWriter: Aborting job f6913a46-d2d8-46f0-a545-2d2ba938b113. org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 179502 tasks (1024.0 MB) is bigger than spark.driver.maxResultSize (1024.0 MB) at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:2171)</code></p>
+<p>By setting <code>spark.driver.maxResultSize</code> to 0(unlimited), the error is gone.  But the Spark job is not collecting data to driver, how can the result returning to driver exceed 1024MB? </p>
+<p><strong> Analysis </strong>:  Each finished task sends a serialized <code>WriteTaskResult</code> object to driver. The object size is usually several kilobytes, e.g.</p>
+<p><code>22/09/06 22:24:18 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 5192 bytes result sent to driver</code></p>
+<p>From the log, we can see there are 179502 (or more) tasks. For such a number of tasks, the total result size can exceed 1024MB for serialized <code>WriteTaskResult</code> objects only.</p>
+<p>The job is reading parquet files from S3 and the input folder has 3.5K parquet files with average size ~116MB per file. As default <code>spark.sql.files.maxPartitionBytes</code> is 128M, so approximately one file to one Spark task.  The job's processing logic further splits one task to ~11 tasks. Total tasks should be 3.5K * 11 = 38.5K. But why there are 179502 (or more) tasks?</p>
+<p>To find root cause, we need to understand how Spark SQL decides the max size of a partition for non-bucketed splittable files.</p>
+<p>Spark2 is following below formula (Spark3 has a slightly different formula which is described later)</p>
+<p><code>maxSplitBytes = Math.min(defaultMaxSplitBytes, Math.max(openCostInBytes, bytesPerCore))</code></p>
+<p><code>maxSplitBytes</code> is the max bytes per partition.</p>
+<p><code>defaultMaxSplitBytes</code> is from <code>spark.sql.files.maxPartitionBytes</code> whose default value is 128M.</p>
+<p><code>openCostInBytes</code>  is from <code>spark.sql.files.openCostInBytes</code> whose default value is 4M.</p>
+<p><code>bytesPerCore</code> = (Sum of all data file size + num of file * <code>openCostInBytes</code> ) / <code>defaultParallelism</code></p>
+<p><code>defaultParallelism</code>’s default value is total number of virtual cores running the job.  It can also be set to a value by defining <code>spark.default.parallelism</code>.</p>
+<p>When there are a large number of virtual cores allocated to the Spark job by Yarn, <code>maxSplitBytes</code> can be smaller than <code>defaultMaxSplitBytes</code>, i.e. more tasks will be created.  For this case, from Spark UI, we know total number of vcores is 15837, i.e. <code>defaultParallelism</code> is 15837
+<img alt="SparkUITotalCores" src="../images/spark-tt-2.png" /></p>
+<p><code>bytesPerCore</code> = (116M * 3500 + 4M * 3500)/15837 = 26.5M</p>
+<p><code>maxSplitBytes</code> = min(128M, max(4M, 26.5M)) = 26.5M.  So one 116M parquet file is split into 4~5 Spark tasks.  3.5K * 11 * 5 = 192.5K -- that's why there were 179502 (or more) tasks.</p>
+<p>Note that the vcore count is based on Yarn containers, not physical cores.  As Yarn’s default container allocation is based on available memory, this means there can be vcore over subscriptions in a heterogeneous EMR cluster.</p>
+<p>For example, if we have a heterogeneous EMR cluster as below:</p>
+<p>Core Node: c5.12xlarge(48cores/96GB) — Memory allocated to Yarn: 90112MB<br />
+Task Node: r5.8xlarge(32cores/256GB) — Memory allocated to Yarn: 253952MB</p>
+<p>The default EMR executor size is based on core node instance type. In this example, for c5.12xlarge, default executor size is 3 cores 4743M memory. Default <code>spark.yarn.executor.memoryOverheadFactor</code> is 0.1875.  A Yarn container has 3 cores, 4743MB*(1+0.1875)= 5632MB memory.</p>
+<p>On c5.12xlarge, Yarn can allocate 16 conatainers with 48 vcores in total:<br />
+90112MB/5632MB = 16 containers * 3 core = 48 vcores</p>
+<p>While on r5.8xlarge, Yarn can allocate 45 containers with 135 vcores in total:<br />
+253952MB/5632MB = 45 containers * 3 core = 135 vcores - 32cores = 103 vcore oversubscription</p>
+<p><strong> Recommendation </strong>: When Spark reads splittable files, <code>maxSplitBytes</code> can be smaller than <code>spark.sql.files.maxPartitionBytes</code> if there are a big number of vcores allocated to the job.  Use the formula described here to set <code>spark.default.parallelism</code> value properly and have a reasonable <code>maxSplitBytes</code>. </p>
+<p><strong> Spark 3 </strong></p>
+<p>Spark 3 provides more options to control<code>maxSplitBytes</code> as below </p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">maxSplitBytes</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">sparkSession</span><span class="p">:</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">selectedPartitions</span><span class="p">:</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">PartitionDirectory</span><span class="p">]):</span><span class="w"> </span><span class="nc">Long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">defaultMaxSplitBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sparkSession</span><span class="p">.</span><span class="n">sessionState</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">filesMaxPartitionBytes</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">openCostInBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sparkSession</span><span class="p">.</span><span class="n">sessionState</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">filesOpenCostInBytes</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">minPartitionNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sparkSession</span><span class="p">.</span><span class="n">sessionState</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">filesMinPartitionNum</span><span class="w"></span>
+<span class="w">      </span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="n">sparkSession</span><span class="p">.</span><span class="n">leafNodeDefaultParallelism</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">totalBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">selectedPartitions</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">getLen</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">openCostInBytes</span><span class="p">)).</span><span class="n">sum</span><span class="w"></span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">bytesPerCore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalBytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">minPartitionNum</span><span class="w"></span>
+
+<span class="w">    </span><span class="nc">Math</span><span class="p">.</span><span class="n">min</span><span class="p">(</span><span class="n">defaultMaxSplitBytes</span><span class="p">,</span><span class="w"> </span><span class="nc">Math</span><span class="p">.</span><span class="n">max</span><span class="p">(</span><span class="n">openCostInBytes</span><span class="p">,</span><span class="w"> </span><span class="n">bytesPerCore</span><span class="p">))</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+
+<p><code>filesMinPartitionNum</code> is from <code>spark.sql.files.minPartitionNum</code>. It is the suggested (not guaranteed) minimum number of split file partitions. If not set, the default value is <code>spark.default.parallelism</code>.</p>
+<p><code>leafNodeDefaultParallelism</code> is from <code>spark.sql.leafNodeDefaultParallelism</code>. It is the default parallelism of Spark SQL leaf nodes.</p>
+<p>Setting either of the above two parameters has the same effect as <code>spark.default.parallelism</code> on <code>maxSplitBytes</code>.</p>
 
 
 
@@ -1175,9 +1250,24 @@
     
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
+        
+        <a href="../best_practices/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Best Practices" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Best Practices
+            </div>
+          </div>
+        </a>
+      
       
         
-        <a href="cost_optimization/introduction/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction" rel="next">
+        <a href="../../hive/introduction/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
@@ -1214,10 +1304,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["tabs"], "search": "assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["tabs"], "search": "../../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
       
     
   </body>
