@@ -71,7 +71,7 @@ The master node does not have large computational requirements. For most cluster
 
 ## ** BP 1.5 Use instances with instance store for jobs that require high disk IOPS **
 
-Use dense SSD storage instances for data-intensive workloads such as I3en or d3en. These instances provide Non-Volatile Memory Express (NVMe) SSD-backed instance storage optimized for low latency, very high random I/O performance, high sequential read throughput and provide high IOPS at a low cost. EMR workloads that spend heavily use HDFS  or spend a lot of time writing spark shuffle data can benefit from these instances and see improved performance which reduces overall cost. 
+Use dense SSD storage instances for data-intensive workloads such as I3en or d3en. These instances provide Non-Volatile Memory Express (NVMe) SSD-backed instance storage optimized for low latency, very high random I/O performance, high sequential read throughput and provide high IOPS at a low cost. EMR workloads that heavily use HDFS or spend a lot of time writing spark shuffle data can benefit from these instances and see improved performance which reduces overall cost. 
 
 ## ** BP 1.6 Use Graviton2 instances **
 
@@ -174,21 +174,25 @@ By default, EMR will try to set YARN and Spark memory settings to best utilize t
 
 For example, if you had a cluster that is using m5.4xlarge instances for its data nodes, you’d have 16 vCPU and 64GB of memory. 
 
-EMR will automatically set yarn.nodemanager.resource.cpu-vcores and yarn.nodemanager.resource.memory-mb in yarn-site.xml to allocate how much of the instances resources can be used for YARN applications. In the m5.4xlarge case, this is 16vCPU and 57344 mb. When using custom configuration for your spark containers, you want to ensure that the memory and cores you allocate to your executor is a multiple of the total resources allocated to yarn. For example, if you set
+EMR will automatically set `yarn.nodemanager.resource.cpu-vcores and yarn.nodemanager.resource.memory-mb` in `yarn-site.xml` to allocate how much of the instances resources can be used for YARN applications. In the m5.4xlarge case, this is 16vCPU and 57344 mb. When using custom configuration for your spark containers, you want to ensure that the memory and cores you allocate to your executor is a multiple of the total resources allocated to yarn. For example, if you set
 
+```
 spark.executor.memory 20,000M
 spark.yarn.executor.memoryOverhead 10% (2,000M)
 spark.executor.cores 4
+```
 
-Spark will only be able to allocate 2 executors on each node resulting in 57,344-44,000 (22,000`*`2) = 13,344 of unallocated resources and 76.7% memory utilization
+Spark will only be able to allocate 2 executors on each node resulting in $`57,344-44,000 (22,000`*`2) = 13,344`$ of unallocated resources and 76.7% memory utilization
 
-However, if spark.executor.memory was right sized to the available total yarn.nodemanager.resource.memory-mb you would get higher instance utilization. For example, 
+However, if `spark.executor.memory` was right sized to the available total `yarn.nodemanager.resource.memory-mb` you would get higher instance utilization. For example, 
 
+```
 spark.executor.memory 12,000M
 spark.yarn.executor.memoryOverhead 10% (1,200M)
 spark.executor.cores 4
+```
 
-Spark will be able to allocate 4 executors on each node resulting in only 57,344-52,800(13,200 * 4) = 4,544 of unallocated resources and 92.0% memory utilization
+Spark will be able to allocate 4 executors on each node resulting in only $`57,344-52,800(13,200 * 4) = 4,544`$ of unallocated resources and 92.0% memory utilization
 
 For more information on Spark and YARN right sizing see: 
 
@@ -222,13 +226,13 @@ For more information on the Grafana and Prometheus solution, see:
 
 ## ** BP 1.13 Monitor and decommission idle EMR cluster **
 
-Decommission Amazon EMR clusters that are no longer required to lower cost.  This can be achieved in two ways. You can use EMR’s “automatic termination policy”  starting 5.30.0 and 6.1.0 or, by monitoring the “isIdle” metric in cloudwatch and terminating yourself. 
+Decommission Amazon EMR clusters that are no longer required to lower cost.  This can be achieved in two ways. You can use EMR’s automatic termination policy starting 5.30.0 and 6.1.0 or, by monitoring the `isIdle` metric in CloudWatch and terminating yourself. 
 
 With EMR’s automatic termination policy feature, EMR continuously samples key metrics associated with the workloads running on the clusters, and auto-terminates when the cluster is idle. For more information on when a cluster is considered idle and considerations, see 
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html>
 
-With EMR’s “isIdle” cloudwatch metric, EMR will emit 1 if no tasks are running and no jobs are running, and emit 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.  You can set an alarm to fire when the cluster has been idle for a given period of time, such as thirty minutes.  Non-YARN based applications such as Presto, Trino, or HBase are not considered with the “IsIdle” Metrics 
+With EMR’s `isIdle` CloudWatch metric, EMR will emit 1 if no tasks are running and no jobs are running, and emit 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.  You can set an alarm to fire when the cluster has been idle for a given period of time, such as thirty minutes.  Non-YARN based applications such as Presto, Trino, or HBase are not considered with `isIdle` metrics.
 
 For a sample solution of this approach, see 
 
