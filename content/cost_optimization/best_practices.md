@@ -5,7 +5,7 @@ Best Practices (BP) for running cost optimized workloads on EMR.
 
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
-As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is $275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
+As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is \$275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
 
 Using Amazon S3 as your persistent data store allows you to grow your storage infinitely, independent of your compute.  With on premise Hadoop systems, you would have to add nodes just to house your data which may not be helping your compute and only increase cost.  In addition, Amazon S3 also has different storage tiers for less frequently accessed data providing opportunity for additional cost savings.
 
@@ -26,6 +26,7 @@ The query that executed on 1 file is 3.6x faster despite the tables and records 
 ![BP - 2](images/bp-2.png)
 
 **Convert** - Columnar file formats like Parquet and ORC can improve read performance. Columnar formats are ideal if most of your queries only select a subset of columns. For use cases where you primarily select all columns, but only select a subset of rows, choose a row optimized file format such as Apache Avro. The following image shows a performance comparison of a select count(`*`) query between Parquet and JSON (text) file formats.
+
 The query that executed over parquet ran 74x faster despite being larger in size. 
 
 ![BP - 3](images/bp-3.png)
@@ -55,7 +56,7 @@ STORED AS PARQUET
 LOCATION ‘s3:///buckets_test/hive-clustered/’;
 ```
 
-In this example, the bucketing column (col1) is specified by the CLUSTERED BY (col1) clause, and the number of buckets (5) is specified by the INTO 5 BUCKETS clause.
+In this example, the bucketing column (col1) is specified by the `CLUSTERED BY (col1)` clause, and the number of buckets (5) is specified by the `INTO 5 BUCKETS` clause.
 
 Bucketing is similar to partitioning – in both cases, data is segregated and stored – but there are a few key differences. Partitioning is based on a column that is repeated in the dataset and involves grouping data by a particular value of the partition column. While bucketing organizes data by a range of values, mainly involving primary key or non-repeated values in a dataset. Bucketing should be considered when your partitions are not comparatively equal in size or you have data skew with your keys. Certain operations like map-side joins are more efficient in bucket tables vs non bucketed ones. 
  
@@ -138,6 +139,7 @@ Consider using a combination of Spot and On-Demand instances to lower cost and r
 
 * In this case, you would provision enough on demand capacity to meet your SLAs and then use additional spot to bring down your average cost. If spot is not available, you’ll still have on demand nodes to meet your SLA. When spot is available, your cluster will have additional compute which reduce run time and lowers the total cost of your job. 
 * For example:
+
 ```
 10 node cluster running for 14 hours 
 Cost = 1.0 * 10 * 14 = $140
@@ -168,6 +170,7 @@ Here’s an example of cluster without auto scaling. Since the size of the clust
 
 Here’s an example of cluster with auto scaling. The cluster capacity (blue dotted line) adjusts to the job demand reducing unused resources and cost. 
 ![BP - 6](images/bp-6.png)
+
 ## ** BP 1.11 Right size application containers **
 
 By default, EMR will try to set YARN and Spark memory settings to best utilize the instances compute resources. This is important to maximize your cluster resources. Whether you are migrating jobs to EMR or writing a new application, It is recommended that you start with default EMR configuration.  If you need to modify the default configuration for your specific use case, It’s important to use all the available resources of the cluster - both CPU and Memory.  
@@ -182,7 +185,7 @@ spark.yarn.executor.memoryOverhead 10% (2,000M)
 spark.executor.cores 4
 ```
 
-Spark will only be able to allocate 2 executors on each node resulting in $`57,344-44,000 (22,000`*`2) = 13,344`$ of unallocated resources and 76.7% memory utilization
+Spark will only be able to allocate 2 executors on each node resulting in 57,344 - 44,000(22,000`*`2 = 13,344 of unallocated resources and 76.7% memory utilization
 
 However, if `spark.executor.memory` was right sized to the available total `yarn.nodemanager.resource.memory-mb` you would get higher instance utilization. For example, 
 
@@ -192,7 +195,7 @@ spark.yarn.executor.memoryOverhead 10% (1,200M)
 spark.executor.cores 4
 ```
 
-Spark will be able to allocate 4 executors on each node resulting in only $`57,344-52,800(13,200 * 4) = 4,544`$ of unallocated resources and 92.0% memory utilization
+Spark will be able to allocate 4 executors on each node resulting in only 57,344 - 52,800(13,200 * 4) = 4,544 of unallocated resources and 92.0% memory utilization
 
 For more information on Spark and YARN right sizing see: 
 

@@ -1,9 +1,10 @@
-# ** 5.2 - Spark troubleshooting and performance tuning **
+#**5.2 - Spark troubleshooting and performance tuning**
 
-## ** 5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK **
-** Symptom **: Amazon MSK cluster has high CPU usage and MSK metrics indicate high connection create rate to the cluster.
+##**5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK**
 
-** Analysis **: By default, Spark Structured Streaming Kafka connector has a 1:1 mapping relation of MSK TopicPartitions to Spark tasks. Between micro batches, Spark tries to (best effort) assign the same MSK TopicPartitions to the same executors which in turn reuses the Kafka consumers and connections. 
+**Symptom**: Amazon MSK cluster has high CPU usage and MSK metrics indicate high connection create rate to the cluster.
+
+**Analysis**: By default, Spark Structured Streaming Kafka connector has a 1:1 mapping relation of MSK TopicPartitions to Spark tasks. Between micro batches, Spark tries to (best effort) assign the same MSK TopicPartitions to the same executors which in turn reuses the Kafka consumers and connections. 
 
 Spark Structured Streaming Kafka connector has an option `minPartitions` which can divide large TopicPartitions to smaller pieces. When `minPartitions` is set to a value larger than the number of TopicPartitions,  Spark creates tasks based on `minPartitions` to increase parallelism (the number of Spark tasks will be approximately `minPartition`). 
 
@@ -14,13 +15,13 @@ Setting `minPartitions` comes at a cost of initializing Kakfa consumers at each 
 
 A test was run with following test environment:
 
-** Kafka version 2.8.1 **
+**Kafka version 2.8.1**
 
 * 3 kafka.m5.xlarge instances
 * test kafka topic has 10 partitions
 * only SASL/SCRAM authentication enabled
 
-** EMR 5.36 (Spark 2.4.8)  cluster **
+**EMR 5.36 (Spark 2.4.8)  cluster**
 
 * 30 core nodes - EC2 m5.4xlarge
 
@@ -36,15 +37,15 @@ Test4: no minPartitions 20:06 - 20:30
 ![ConnectionCreationRate](images/spark-tt-1.png)
 
 
-** Recommendation **: 
+**Recommendation**: 
 
 1. Upgrade to the latest EMR version (spark 3.x) to use Sparks [consumer pool cache](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html#consumer-caching) feature. This feature allows Spark to cache more than one Kafka consumer with same MSK TopicPartition at each executor, and reuse the consumers in later micro batches. This will allow you to set `minPartitions` while reduce the ConnectionCreationRate.
 
 2. On EMR 5.x (Spark 2.x), only set min partitions when needed - for example, if you have data skew or if your stream is falling behind. Min partitions will allow you to increase parallelism and process records faster but at the expense of high connection rates and CPU.  
 
 
-## ** 5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data**
-** Symptom **: Spark jobs fail from time to time and below error is seen in the log:
+##**5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data**
+**Symptom**: Spark jobs fail from time to time and below error is seen in the log:
 
 `
 22/08/22 14:14:24 ERROR FileFormatWriter: Aborting job f6913a46-d2d8-46f0-a545-2d2ba938b113. org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 179502 tasks (1024.0 MB) is bigger than spark.driver.maxResultSize (1024.0 MB) at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:2171)
@@ -52,7 +53,7 @@ Test4: no minPartitions 20:06 - 20:30
 
 By setting `spark.driver.maxResultSize` to 0(unlimited), the error is gone.  But the Spark job is not collecting data to driver, how can the result returning to driver exceed 1024MB? 
 
-** Analysis **:  Each finished task sends a serialized `WriteTaskResult` object to driver. The object size is usually several kilobytes, e.g.
+**Analysis**:  Each finished task sends a serialized `WriteTaskResult` object to driver. The object size is usually several kilobytes, e.g.
 
 `22/09/06 22:24:18 INFO Executor: Finished task 0.0 in stage 3.0 (TID 3). 5192 bytes result sent to driver`
 
@@ -98,10 +99,10 @@ On c5.12xlarge, Yarn can allocate 16 conatainers with 48 vcores in total:
 While on r5.8xlarge, Yarn can allocate 45 containers with 135 vcores in total:  
 253952MB/5632MB = 45 containers * 3 core = 135 vcores - 32cores = 103 vcore oversubscription
 
-** Recommendation **: When Spark reads splittable files, `maxSplitBytes` can be smaller than `spark.sql.files.maxPartitionBytes` if there are a big number of vcores allocated to the job.  Use the formula described here to set `spark.default.parallelism` value properly and have a reasonable `maxSplitBytes`. 
+**Recommendation**: When Spark reads splittable files, `maxSplitBytes` can be smaller than `spark.sql.files.maxPartitionBytes` if there are a big number of vcores allocated to the job.  Use the formula described here to set `spark.default.parallelism` value properly and have a reasonable `maxSplitBytes`. 
 
 
-** Spark 3 **
+**Spark 3**
 
 Spark 3 provides more options to control`maxSplitBytes` as below 
 
