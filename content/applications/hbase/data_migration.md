@@ -7,7 +7,7 @@ This document describes possible migrations paths you can follow when migrating 
 
 This is the most straight forward approach that doesn't require a complex setup and can easily be achieved using simple bash scripts. This approach is suitable if your data does not change frequently or when you can tolerate downtimes in your production systems to perform the data migration.
 
-Below a list of steps that can be used to create a HBase Snapshot and transfer it to an Amazon S3 bucket. Please note that you can use the same approach to store snapshots on an HDFS cluster. If this is the case, replace the S3 target path in the following commands with the destination HDFS path (e.g. hdfs://NN_TARGET:8020/user/hbase) where you want to store the snapshots.
+Below a list of steps that can be used to create a HBase Snapshot and transfer it to an Amazon S3 bucket. Please note that you can use the same approach to store snapshots on an HDFS cluster. If this is the case, replace the S3 target path in the following commands with the destination HDFS path (e.g. `hdfs://NN_TARGET:8020/user/hbase`) where you want to store the snapshots.
 
 **Create a snapshot of a single HBase table**
 

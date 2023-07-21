@@ -17,7 +17,6 @@ In terms of cluster scale in / out, it’s not recommended to enable the [EMR Ma
 * Scale In - Disable the HBase tables and use the EMR Web Console or API to decrease the number of nodes in the cluster.
 
 
-
 ## HBase on HDFS
 
 Within this section you can find additional information to secure your data when launching an Amazon EMR cluster using HDFS as storage layer. 
@@ -41,8 +40,6 @@ For sample scripts and commands see the related examples in the [Data Migration]
 
 * Use a time identifier in the snapshot name that can help you identify when the snapshot was created. The creation time is also present in the snapshot metadata, but using this convention in the name can save some time while restoring an impaired cluster. 
 
-
-
 ### HBase - Cluster Replication
 
 The [HBase cluster replication](https://hbase.apache.org/book.html#_cluster_replication) allows you to keep one or more HBase clusters synchronized between each other. Depending on how you set up the replication and peering between the clusters you can achieve different configurations to establish both a Disaster Recovery or a Highly Available setup depending on your needs.  
@@ -61,6 +58,7 @@ To setup this architecture you should performed the following steps:
 * Create two HBase clusters in different AWS Availability Zones
 
 * Create an [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/) using an [EC2 Target Group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html) configured with the following specifications: 
+* 
     * **Target Type**: IP addresses. EMR master IP for the Primary and Secondary cluster
     * **Protocol**: TCP
     * **Port:** 2181. Default port used by the Zookeeper service
@@ -115,7 +113,6 @@ In order to implement the following architecture, you can perform the steps belo
 
 * Once done, specify the Route53 A record previously defined to route your client applications to the EMR Primary cluster. 
 
-
 This architecture serves mainly to implement a DR strategy for your HBase data. However, you can still leverage the Secondary cluster as a read replica of your data to reduce read requests on the Primary EMR Cluster. However, if you want to implement this scenario, please make sure that only client applications that have to perform READ operations (e.g. SCAN, GET) connect to the Secondary EMR cluster.
 
 
@@ -127,8 +124,6 @@ In case of failures on the EMR Primary cluster, you’ll be able to route your c
 If you have a business requirement that requires to replicate HBase data in different AWS Regions, you can still leverage the HBase cluster replication feature to synchronize data between two clusters. The setup is very similar to what previously described, but requires to establish an inter-region [VPC peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) between the two AWS Regions, so that HBase clusters can exchange data between each other. An example multi region Active / Active setup is depicted in the below figure.
 
 ![HBase - Cluster Replication - Cross](./img/hbase_replication_cross.png "HBase - Cluster Replication - Cross")
-
-
 
 ## HBase on Amazon S3
 

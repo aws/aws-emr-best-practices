@@ -33,13 +33,13 @@ To change the default NN memory, you can use the following [EMR Configuration](h
 
 Amazon EMR already configures most of the HDFS parameters that are required to get good HDFS performance for HBase. However, if you’re using a large instance with several vCpu, you might benefit in increasing the number of service threads that are available for the HDFS DataNode service. Please note that if you’re using [HDFS - Short Circuit Reads](#hdfs-short-circuit-reads) you might not get any additional benefits from this parameter tuning, but this might still be handy if your HDFS is used by other applications. 
 
-In this case, setting the **dfs.datanode.handler.count** to 3 times the number of vCpu available on the node can be a good starting point. In the same way we can also tune the number of **dfs.namenode.handler.count** for larger cluster installations. For this last parameter, you can use the following formula to determine a good value for your cluster
+In this case, setting the *`dfs.datanode.handler.count`* to 3 times the number of vCpu available on the node can be a good starting point. In the same way we can also tune the number of *`dfs.namenode.handler.count`* for larger cluster installations. For this last parameter, you can use the following formula to determine a good value for your cluster
 
 ```
 20 * log2(number of CORE nodes)
 ```
 
-Please note that this value might be useful to increase, if you have more than 20 CORE nodes provisioned in the cluster, otherwise you might stick to the default values set by the service. Also for both **dfs.namenode.handler.count** and **dfs.datanode.handler.count** you should not set a value higher than 200.
+Please note that this value might be useful to increase, if you have more than 20 CORE nodes provisioned in the cluster, otherwise you might stick to the default values set by the service. Also for both *`dfs.namenode.handler.count`* and *`dfs.datanode.handler.count`* you should not set a value higher than 200.
 
 
 ```json
@@ -89,7 +89,7 @@ If you specify the HDFS replication manually, please make sure to have a suffici
 
 Hadoop 2.4 introduced a new feature called Hedged Reads. If a read from a block is slow, the HDFS client starts up another parallel read against a different block replica. The result of whichever read returns first is used, and the outstanding read is cancelled. This feature helps in situations where a read occasionally takes a long time rather than when there is a systemic problem. Hedged reads can be enabled for HBase when the HFiles are stored in HDFS. This feature is disabled by default.
 
-To enable hedged reads, set **dfs.client.hedged.read.threadpool.size** to the number of threads to dedicate to running hedged threads, and **dfs.client.hedged.read.threshold.millis** to the number of milliseconds to wait before starting another read against a different block replica. 
+To enable hedged reads, set *`dfs.client.hedged.read.threadpool.size`* to the number of threads to dedicate to running hedged threads, and *`dfs.client.hedged.read.threshold.millis`* to the number of milliseconds to wait before starting another read against a different block replica. 
 
 The following is an example configuration to enable hedged reads using EMR Configurations: 
 
