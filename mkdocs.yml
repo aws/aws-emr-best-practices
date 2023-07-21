@@ -20,8 +20,6 @@ nav:
   - 4 - Features: 
     - 4.1 - Managed Scaling: 'features/managed_scaling/best_practices.md'     
     - 4.2 - Spot Usage: 'features/spot_usage/best_practices.md'              
-  # - 4 - Performance Efficiency: 'index.md'
-  # - 5 - Operational Excellence: 'index.md'
   - 5 - Applications:
       - 5.1 Spark:
         - Introduction: 'applications/spark/introduction.md'
@@ -32,7 +30,7 @@ nav:
         - Best Practices: 'applications/hive/best_practices.md'
       - 5.3 HBase:
         - Introduction: 'applications/hbase/introduction.md'
-        - Best Practice: 'applications/hbase/best_practice.md'
+        - Best Practices: 'applications/hbase/best_practice.md'
         - Best Practice for HDFS: 'applications/hbase/best_practice_hdfs.md'
         - Best Practice for Amazon S3: 'applications/hbase/best_practice_s3.md'
         - Data Integrity: 'applications/hbase/data_integrity.md'        
@@ -42,25 +40,15 @@ nav:
         - Performance Tests: 'applications/hbase/performance_tests.md'
         - Security: 'applications/hbase/security.md'
   - 6 - Architecture:
-      - Batch:
-        - Introduction: 'architecture/batch/introduction.md' 
+#      - Batch:
+#        - Introduction: 'architecture/batch/introduction.md' 
       - Ad Hoc:
         - Introduction: 'architecture/adhoc/introduction.md' 
         - Architecture: 'architecture/adhoc/architecture.md'         
-      - Notebooks:
-        - Introduction: 'architecture/notebooks/introduction.md'       
-      - Datalake Storage:
-        - Introduction: 'architecture/datalake_storage/introduction.md'         
-    # - Hive: 'index.md'      
-    # - Introduction: 'index.md'
-  # - Performance:
-  #   - Introduction: 'index.md'
-  # - Reliability:
-  #   - Introduction: 'index.md'
-  # - Applications:
-  #   - Spark: 'index.md'
-  #   - Hive: 'index.md'
-  #   - Hbase: 'index.md'
+#      - Notebooks:
+#        - Introduction: 'architecture/notebooks/introduction.md'       
+#      - Datalake Storage:
+#        - Introduction: 'architecture/datalake_storage/introduction.md'         
 markdown_extensions:
     - toc:
         permalink: true
