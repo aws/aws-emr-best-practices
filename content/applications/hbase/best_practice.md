@@ -21,7 +21,7 @@ When a node is in an UNHEALTHY state, with the termination protection enabled th
 
 ## HBase RPC Listeners
 
-One of the most important parameters to configure in your HBase cluster is the number of active RPC listeners defined per Region Server. Tuning the parameter **hbase.regionserver.handler.count** (default: 30) can increase the number of requests that you can concurrently serve in each region server and so the overall throughput of your cluster. To modify the default number of RPC listeners you can use the following EMR configuration: 
+One of the most important parameters to configure in your HBase cluster is the number of active RPC listeners defined per Region Server. Tuning the parameter *`hbase.regionserver.handler.count`* (default: 30) can increase the number of requests that you can concurrently serve in each region server and so the overall throughput of your cluster. To modify the default number of RPC listeners you can use the following EMR configuration: 
 
 ```json
 [
@@ -45,15 +45,15 @@ On Amazon EMR, when you install HBase, the memory will be evenly re-partitioned 
 
 However, when working with HBase it might be convenient to override the default parameters and increase the available memory for our HBase services. This might be required if we want to host a higher number of Regions per Region Server. To modify the default memory, you should modify the HBase environmental variables defined in the *hbase-env* which defines the default heap memory available for each HBase service. The following list highlight the variables that should be modified by service: 
 
-* **HBASE_MASTER_OPTS** JVM options for the HBase master
-* **HBASE_REGIONSERVER_OPTS** JVM options for the HBase Region Servers
-* **HBASE_THRIFT_OPTS** JVM options for the HBase Thrift service
-* **HBASE_REST_OPTS** JVM options for the HBase REST service
+* **`HBASE_MASTER_OPTS`** JVM options for the HBase master
+* **`HBASE_REGIONSERVER_OPTS`** JVM options for the HBase Region Servers
+* **`HBASE_THRIFT_OPTS`** JVM options for the HBase Thrift service
+* **`HBASE_REST_OPTS`** JVM options for the HBase REST service
 
 
 It’s best practice to modify the memory of each component using its own dedicated variable, rather than using the more general **HBASE_OPTS**, which is used to apply common JVM options across all HBase services. 
 
-To override the default memory we should specify the following java parameter in our environmental variable:  `-Xmx<size>[g|G|m|M|k|K]`. Please also make sure to add a self reference in the environmental variable to avoid loosing other parameters that are set in the script. Besides, if we modify the default HBase memory, we should also lower accordingly the memory specified for the YARN Node Manager service to avoid incurring in Out Of Memory errors. 
+To override the default memory we should specify the following java parameter in our environmental variable: `-Xmx<size>[g|G|m|M|k|K]`. Please also make sure to add a self reference in the environmental variable to avoid loosing other parameters that are set in the script. Besides, if we modify the default HBase memory, we should also lower accordingly the memory specified for the YARN Node Manager service to avoid incurring in Out Of Memory errors. 
 
 Please note that either if you’re just installing HBase, it might still be convenient to keep some memory reserved for YARN. This can be useful as some HBase utility runs on YARN (e.g. HBase export utility). 
 
@@ -103,7 +103,7 @@ In write intensive clusters, you might increase the HBase throughput by adopting
 ]
 ```
 
-The parameter *hbase.wal.regiongrouping.numgroups* determines the number of WALs that will be created per Region Server. By default, this parameter is set to two, but you can tune this parameter accordingly to the number of disks attached to the node for better performance. 
+The parameter *`hbase.wal.regiongrouping.numgroups`* determines the number of WALs that will be created per Region Server. By default, this parameter is set to two, but you can tune this parameter accordingly to the number of disks attached to the node for better performance. 
 
 
 ## HBase OffHeap Caching

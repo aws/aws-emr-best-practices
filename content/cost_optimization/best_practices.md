@@ -5,7 +5,7 @@ Best Practices (BP) for running cost optimized workloads on EMR.
 
 ## ** BP 1.1 Use Amazon S3 as your persistent data store **
 
-As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is $275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
+As of Oct 1, 2021, Amazon S3 is 2.3 cents a GB/month for the first 50TB. This is \$275 per TB/year which is a much lower cost than 3x replicated data in HDFS. With HDFS, you’ll need to provision EBS volumes. EBS is 10 cents a GB/month, which is `~`4x the cost of Amazon S3 or 12x if you include the need for 3x HDFS replication. 
 
 Using Amazon S3 as your persistent data store allows you to grow your storage infinitely, independent of your compute.  With on premise Hadoop systems, you would have to add nodes just to house your data which may not be helping your compute and only increase cost.  In addition, Amazon S3 also has different storage tiers for less frequently accessed data providing opportunity for additional cost savings.
 
@@ -26,6 +26,7 @@ The query that executed on 1 file is 3.6x faster despite the tables and records 
 ![BP - 2](images/bp-2.png)
 
 **Convert** - Columnar file formats like Parquet and ORC can improve read performance. Columnar formats are ideal if most of your queries only select a subset of columns. For use cases where you primarily select all columns, but only select a subset of rows, choose a row optimized file format such as Apache Avro. The following image shows a performance comparison of a select count(`*`) query between Parquet and JSON (text) file formats.
+
 The query that executed over parquet ran 74x faster despite being larger in size. 
 
 ![BP - 3](images/bp-3.png)
@@ -55,7 +56,7 @@ STORED AS PARQUET
 LOCATION ‘s3:///buckets_test/hive-clustered/’;
 ```
 
-In this example, the bucketing column (col1) is specified by the CLUSTERED BY (col1) clause, and the number of buckets (5) is specified by the INTO 5 BUCKETS clause.
+In this example, the bucketing column (col1) is specified by the `CLUSTERED BY (col1)` clause, and the number of buckets (5) is specified by the `INTO 5 BUCKETS` clause.
 
 Bucketing is similar to partitioning – in both cases, data is segregated and stored – but there are a few key differences. Partitioning is based on a column that is repeated in the dataset and involves grouping data by a particular value of the partition column. While bucketing organizes data by a range of values, mainly involving primary key or non-repeated values in a dataset. Bucketing should be considered when your partitions are not comparatively equal in size or you have data skew with your keys. Certain operations like map-side joins are more efficient in bucket tables vs non bucketed ones. 
  
@@ -71,7 +72,7 @@ The master node does not have large computational requirements. For most cluster
 
 ## ** BP 1.5 Use instances with instance store for jobs that require high disk IOPS **
 
-Use dense SSD storage instances for data-intensive workloads such as I3en or d3en. These instances provide Non-Volatile Memory Express (NVMe) SSD-backed instance storage optimized for low latency, very high random I/O performance, high sequential read throughput and provide high IOPS at a low cost. EMR workloads that spend heavily use HDFS  or spend a lot of time writing spark shuffle data can benefit from these instances and see improved performance which reduces overall cost. 
+Use dense SSD storage instances for data-intensive workloads such as I3en or d3en. These instances provide Non-Volatile Memory Express (NVMe) SSD-backed instance storage optimized for low latency, very high random I/O performance, high sequential read throughput and provide high IOPS at a low cost. EMR workloads that heavily use HDFS or spend a lot of time writing spark shuffle data can benefit from these instances and see improved performance which reduces overall cost. 
 
 ## ** BP 1.6 Use Graviton2 instances **
 
@@ -138,6 +139,7 @@ Consider using a combination of Spot and On-Demand instances to lower cost and r
 
 * In this case, you would provision enough on demand capacity to meet your SLAs and then use additional spot to bring down your average cost. If spot is not available, you’ll still have on demand nodes to meet your SLA. When spot is available, your cluster will have additional compute which reduce run time and lowers the total cost of your job. 
 * For example:
+
 ```
 10 node cluster running for 14 hours 
 Cost = 1.0 * 10 * 14 = $140
@@ -168,27 +170,32 @@ Here’s an example of cluster without auto scaling. Since the size of the clust
 
 Here’s an example of cluster with auto scaling. The cluster capacity (blue dotted line) adjusts to the job demand reducing unused resources and cost. 
 ![BP - 6](images/bp-6.png)
+
 ## ** BP 1.11 Right size application containers **
 
 By default, EMR will try to set YARN and Spark memory settings to best utilize the instances compute resources. This is important to maximize your cluster resources. Whether you are migrating jobs to EMR or writing a new application, It is recommended that you start with default EMR configuration.  If you need to modify the default configuration for your specific use case, It’s important to use all the available resources of the cluster - both CPU and Memory.  
 
 For example, if you had a cluster that is using m5.4xlarge instances for its data nodes, you’d have 16 vCPU and 64GB of memory. 
 
-EMR will automatically set yarn.nodemanager.resource.cpu-vcores and yarn.nodemanager.resource.memory-mb in yarn-site.xml to allocate how much of the instances resources can be used for YARN applications. In the m5.4xlarge case, this is 16vCPU and 57344 mb. When using custom configuration for your spark containers, you want to ensure that the memory and cores you allocate to your executor is a multiple of the total resources allocated to yarn. For example, if you set
+EMR will automatically set `yarn.nodemanager.resource.cpu-vcores and yarn.nodemanager.resource.memory-mb` in `yarn-site.xml` to allocate how much of the instances resources can be used for YARN applications. In the m5.4xlarge case, this is 16vCPU and 57344 mb. When using custom configuration for your spark containers, you want to ensure that the memory and cores you allocate to your executor is a multiple of the total resources allocated to yarn. For example, if you set
 
+```
 spark.executor.memory 20,000M
 spark.yarn.executor.memoryOverhead 10% (2,000M)
 spark.executor.cores 4
+```
 
-Spark will only be able to allocate 2 executors on each node resulting in 57,344-44,000 (22,000`*`2) = 13,344 of unallocated resources and 76.7% memory utilization
+Spark will only be able to allocate 2 executors on each node resulting in 57,344 - 44,000(22,000`*`2 = 13,344 of unallocated resources and 76.7% memory utilization
 
-However, if spark.executor.memory was right sized to the available total yarn.nodemanager.resource.memory-mb you would get higher instance utilization. For example, 
+However, if `spark.executor.memory` was right sized to the available total `yarn.nodemanager.resource.memory-mb` you would get higher instance utilization. For example, 
 
+```
 spark.executor.memory 12,000M
 spark.yarn.executor.memoryOverhead 10% (1,200M)
 spark.executor.cores 4
+```
 
-Spark will be able to allocate 4 executors on each node resulting in only 57,344-52,800(13,200 * 4) = 4,544 of unallocated resources and 92.0% memory utilization
+Spark will be able to allocate 4 executors on each node resulting in only 57,344 - 52,800(13,200 * 4) = 4,544 of unallocated resources and 92.0% memory utilization
 
 For more information on Spark and YARN right sizing see: 
 
@@ -222,13 +229,13 @@ For more information on the Grafana and Prometheus solution, see:
 
 ## ** BP 1.13 Monitor and decommission idle EMR cluster **
 
-Decommission Amazon EMR clusters that are no longer required to lower cost.  This can be achieved in two ways. You can use EMR’s “automatic termination policy”  starting 5.30.0 and 6.1.0 or, by monitoring the “isIdle” metric in cloudwatch and terminating yourself. 
+Decommission Amazon EMR clusters that are no longer required to lower cost.  This can be achieved in two ways. You can use EMR’s automatic termination policy starting 5.30.0 and 6.1.0 or, by monitoring the `isIdle` metric in CloudWatch and terminating yourself. 
 
 With EMR’s automatic termination policy feature, EMR continuously samples key metrics associated with the workloads running on the clusters, and auto-terminates when the cluster is idle. For more information on when a cluster is considered idle and considerations, see 
 
 <https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html>
 
-With EMR’s “isIdle” cloudwatch metric, EMR will emit 1 if no tasks are running and no jobs are running, and emit 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.  You can set an alarm to fire when the cluster has been idle for a given period of time, such as thirty minutes.  Non-YARN based applications such as Presto, Trino, or HBase are not considered with the “IsIdle” Metrics 
+With EMR’s `isIdle` CloudWatch metric, EMR will emit 1 if no tasks are running and no jobs are running, and emit 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.  You can set an alarm to fire when the cluster has been idle for a given period of time, such as thirty minutes.  Non-YARN based applications such as Presto, Trino, or HBase are not considered with `isIdle` metrics.
 
 For a sample solution of this approach, see 
 

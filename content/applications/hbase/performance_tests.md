@@ -47,7 +47,7 @@ For example, the following command allows us to create a table called *MyWriteTe
 hbase pe --table=MyWriteTest --presplit=200 --size=2 --latency --nomapred randomWrite 1
 ```
 
-As described in the [Log](./observability.md#logs) section, the log output will be stored in the **/var/log/hbase/hbase.log** file. Please make sure to run the previous command as **hbase** user, or you’ll not have the permissions to modify this file using the standard **hadoop** user. The following shows a sample output for the previous command: 
+As described in the [Log](./observability.md#logs) section, the log output will be stored in the **`/var/log/hbase/hbase.log`** file. Please make sure to run the previous command as **`hbase`** user, or you’ll not have the permissions to modify this file using the standard **`hadoop`** user. The following shows a sample output for the previous command: 
 
 ```log
 INFO [TestClient-0] hbase.PerformanceEvaluation: Latency (us) : mean=21.45, min=1.00, max=480941.00, stdDev=992.53, 50th=2.00, 75th=2.00, 95th=2.00, 99th=3.00, 99.9th=24.00, 99.99th=37550.00, 99.999th=46364.23
@@ -63,11 +63,11 @@ INFO [main] hbase.PerformanceEvaluation: [ Avg latency (us)] 21
 INFO [main] hbase.PerformanceEvaluation: [ Avg TPS/QPS] 49405 row per second
 ```
 
-As you can see this will report min, max and avg response latency for our write requests, along with throughput information about the max number of calls served by the cluster. Please note that in our example we used the *nomapred* parameter that will use a local thread to perform the test (in this case client resides on the EMR master node).
+As you can see this will report min, max and avg response latency for our write requests, along with throughput information about the max number of calls served by the cluster. Please note that in our example we used the *`nomapred`* parameter that will use a local thread to perform the test (in this case client resides on the EMR master node).
 
 If we want to generate a higher number of requests is better to remove this option, so that the utility will use a Map Reduce (MR) job to perform the test. In this last scenario, it might be convenient to run the MR job on a separate cluster, to avoid using resources (cpu, network bandwidth) from our HBase cluster and gather more realistic results. 
 
-For example, the same tests can performed from a separate EMR cluster adding the following parameter: **-Dhbase.zookeeper.quorum=TARGET_HBASE_MASTER_DNS**, and replacing TARGET_HBASE_MASTER_DNS with the EMR master hostname we want to test.
+For example, the same tests can performed from a separate EMR cluster adding the following parameter: **`-Dhbase.zookeeper.quorum=TARGET_HBASE_MASTER_DNS`**, and replacing TARGET_HBASE_MASTER_DNS with the EMR master hostname we want to test.
 
 ```bash
 hbase pe -Dhbase.zookeeper.quorum=ip-xxx-xx-x-xxx.compute.internal --table=MyWriteTestTwo --presplit=200 --size=2 --latency  randomWrite 1

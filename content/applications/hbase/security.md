@@ -13,23 +13,23 @@ Amazon EMR automatically configures HBase with the required configurations when 
 
 | Configuration                                    | Value                              |
 |--------------------------------------------------|------------------------------------|
-| **hbase.security.authentication**                | kerberos                           |
-| **hbase.security.authorization**                 | true                               | 
-| **hbase.master.kerberos.principal**              | hbase/_HOST@<YOUR_KERBEROS_REALM>  | 
-| **hbase.master.keytab.file**                     | /etc/hbase.keytab                  | 
-| **hbase.regionserver.kerberos.principal**        | hbase/_HOST@<YOUR_KERBEROS_REALM>  | 
-| **hbase.regionserver.keytab.file**               | /etc/hbase.keytab                  | 
-| **hbase.thrift.kerberos.principal**              | hbase/_HOST@<YOUR_KERBEROS_REALM>  | 
-| **hbase.thrift.keytab.file**                     | /etc/hbase.keytab                  | 
-| **hbase.thrift.security.qop**                    | auth                               | 
-| **hbase.rest.authentication.type**               | kerberos                           | 
-| **hbase.rest.authentication.kerberos.principal** | HTTP/_HOST@<YOUR_KERBEROS_REALM>   | 
-| **hbase.rest.authentication.kerberos.keytab**    | /etc/hbase.keytab                  | 
-| **hbase.rest.kerberos.principal**                | hbase/_HOST@<YOUR_KERBEROS_REALM>  | 
-| **hbase.rest.keytab.file**                       | /etc/hbase.keytab                  | 
-| **hbase.rest.support.proxyuser**                 | true                               | 
-| **hadoop.proxyuser.hbase.groups**                | *                                  | 
-| **hadoop.proxyuser.hbase.hosts**                 | *                                  | 
+| **hbase.security.authentication**                | `kerberos`                           |
+| **hbase.security.authorization**                 | `true`                               | 
+| **hbase.master.kerberos.principal**              | `hbase/_HOST@<YOUR_KERBEROS_REALM>`  | 
+| **hbase.master.keytab.file**                     | `/etc/hbase.keytab`                  | 
+| **hbase.regionserver.kerberos.principal**        | `hbase/_HOST@<YOUR_KERBEROS_REALM>`  | 
+| **hbase.regionserver.keytab.file**               | `/etc/hbase.keytab`                  | 
+| **hbase.thrift.kerberos.principal**              | `hbase/_HOST@<YOUR_KERBEROS_REALM>`  | 
+| **hbase.thrift.keytab.file**                     | `/etc/hbase.keytab`                  | 
+| **hbase.thrift.security.qop**                    | `auth`                               | 
+| **hbase.rest.authentication.type**               | `kerberos`                           | 
+| **hbase.rest.authentication.kerberos.principal** | `HTTP/_HOST@<YOUR_KERBEROS_REALM>`   | 
+| **hbase.rest.authentication.kerberos.keytab**    | `/etc/hbase.keytab`                  | 
+| **hbase.rest.kerberos.principal**                | `hbase/_HOST@<YOUR_KERBEROS_REALM>`  | 
+| **hbase.rest.keytab.file**                       | `/etc/hbase.keytab`                  | 
+| **hbase.rest.support.proxyuser**                 | `true`                               | 
+| **hadoop.proxyuser.hbase.groups**                | `*`                                  | 
+| **hadoop.proxyuser.hbase.hosts**                 | `*`                                  | 
 
 
 To launch an EMR cluster with Kerberos Authentication, please refer to [Configuring Kerberos on Amazon EMR](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-kerberos-configure.html)
@@ -53,7 +53,7 @@ Once the users are authenticated through Kerberos, we can now implement our Auth
 ]
 ```
 
-In order to grant permissions to specific users in the cluster, you must define the ACL policies using the `hbase` admin user. For example, the below command add the READ('R'), WRITE('W'), EXEC('X'), CREATE('C'), ADMIN('A') permissions to the `hadoop` user:
+In order to grant permissions to specific users in the cluster, you must define the ACL policies using the `hbase` admin user. For example, the below command add the `READ('R')`, `WRITE('W')`, `EXEC('X')`, `CREATE('C')`, `ADMIN('A')` permissions to the `hadoop` user:
 
 ```bash
 sudo -s

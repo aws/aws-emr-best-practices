@@ -62,7 +62,8 @@ This is the default deploy mode for Spark applications in EMR. In this deploy mo
 
 ![BP - 4](images/spark-bp-4.png)
 
-Use this deploy mode if :-
+Use this deploy mode if:
+
 * You are running only one or two Spark applications at a time in a cluster. This deploy mode is not ideal if you are running multiple applications at the same time on the same cluster since all those Spark drivers running on a single master/remote node can lead to resource contention.
 * You want to be more in control of your Spark driver configurations. In client mode, Spark driver resources will not compete with YARN resources and can be adjusted separately without affecting the YARN resource procurement of your applications.
 * You are running too many executors (1000+) or tasks (30000+) in a single application. Since Spark driver manages and monitors all the tasks and executors of an application, too many executors/tasks may slow down the Spark driver significantly while polling for statuses. Since EMR allows you to specify a different instance type for master node, you can choose a very powerful instance like z1d and reserve a large amount of memory and CPU resources for the Spark driver process managing too many executors and tasks from an application.
@@ -75,13 +76,14 @@ In cluster deploy mode, your Spark driver will be located within the Application
 
 ![BP - 5](images/spark-bp-5.png)
 
-Use cluster deploy mode if :-
+Use cluster deploy mode if:
+
 * You are submitting multiple applications at the same time or have higher application or EMR step concurrency. While running multiple applications, Spark drivers will be spread across the cluster since AM container from a single application will be launched on one of the worker nodes.
 * There are relatively fewer number of executors per application. i.e., the Spark driver process does not have to do intensive operations like manage and monitor tasks from too many executors.
 * You are saving results in S3/HDFS and there is no need to print output to the console.
 * You want to specify detailed instructions on where AM runs. You can launch AMs on CORE partition or both CORE and TASK partitions based on where you want your AM and executors to launch. For example, you can run AM on only on-demand CORE nodes and executors only on spot task nodes.
-* You want to relaunch a failed driver JVM i.e., increased resiliency. By default, YARN re-attempts AM loss twice based on property *spark.yarn.maxAppAttempts*. You can increase this value further if needed.
-* You want to ensure that termination of your Spark client will not lead to termination of your application. You can also have Spark client return success status right after the job submission if the property *spark.yarn.submit.waitAppCompletion* is set to "false".
+* You want to relaunch a failed driver JVM i.e., increased resiliency. By default, YARN re-attempts AM loss twice based on property *`spark.yarn.maxAppAttempts`*. You can increase this value further if needed.
+* You want to ensure that termination of your Spark client will not lead to termination of your application. You can also have Spark client return success status right after the job submission if the property *`spark.yarn.submit.waitAppCompletion`* is set to "false".
 
 Regardless of which deploy mode you choose, make sure that your driver Spark configs are tuned for your workload needs.
 
@@ -99,7 +101,8 @@ Use splittable compression formats like BZ2, LZO etc. Parquet uses Snappy compre
 
 ![BP - 7](images/spark-bp-7.png)
 
-You can also apply columnar encryption on Parquet files using KMS.
+You can also apply columnar encryption on Parquet files using KMS:
+
 ```
 sc.hadoopConfiguration.set("parquet.encryption.kms.client.class" ,"org.apache.parquet.crypto.keytools.mocks.InMemoryKMS")
 // Explicit master keys (base64 encoded) - required only for mock InMemoryKMS
@@ -118,7 +121,7 @@ val df2 = spark.read.parquet("/path/to/table.parquet.encrypted")
 
 Partitioning your data or tables is very important if you are going to run your code or queries with filter conditions. Partitioning helps arrange your data files into different S3 prefixes or HDFS folders based on the partition key. It helps minimize read/write access footprint i.e., you will be able to read files only from the partition folder specified in your where clause - thus avoiding a costly full table scan. Partitioning can also help if your data ingestion is incremental in nature. However, partitioning can reduce read throughput when you perform full table scans.
 
-You can choose one or more partition fields from your dataset or table columns based on :-
+You can choose one or more partition fields from your dataset or table columns based on:
 
 * Query pattern. i.e., if you find queries use one or more columns frequently in the filter conditions more so than other columns, it is recommended to consider leveraging them as partitioning field.
 * Ingestion pattern. i.e., if you are loading data into your table based on a fixed schedule (eg: once everyday) and you want to avoid re-writing historical data, you can partition your data based on date field (typically in YYYY-MM-DD format or YYYY/MM/DD nested partitions).
@@ -126,21 +129,25 @@ You can choose one or more partition fields from your dataset or table columns b
 * File sizes per partition. It is recommended that your individual file sizes within each partition are >=128 MB.
 
 The number of shuffle partitions will determine the number of output files per table partition.
+
 ```
 df.repartition(400).write.partitionBy("datecol").parquet("s3://bucket/output/")
 ```
-The above code will create maximum of 400 files per datecol partition. Repartition API alters the number of shuffle partitions dynamically. PartitionBy API specifies the partition column(s) of the table. You can also control the number of shuffle partitions with the Spark property *spark.sql.shuffle.partitions*. You can use repartition API to control the output file size i.e., for merging small files. For splitting large files, you can use the property *spark.sql.files.maxPartitionBytes*.
+
+The above code will create maximum of 400 files per datecol partition. Repartition API alters the number of shuffle partitions dynamically. PartitionBy API specifies the partition column(s) of the table. You can also control the number of shuffle partitions with the Spark property *`spark.sql.shuffle.partitions`*. You can use repartition API to control the output file size i.e., for merging small files. For splitting large files, you can use the property *`spark.sql.files.maxPartitionBytes`*.
 
 Partitioning ensures that [dynamic partition pruning](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic) takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Spark optimized logical plan or DAG can be studied to ensure that the partition filters are pushed down while reading and writing to partitioned tables from Spark.
 
-For example, following query will push partition filters for better performance. l_shipdate and l_shipmode are partition fields of the table "testdb.lineitem_shipmodesuppkey_part".
+For example, following query will push partition filters for better performance. `l_shipdate` and `l_shipmode` are partition fields of the table "testdb.lineitem_shipmodesuppkey_part".
 
 ```
 val df = spark.sql("select count(*) from testdb.lineitem_shipmodesuppkey_part where l_shipdate='1993-12-03' and l_shipmode='SHIP'")
 
 df.queryExecution.toString
 ```
+
 Printing the query execution plan where we can see pushed filters for the two partition fields in where clause:
+
 ```
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=true
@@ -164,15 +171,17 @@ AdaptiveSparkPlan isFinalPlan=true
 
 Amazon EMR configures Spark defaults during the cluster launch based on your cluster's infrastructure (number of instances and instance types). EMR configured defaults are generally sufficient for majority of the workloads. However, if it is not meeting your performance expectations, it is recommended to tune the Spark driver/executor configurations and see if you can achieve better performance. Following are the general recommendations on driver/executor configuration tuning.
 
-For a starting point, generally, it is advisable to set *spark.executor.cores* to 4 or 5 and tune *spark.executor.memory* around this value. Also, when you calculate the *spark.executor.memory*, you need to account for the executor overhead which is set to 0.1875 by default (i.e., 18.75% of *spark.executor.memory*). For example, for a 2 worker node r4.8xlarge cluster, following will be the configurations.
+For a starting point, generally, it is advisable to set *`spark.executor.cores`* to 4 or 5 and tune *`spark.executor.memory`* around this value. Also, when you calculate the *`spark.executor.memory`*, you need to account for the executor overhead which is set to 0.1875 by default (i.e., 18.75% of *`spark.executor.memory`*). For example, for a 2 worker node r4.8xlarge cluster, following will be the configurations.
 
-Based on [Task Configurations](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html) r4.8xlarge node has YARN memory of 241664 MB (based on the value of *yarn.nodemanager.resource.memory-mb*). The instance has 32 vCores. If we set *spark.executor.cores* as 4, we can run 8 executors at a time. So, the configurations will be following.
+Based on [Task Configurations](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html) r4.8xlarge node has YARN memory of 241664 MB (based on the value of *`yarn.nodemanager.resource.memory-mb`*). The instance has 32 vCores. If we set *`spark.executor.cores`* as 4, we can run 8 executors at a time. So, the configurations will be following.
 
-*spark.executor.cores* = 4
+```
+spark.executor.cores = 4
 
-*spark.executor.memory* + (*spark.executor.memory* * *spark.yarn.executor.memoryOverheadFactor*) = (241664 MB / 8) = 30208 MB
+spark.executor.memory + (spark.executor.memory * spark.yarn.executor.memoryOverheadFactor) = (241664 MB / 8) = 30208 MB
 
-*spark.executor.memory* = 24544 MB (substituting default *spark.yarn.executor.memoryOverheadFactor*=0.1875)
+spark.executor.memory = 24544 MB (substituting default spark.yarn.executor.memoryOverheadFactor = 0.1875)
+```
 
 If you have a cluster of 10 r4.8xlarge nodes, then totally, 80 executors can run with 24544 MB memory and 4 vCores each.
 
@@ -193,26 +202,26 @@ To provide an example, lets say you have requested a cluster with a core fleet c
 | r5.4xlarge | 122880 |
 | r5.12xlarge | 385024 |
 
-Now, let us calculate executor memory after setting *spark.executor.cores* = 4 by starting with smallest YARN memory from the above table (c5.4xlarge) and dividing the YARN memory by *spark.executor.cores* to get the total container size -> 24576 / 4 = 6144.
+Now, let us calculate executor memory after setting *`spark.executor.cores`* = 4 by starting with smallest YARN memory from the above table (c5.4xlarge) and dividing the YARN memory by *`spark.executor.cores`* to get the total container size -> 24576 / 4 = 6144.
 
-*spark.executor.memory* = 6144 - (6144 * 0.1875) = 4992 MB
+*`spark.executor.memory`* = 6144 - (6144 * 0.1875) = 4992 MB
 
 Using default Spark implementation, with the above math, if you set 4992 MB as executor memory, then in r5.12xlarge instances in your fleet, the resources will be under utilized even though you will not see the evidence of it from the Resource Manager UI. With the above configs, 77 executors can run in r5.12xlarge but there are only 48 vCores. So, even though 77 executors will have YARN resources allocated, they are only able to run 48 tasks at any given time which could be considered a wastage of memory resources.
 
-In order to alleviate this issue, from EMR 5.32 and EMR 6.2, there is a feature called Heterogenous Executors which dynamically calculates executor sizes. It is defined by the property *spark.yarn.heterogeneousExecutors.enabled* and is set to "true" by default. Further, you will be able to control the maximum resources allocated to each executor with properties *spark.executor.maxMemory* and *spark.executor.maxCores*. Minimum resources are calculated with *spark.executor.cores* and *spark.executor.memory*. For uniform instance groups or for flexible fleets with instance types having similar vCore:memory ratio, you can try setting *spark.yarn.heterogeneousExecutors.enabled* to "false" and see if you get better performance.
+In order to alleviate this issue, from EMR 5.32 and EMR 6.2, there is a feature called Heterogenous Executors which dynamically calculates executor sizes. It is defined by the property *`spark.yarn.heterogeneousExecutors.enabled`* and is set to "true" by default. Further, you will be able to control the maximum resources allocated to each executor with properties *`spark.executor.maxMemory`* and *`spark.executor.maxCores`*. Minimum resources are calculated with *`spark.executor.cores`* and *`spark.executor.memory`*. For uniform instance groups or for flexible fleets with instance types having similar vCore:memory ratio, you can try setting *`spark.yarn.heterogeneousExecutors.enabled`* to "false" and see if you get better performance.
 
 Similar to executors, driver memory and vCores can be calculated as well. The default memory overhead for driver container is 10% of driver memory. If you are using cluster deploy mode, then the driver resources will be allocated from one of the worker nodes. So, based on the driver memory/core configurations, it will take away some of the YARN resources that could be used for launching executors - which shouldn't matter that much if your cluster is not very small. If you are using client deploy mode and submitting jobs from EMR master node or a remote server, then the driver resources are taken from the master node or remote server and your driver will not compete for YARN resources used by executor JVMs. The default driver memory (without maximizeResourceAllocation) is 2 GB. You can increase driver memory or cores for the following conditions:
 
 1. Your cluster size is very large and there are many executors (1000+) that need to send heartbeats to driver.
-2. Your result size retrieved during Spark actions such as collect() or take() is very large. For this, you will also need to tune *spark.driver.maxResultSize*.
+2. Your result size retrieved during Spark actions such as collect() or take() is very large. For this, you will also need to tune *`spark.driver.maxResultSize`*.
 
-You can use smaller driver memory (or use the default *spark.driver.memory*) if you are running multiple jobs in parallel.
+You can use smaller driver memory (or use the default *`spark.driver.memory`*) if you are running multiple jobs in parallel.
 
-Now, coming to *spark.sql.shuffle.partitions* for Dataframes and Datasets and *spark.default.parallelism* for RDDs, it is recommended to set this value to total number of vCores in your cluster or a multiple of that value. For example, a 10 core node r4.8xlarge cluster can accommodate 320 vCores in total. Hence, you can set shuffle partitions or parallelism to 320 or a multiple of 320 such that each vCore handles a single Spark partition at any given time. It is not recommended to set this value too high or too low. Generally 1 or 2x the total number of vCores is optimal. Generally, each Spark shuffle partition should process ~128 MB of data. This can be determined by looking at the execution plan from the Spark UI.
+Now, coming to *`spark.sql.shuffle.partitions`* for Dataframes and Datasets and *`spark.default.parallelism`* for RDDs, it is recommended to set this value to total number of vCores in your cluster or a multiple of that value. For example, a 10 core node r4.8xlarge cluster can accommodate 320 vCores in total. Hence, you can set shuffle partitions or parallelism to 320 or a multiple of 320 such that each vCore handles a single Spark partition at any given time. It is not recommended to set this value too high or too low. Generally 1 or 2x the total number of vCores is optimal. Generally, each Spark shuffle partition should process ~128 MB of data. This can be determined by looking at the execution plan from the Spark UI.
 
 ![BP - 16](images/spark-bp-16.png)
 
-From the above image, you can see that the average size in exchange (shuffle) is 2.2 KB which means we can try to reduce *spark.sql.shuffle.partitions* to increase partition size during the exchange.
+From the above image, you can see that the average size in exchange (shuffle) is 2.2 KB which means we can try to reduce *`spark.sql.shuffle.partitions`* to increase partition size during the exchange.
 
 Apart from this, if you want to use tools to receive tuning suggestions, consider using [Sparklens and Dr. Elephant](https://aws.amazon.com/blogs/big-data/tune-hadoop-and-spark-performance-with-dr-elephant-and-sparklens-on-amazon-emr/) with Amazon EMR which will provide tuning suggestions based on metrics collected during the runtime of your application.
 
@@ -277,15 +286,16 @@ val conf = new SparkConf()
 ```
 You can also optionally fine tune the following Kryo configs :-
 
-*spark.kryo.unsafe* - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster fleets use a mix of different processors (for eg: AMD, Graviton and Intel types within the same fleet).
-*spark.kryoserializer.buffer.max* - Maximum size of Kryo buffer. Default is 64m. Recommended to increase this property upto 1024m but the value should be below 2048m.
-*spark.kryoserializer.buffer* - Initial size of Kryo serialization buffer. Default is 64k. Recommended to increase up to 1024k.
+*`spark.kryo.unsafe`* - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster fleets use a mix of different processors (for eg: AMD, Graviton and Intel types within the same fleet).
+*`spark.kryoserializer.buffer.max`* - Maximum size of Kryo buffer. Default is 64m. Recommended to increase this property upto 1024m but the value should be below 2048m.
+*`spark.kryoserializer.buffer`* - Initial size of Kryo serialization buffer. Default is 64k. Recommended to increase up to 1024k.
 
 ## ** BP 5.1.8  -   Tune Garbage Collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
-Following is the spark configuration :-
+Following is the spark configuration:
+
 ```
 [{
 "classification": "spark-defaults",
@@ -296,12 +306,15 @@ Following is the spark configuration :-
 "configurations": []
 }]
 ```
-You can also tune the GC parameters for better GC performance. You can see the comprehensive list of parameters [here](https://www.oracle.com/technical-resources/articles/java/g1gc.html) for G1GC and [here](https://docs.oracle.com/en/java/javase/11/gctuning/parallel-collector1.html) for ParallelGC. Some useful ones are below :-
 
+You can also tune the GC parameters for better GC performance. You can see the comprehensive list of parameters [here](https://www.oracle.com/technical-resources/articles/java/g1gc.html) for G1GC and [here](https://docs.oracle.com/en/java/javase/11/gctuning/parallel-collector1.html) for ParallelGC. Some useful ones are below:
+
+```
 -XX:ConcGCThreads=n
 -XX:ParallelGCThreads=n
 -XX:InitiatingHeapOccupancyPercent=45
 -XX:MaxGCPauseMillis=200
+```
 
 You can monitor GC performance using Spark UI. The GC time should be ideally <= 1% of total task runtime. If not, consider tuning the GC settings or experiment with larger executor sizes. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is indicative of poor GC performance.
 
@@ -314,9 +327,11 @@ When using Spark APIs, try to use the optimal ones if your use case permits. Fol
 ### repartition vs coalesce
 
 Both repartition and coalesce are used for changing the number of shuffle partitions dynamically. Repartition is used for both increasing and decreasing the shuffle partitions whereas coalesce is used for only decreasing the number of shuffle partitions. If your goal is to decrease the number of shuffle partitions, consider using coalesce instead of repartition. Repartition triggers a full shuffle but coalesce triggers only a partial shuffle and thus minimizes the amount of data shuffled by keeping a few nodes as solely receivers of the shuffle data.
+
 ```
 df.coalesce(1) //instead of df.repartition(1)
 ```
+
 But please note that when you coalesce (or repartition) to a very small number, your JVM will process a lot of data which can lead to OOM issues or disk space issues due to shuffle spill.
 
 ### groupByKey vs reduceByKey
@@ -380,6 +395,7 @@ For such use cases, you can consider disabling dynamic allocation along with set
     "configurations": []
 }]
 ```
+
 Please note that if you are running more than one application at a time, you may need to tweak the Spark executor configurations to allocate resources to them. By disabling dynamic allocation, Spark driver or YARN Application Master does not have to calculate resource requirements at runtime or collect certain heuristics. This may save anywhere from 5-10% of job execution time. However, you will need to carefully plan Spark executor configurations in order to ensure that your entire cluster is being utilized. If you choose to do this, then it is better to disable autoscaling since your cluster only runs a fixed number of executors at any given time unless your cluster runs other applications as well.
 
 However, only consider this option if your workloads meet the above criteria since otherwise your jobs may fail due to lack of resources or you may end up wasting your cluster resources.
@@ -404,17 +420,17 @@ Even if you are using S3 directly to store your data, if your workloads are shuf
 
 ## ** BP 5.1.13  -   Spark speculation with EMRFS **
 
-In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to serious issues such as data loss or duplicate data. By default, *spark.speculation* is turned off. Only enable *spark.speculation* if you are doing one of the following.
+In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to serious issues such as data loss or duplicate data. By default, *`spark.speculation`* is turned off. Only enable *`spark.speculation`* if you are doing one of the following.
 
 * Writing Parquet files to S3 using EMRFSOutputCommitter
 * Using HDFS as temporary storage in an understanding that final output will be written to S3 using S3DistCp
 * Using HDFS as storage (not recommended)
 
-**Do not enable *spark.speculation* if none of the above criteria is met since it will lead to incorrect or missing or duplicate data.**
+**Do not enable *`spark.speculation`* if none of the above criteria is met since it will lead to incorrect or missing or duplicate data.**
 
-You can consider enabling *spark.speculation* especially while running workloads on very large clusters, provided you are performing one of the above actions. This is because, due to some hardware or software issues, one node out of 500+ nodes could be slower and may run tasks slowly even if data size being processed is the same as other tasks. Chances of this happening are higher in larger clusters. In that case, *spark.speculation* will help relaunch those slow tasks on other nodes providing SLA consistency (as long as the above criteria are met).
+You can consider enabling *`spark.speculation`* especially while running workloads on very large clusters, provided you are performing one of the above actions. This is because, due to some hardware or software issues, one node out of 500+ nodes could be slower and may run tasks slowly even if data size being processed is the same as other tasks. Chances of this happening are higher in larger clusters. In that case, *`spark.speculation`* will help relaunch those slow tasks on other nodes providing SLA consistency (as long as the above criteria are met).
 
-You can set *spark.speculation* to true in spark-defaults or pass it as a command line option (--conf *spark.speculation*="true").
+You can set *`spark.speculation`* to true in spark-defaults or pass it as a command line option (--conf *`spark.speculation`*="true").
 
 ```
 [{
@@ -426,7 +442,7 @@ You can set *spark.speculation* to true in spark-defaults or pass it as a comman
 }]
 ```
 
-Please do not enable *spark.speculation* if you are writing any non-Parquet files to S3 or if you are writing Parquet files to S3 without the default EMRFSOutputCommitter.
+Please do not enable *`spark.speculation`* if you are writing any non-Parquet files to S3 or if you are writing Parquet files to S3 without the default EMRFSOutputCommitter.
 
 ## ** BP 5.1.14 -   Data quality and integrity checks with deequ **
 
@@ -509,6 +525,7 @@ Now, aggregation is performed on this salt column and the results are reduced by
 ```
 unsalted_df = salted_df.groupBy("salt", groupByFields).agg(aggregateFields).groupBy(groupByFields).agg(aggregateFields)
 ```
+
 Similar logic can  be applied for windowing functions as well.
 
 A downside to this approach is that it creates too many small tasks for non-skewed keys which may have a negative impact on the overall job performance.
@@ -531,6 +548,7 @@ val replicaDF = skewDF
       .drop('replica')
 val merged = salted.join(replicaDF, joinColumns :+ "salt")
 ```
+
 ### Isolated broadcast join
 In this approach, smaller lookup table is broadcasted across the workers and joined in map phase itself. Thus, reducing the amount of data shuffles. Similar to last approach, skewed keys are separated from normal keys. Then, we reduce the ”normal” keys and perform map-side join on isolated ”skewed” keys. Finally, we can merge the results of skewed and normal joins
 
@@ -577,9 +595,9 @@ SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1 INNER JOIN t2 ON t1.key = t2.key;
 ```
 
 ### Broadcast Join
-Broadcast join i.e., map-side join is the most optimal join, provided one of your tables is small enough - in the order of MBs and you are performing an equi (=) join. All join types are supported except full outer joins. This join type broadcasts the smaller table as a hash table across all the worker nodes in memory. Note that once the small table has been broadcasted, we cannot make changes to it. Now that the hash table is locally in the JVM, it is merged easily with the large table based on the condition using a hash join. High performance while using this join can be attributed to minimal shuffle overhead. From EMR 5.30 and EMR 6.x onwards, by default, while performing a join if one of your tables is <=10 MB, this join strategy is chosen. This is based on the parameter *spark.sql.autoBroadcastJoinThreshold* which is defaulted to 10 MB.
+Broadcast join i.e., map-side join is the most optimal join, provided one of your tables is small enough - in the order of MBs and you are performing an equi (=) join. All join types are supported except full outer joins. This join type broadcasts the smaller table as a hash table across all the worker nodes in memory. Note that once the small table has been broadcasted, we cannot make changes to it. Now that the hash table is locally in the JVM, it is merged easily with the large table based on the condition using a hash join. High performance while using this join can be attributed to minimal shuffle overhead. From EMR 5.30 and EMR 6.x onwards, by default, while performing a join if one of your tables is <=10 MB, this join strategy is chosen. This is based on the parameter *`spark.sql.autoBroadcastJoinThreshold`* which is defaulted to 10 MB.
 
-If one of your join tables are larger than 10 MB, you can either modify *spark.sql.autoBroadcastJoinThreshold* or use an explicit broadcast hint. You can verify that your query uses a broadcast join by investigating the live plan from SQL tab of Spark UI.
+If one of your join tables are larger than 10 MB, you can either modify *`spark.sql.autoBroadcastJoinThreshold`* or use an explicit broadcast hint. You can verify that your query uses a broadcast join by investigating the live plan from SQL tab of Spark UI.
 
 ![BP - 24](images/spark-bp-24.png)
 
@@ -590,12 +608,12 @@ This is the most common join used by Spark. If you are joining two large tables 
 
 ![BP - 25](images/spark-bp-25.png)
 
-Spark configuration *spark.sql.join.preferSortMergeJoin* is defaulted to true from Spark 2.3 onwards. When this join is implemented, data is read from both tables and shuffled. After this shuffle operation, records with the same keys from both datasets are sent to the same partition. Here, the entire dataset is not broadcasted, which means that the data in each partition will be of manageable size after the shuffle operation. After this, records on both sides are sorted by the join key. A join is performed by iterating over the records on the sorted dataset. Since the dataset is sorted, the merge or join operation is stopped for an element as soon as a key mismatch is encountered. So a join attempt is not performed on all keys. After sorting, join operation is performed upon iterating the datasets on both sides which will happen quickly on the sorted datasets.
+Spark configuration *`spark.sql.join.preferSortMergeJoin`* is defaulted to true from Spark 2.3 onwards. When this join is implemented, data is read from both tables and shuffled. After this shuffle operation, records with the same keys from both datasets are sent to the same partition. Here, the entire dataset is not broadcasted, which means that the data in each partition will be of manageable size after the shuffle operation. After this, records on both sides are sorted by the join key. A join is performed by iterating over the records on the sorted dataset. Since the dataset is sorted, the merge or join operation is stopped for an element as soon as a key mismatch is encountered. So a join attempt is not performed on all keys. After sorting, join operation is performed upon iterating the datasets on both sides which will happen quickly on the sorted datasets.
 
 Continue to use this join type if you are joining two large tables with an equi condition on sortable keys. Do not convert a sort merge join to broadcast unless one of the tables is < 1 GB. All join types are supported.
 
 ### Shuffle Hash Join
-Shuffle Hash Join sends data with the same join keys in the same executor node followed by a Hash Join. The data is shuffled among the executors using the join key. Then, the data is combined using Hash Join since data from the same key will be present in the same executor. In most cases, this join type performs poorly when compared to Sort Merge join since it is more shuffle intensive. Typically, this join type is avoided by Spark unless *spark.sql.join.preferSortMergeJoin* is set to "false" or the join keys are not sortable. This join also supports only equi conditions. All join types are supported except full outer joins. If you find out from the Spark UI that you are using a Shuffle Hash join, then check your join condition to see if you are using non-sortable keys and cast them to a sortable type to convert it into a Sort Merge join.
+Shuffle Hash Join sends data with the same join keys in the same executor node followed by a Hash Join. The data is shuffled among the executors using the join key. Then, the data is combined using Hash Join since data from the same key will be present in the same executor. In most cases, this join type performs poorly when compared to Sort Merge join since it is more shuffle intensive. Typically, this join type is avoided by Spark unless *`spark.sql.join.preferSortMergeJoin`* is set to "false" or the join keys are not sortable. This join also supports only equi conditions. All join types are supported except full outer joins. If you find out from the Spark UI that you are using a Shuffle Hash join, then check your join condition to see if you are using non-sortable keys and cast them to a sortable type to convert it into a Sort Merge join.
 
 ### Broadcast Nested Loop Join
 Broadcast Nested Loop Join broadcasts one of the entire datasets and performs a nested loop to join the data. Some of the results are broadcasted for a better performance. Broadcast Nested Loop Join generally leads to poor job performance and may lead to OOMs or network bottlenecks. This join type is avoided by Spark unless no other options are applicable. It supports both equi and non-equi join conditions (<,>,<=,>=,like conditions,array/list matching etc.). If you see this join being used by Spark upon investigating your query plan, it is possible that it is being caused by a poor coding practice.
@@ -618,7 +636,7 @@ val result1 = df1.join(df2, df1("l_partkey") === df2("l_partkey"))
 val result2 = df1.join(df2, df1("l_linenumber") === df2("l_linenumber"))
 val resultDF = result1.union(result2)
 ```
-The query plan after optimization looks like below. You can also optionally pass a broadcast hint to ensure that broadcast join happens if any one of your two tables is small enough. In the following case, it picked broadcast join by default since one of the two tables met *spark.sql.autoBroadcastJoinThreshold*.
+The query plan after optimization looks like below. You can also optionally pass a broadcast hint to ensure that broadcast join happens if any one of your two tables is small enough. In the following case, it picked broadcast join by default since one of the two tables met *`spark.sql.autoBroadcastJoinThreshold`*.
 
 ![BP - 27](images/spark-bp-27.png)
 
@@ -632,7 +650,7 @@ for l_key in lhs_table:
 ```
 If this join type cannot be avoided, consider passing a Broadcast hint on one of the tables if it is small enough which will lead to Spark picking Broadcast Nested Loop Join instead. Broadcast Nested Loop Join may be slightly better than the cartesian joins in some cases since atleast some of the results are broadcasted for better performance.
 
-Following code will lead to a Cartesian product provided the tables do not meet *spark.sql.autoBroadcastJoinThreshold*.
+Following code will lead to a Cartesian product provided the tables do not meet *`spark.sql.autoBroadcastJoinThreshold`*.
 
 ```
 val crossJoinDF = df1.join(df2, df1("l_partkey") >= df2("l_partkey"))
@@ -650,25 +668,25 @@ val crossJoinDF = df1.join(broadcast(df2), df1("l_partkey") >= df2("l_partkey"))
 
 Spark provides blacklisting feature which allows you to blacklist an executor or even an entire node if one or more tasks fail on the same node or executor for more than configured number of times. Spark blacklisting properties may prove to be very useful especially for very large clusters (100+ nodes) where you may rarely encounter an impaired node. We discussed this issue briefly in BPs 5.1.13 and 5.1.14.
 
-This blacklisting is enabled by default in Amazon EMR with the *spark.blacklist.decommissioning.enabled* property set to true. You can control the time for which the node is blacklisted using *spark.blacklist.decommissioning.timeout property*, which is set to 1 hour by default, equal to the default value for *yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs*. It is recommended to set *spark.blacklist.decommissioning.timeout* to a value equal to or greater than *yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs* to make sure that Amazon EMR blacklists the node for the entire decommissioning period.
+This blacklisting is enabled by default in Amazon EMR with the *`spark.blacklist.decommissioning.enabled`* property set to true. You can control the time for which the node is blacklisted using *`spark.blacklist.decommissioning.timeout property`*, which is set to 1 hour by default, equal to the default value for *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`*. It is recommended to set *`spark.blacklist.decommissioning.timeout`* to a value equal to or greater than *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`* to make sure that Amazon EMR blacklists the node for the entire decommissioning period.
 
 Following are some *experimental* blacklisting properties.
 
-**spark.blacklist.task.maxTaskAttemptsPerExecutor** determines the number of times a unit task can be retried on one executor before it is blacklisted for that task. Defaults to 2.
+**`spark.blacklist.task.maxTaskAttemptsPerExecutor`** determines the number of times a unit task can be retried on one executor before it is blacklisted for that task. Defaults to 2.
 
-**spark.blacklist.task.maxTaskAttemptsPerNode** determines the number of times a unit task can be retried on one worker node before the entire node is blacklisted for that task. Defaults to 2.
+**`spark.blacklist.task.maxTaskAttemptsPerNode`** determines the number of times a unit task can be retried on one worker node before the entire node is blacklisted for that task. Defaults to 2.
 
-**spark.blacklist.stage.maxFailedTasksPerExecutor** is same as *spark.blacklist.task.maxTaskAttemptsPerExecutor* but the executor is blacklisted for the entire stage.
+**`spark.blacklist.stage.maxFailedTasksPerExecutor`** is same as *`spark.blacklist.task.maxTaskAttemptsPerExecutor`* but the executor is blacklisted for the entire stage.
 
-**spark.blacklist.stage.maxFailedExecutorsPerNode** determines how many different executors are marked as blacklisted for a given stage, before the entire worker node is marked as blacklisted for the stage. Defaults to 2.
+**`spark.blacklist.stage.maxFailedExecutorsPerNode`** determines how many different executors are marked as blacklisted for a given stage, before the entire worker node is marked as blacklisted for the stage. Defaults to 2.
 
-**spark.blacklist.application.maxFailedTasksPerExecutor** is same as *spark.blacklist.task.maxTaskAttemptsPerExecutor* but the executor is blacklisted for the entire application.
+**`spark.blacklist.application.maxFailedTasksPerExecutor`** is same as *`spark.blacklist.task.maxTaskAttemptsPerExecutor`* but the executor is blacklisted for the entire application.
 
-**spark.blacklist.application.maxFailedExecutorsPerNode** is same as *spark.blacklist.stage.maxFailedExecutorsPerNode* but the worker node is blacklisted for the entire application.
+**`spark.blacklist.application.maxFailedExecutorsPerNode`** is same as *`spark.blacklist.stage.maxFailedExecutorsPerNode`* but the worker node is blacklisted for the entire application.
 
-**spark.blacklist.killBlacklistedExecutors** when set to true will kill the executors when they are blacklisted for the entire application or during a fetch failure. If node blacklisting properties are used, it will kill all the executors of a blacklisted node. It defaults to false. Use with caution since it is susceptible to unexpected behavior due to red herring.
+**`spark.blacklist.killBlacklistedExecutors`** when set to true will kill the executors when they are blacklisted for the entire application or during a fetch failure. If node blacklisting properties are used, it will kill all the executors of a blacklisted node. It defaults to false. Use with caution since it is susceptible to unexpected behavior due to red herring.
 
-**spark.blacklist.application.fetchFailure.enabled** when set to true will blacklist the executor immediately when a fetch failure happens. If external shuffle service is enabled, then the whole node will be blacklisted. This setting is aggressive. Fetch failures usually happen due to a rare occurrence of impaired hardware but may happen due to other reasons as well. Use with caution since it is susceptible to unexpected behavior due to red herring.
+**`spark.blacklist.application.fetchFailure.enabled`** when set to true will blacklist the executor immediately when a fetch failure happens. If external shuffle service is enabled, then the whole node will be blacklisted. This setting is aggressive. Fetch failures usually happen due to a rare occurrence of impaired hardware but may happen due to other reasons as well. Use with caution since it is susceptible to unexpected behavior due to red herring.
 
 The node blacklisting configurations are helpful for the rarely impaired hardware case we discussed earlier. For example, following configurations can be set to ensure that if a task fails more than 2 times in an executor and if more than two executors fail in a particular worker or if you encounter a single fetch failure, then the executor and worker are blacklisted and subsequently removed from your application.
 
@@ -687,7 +705,7 @@ You will be able to distinguish blacklisted executors and nodes from the Spark U
 
 ![BP - 30](images/spark-bp-30.png)
 
-When a stage fails because of fetch failures from a node being decommissioned, by default, Amazon EMR does not count the stage failure toward the maximum number of failures allowed for a stage as set by *spark.stage.maxConsecutiveAttempts*. This is determined by the setting *spark.stage.attempt.ignoreOnDecommissionFetchFailure* being set to true. This prevents a job from failing if a stage fails multiple times because of node failures for valid reasons such as a manual resize, an automatic scaling event, or Spot instance interruptions.
+When a stage fails because of fetch failures from a node being decommissioned, by default, Amazon EMR does not count the stage failure toward the maximum number of failures allowed for a stage as set by *`spark.stage.maxConsecutiveAttempts`*. This is determined by the setting *`spark.stage.attempt.ignoreOnDecommissionFetchFailure`* being set to true. This prevents a job from failing if a stage fails multiple times because of node failures for valid reasons such as a manual resize, an automatic scaling event, or Spot instance interruptions.
 
 ## ** BP 5.1.19  - Debugging and monitoring Spark applications **
 
@@ -705,7 +723,7 @@ Apart from the UIs, you can also see application logs in S3 Log URI configured w
 
 ![BP - 32](images/spark-bp-32.png)
 
-If you have SSH access to the EC2 nodes of your EMR cluster, you can also see application master and executor logs stored in the local disk under /var/log/containers. You will only need to see the local logs if S3 logs are unavailable for some reason. Once the application finishes, the logs are aggregated to HDFS and are available for up to 48 hours based on the property *yarn.log-aggregation.retain-seconds*.
+If you have SSH access to the EC2 nodes of your EMR cluster, you can also see application master and executor logs stored in the local disk under /var/log/containers. You will only need to see the local logs if S3 logs are unavailable for some reason. Once the application finishes, the logs are aggregated to HDFS and are available for up to 48 hours based on the property *`yarn.log-aggregation.retain-seconds`*.
 
 ## ** BP 5.1.20  -  Spark Observability Platforms **
 
@@ -724,7 +742,7 @@ Apart from native solutions, you can also use one of the AWS Partner solutions. 
 Following are some interesting resolutions for common (but not so common) errors faced by EMR customers. We will continue to update this list as and when we encounter new and unique issues and resolutions.
 
 ###Potential strategies to mitigate S3 throttling errors
-For mitigating S3 throttling errors (503: Slow Down), consider increasing *fs.s3.maxRetries* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it further based on your processing needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
+For mitigating S3 throttling errors (503: Slow Down), consider increasing *`fs.s3.maxRetries`* in emrfs-site configuration. By default, it is set to 15 and you may need to increase it further based on your processing needs. You can also increase the multipart upload threshold in EMRFS. Default value at which MPU triggers is 128 MB.
 
 ```
 [{
@@ -764,11 +782,11 @@ If you are running Spark jobs on large clusters with many number of executors, y
 ERROR scheduler.LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
 WARN scheduler.LiveListenerBus: Dropped 1 SparkListenerEvents since Thu Jan 01 01:00:00 UTC 1970
 ```
-For this issue, you can increase *spark.scheduler.listenerbus.eventqueue.size* from default of 10000 to 2x or more until you do not see dropped events anymore.
+For this issue, you can increase *`spark.scheduler.listenerbus.eventqueue.size`* from default of 10000 to 2x or more until you do not see dropped events anymore.
 
-Running large number of executors may also lead to driver hanging since the executors constantly heartbeat to the driver. You can minimize the impact by increasing *spark.executor.heartbeatInterval* from 10s to 30s or so. But do not increase to a very high number since this will prevent finished or failed executors from being reclaimed for a long time which will lead to wastage cluster resources.
+Running large number of executors may also lead to driver hanging since the executors constantly heartbeat to the driver. You can minimize the impact by increasing *`spark.executor.heartbeatInterval`* from 10s to 30s or so. But do not increase to a very high number since this will prevent finished or failed executors from being reclaimed for a long time which will lead to wastage cluster resources.
 
-If you see the Application Master hanging while requesting executors from the Resource Manager, consider increasing *spark.yarn.containerLauncherMaxThreads* which is defaulted to 25. You may also want to increase *spark.yarn.am.memory* (default: 512 MB) and *spark.yarn.am.cores* (default: 1).
+If you see the Application Master hanging while requesting executors from the Resource Manager, consider increasing *`spark.yarn.containerLauncherMaxThreads`* which is defaulted to 25. You may also want to increase *`spark.yarn.am.memory`* (default: 512 MB) and *`spark.yarn.am.cores`* (default: 1).
 
 ###Adjust HADOOP, YARN and HDFS heap sizes for intensive workflows
 You can see the heap sizes of HDFS and YARN processes under /etc/hadoop/conf/hadoop-env.sh and /etc/hadoop/conf/yarn-env.sh on your cluster.
@@ -817,7 +835,7 @@ In this case, it is possible that your HDFS or YARN daemon was trying to grow it
   }
 ]
 ```
-Additionally, you can also consider reducing *yarn.nodemanager.resource.memory-mb* by subtracting the heap sizes of HADOOP, YARN and HDFS daemons from *yarn.nodemanager.resource.memory-mb* for your instance types.
+Additionally, you can also consider reducing *`yarn.nodemanager.resource.memory-mb`* by subtracting the heap sizes of HADOOP, YARN and HDFS daemons from *`yarn.nodemanager.resource.memory-mb`* for your instance types.
 
 ###Precautions to take for highly concurrent workloads
 
@@ -832,7 +850,7 @@ When you are running multiple Spark applications in parallel, you may sometimes 
 22/02/25 21:39:49 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/py4j-0.10.9-src.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/py4j-0.10.9-src.zip
 22/02/25 21:39:50 INFO Client: Uploading resource file:/mnt/tmp/spark-b0fe28f9-17e5-42da-ab8a-5c861d81e25b/__spark_conf__7549408525505552236.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0003/__spark_conf__.zip
 ```
-To mitigate this, you can zip your job dependencies along with Spark dependencies in advance, upload the zip file to HDFS or S3 and set *spark.yarn.archive* to that location. Below is an example:
+To mitigate this, you can zip your job dependencies along with Spark dependencies in advance, upload the zip file to HDFS or S3 and set *`spark.yarn.archive`* to that location. Below is an example:
 ```
 zip -r spark-dependencies.zip /mnt/jars/
 hdfs dfs -mkdir /user/hadoop/deps/
@@ -857,7 +875,7 @@ Now you will see that the Spark and Job dependencies are not zipped or uploaded 
 22/02/25 21:56:08 INFO Client: Uploading resource file:/usr/lib/spark/python/lib/py4j-0.10.9-src.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/py4j-0.10.9-src.zip
 22/02/25 21:56:08 INFO Client: Uploading resource file:/mnt/tmp/spark-0fbfb5a9-7c0c-4f9f-befd-3c8f56bc4688/__spark_conf__5472705335503774914.zip -> hdfs://ip-172-31-45-211.ec2.internal:8020/user/hadoop/.sparkStaging/application_1645574675843_0007/__spark_conf__.zip
 ```
-If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s [ShutdownHook](https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227). If this happens, increase *hadoop.service.shutdown.timeout* property from 30s to to a larger value.
+If you are using EMR Step API to submit your job, you may encounter another issue during the deletion of your Spark dependency zip file (which will not happen if you follow the above recommendation) and other conf files from /mnt/tmp upon successful YARN job completion. If there is a delay of over 30s during this operation, it leads to EMR step failure even if the corresponding YARN job itself is successful. This is due to the behavior of Hadoop’s [ShutdownHook](https://github.com/apache/hadoop/blob/branch-2.10.1/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/RunJar.java#L227). If this happens, increase *`hadoop.service.shutdown.timeout`* property from 30s to to a larger value.
 
 Please feel free to contribute to this list if you would like to share your resolution for any interesting issues that you may have encountered while running Spark workloads on Amazon EMR.
 
@@ -898,7 +916,7 @@ spark.read.text(...) returns a DataSet[Row] or a DataFrame
 
 ### Spark Core API (RDDs)
 
-When using *sc.textFile* Spark uses the block size set for the filesysytem protocol it's reading from, to calculate the number of partitions in input:
+When using *`sc.textFile`* Spark uses the block size set for the filesysytem protocol it's reading from, to calculate the number of partitions in input:
 
 [SparkContext.scala](https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/SparkContext.scala#L819-L832)
 ```
@@ -924,9 +942,10 @@ When using *sc.textFile* Spark uses the block size set for the filesysytem proto
           long splitSize = computeSplitSize(goalSize, minSize, blockSize);
 ```
 
-When using the *S3A* protocol the block size is set through the *fs.s3a.block.size parameter* (default 32M), and when using *S3* protocol through *fs.s3n.block.size* (default 64M). Important to notice here is that with *S3* protocol the parameter used is *fs.s3n.block.size* and not *fs.s3.block.size* as you would expect. In EMR indeed, when using EMRFS, which means using *s3* with *s3://* prefix, *fs.s3.block.size* will not have any affect on the EMRFS configration.
+When using the *S3A* protocol the block size is set through the *`fs.s3a.block.size parameter`* (default 32M), and when using *S3* protocol through *`fs.s3n.block.size`* (default 64M). Important to notice here is that with *S3* protocol the parameter used is *`fs.s3n.block.size`* and not *`fs.s3.block.size`* as you would expect. In EMR indeed, when using EMRFS, which means using *s3* with *s3://* prefix, *`fs.s3.block.size`* will not have any affect on the EMRFS configration.
 
 Following some testing results using these parameters:
+
 ```
 CONF
 Input: 1 file, total size 336 MB
@@ -952,9 +971,10 @@ TEST 2 (modified)
 
 ### Spark SQL (DATAFRAMEs) 
 
-When using *spark.read.text* no. of spark tasks/partitions depends on default parallelism:
+When using *`spark.read.text`* no. of spark tasks/partitions depends on default parallelism:
 
 [DataSourceScanExec.scala](https://github.com/apache/spark/blob/v2.4.8/sql/core/src/main/scala/org/apache/spark/sql/execution/DataSourceScanExec.scala#L423-L430)
+
 ```
     val defaultMaxSplitBytes =
       fsRelation.sparkSession.sessionState.conf.filesMaxPartitionBytes
@@ -969,24 +989,26 @@ When using *spark.read.text* no. of spark tasks/partitions depends on default pa
 The default Parallelism is determined via:
 
 [CoarseGrainedSchedulerBackend.scala](https://github.com/apache/spark/blob/v2.4.8/core/src/main/scala/org/apache/spark/scheduler/cluster/CoarseGrainedSchedulerBackend.scala#L457-L459)
+
 ```
   override def defaultParallelism(): Int = {
     conf.getInt("spark.default.parallelism", math.max(totalCoreCount.get(), 2))
   }
 ```
 
-If *defaultParallelism* is too large, *bytesPerCore* will be small, and *maxSplitBytes* can be small, which can result in more no. of spark tasks/partitions. So if there're more cores, *spark.default.parallelism* can be large, *defaultMaxSplitBytes* can be small, and no. of spark tasks/partitions can be large.
+If *defaultParallelism* is too large, *bytesPerCore* will be small, and *maxSplitBytes* can be small, which can result in more no. of spark tasks/partitions. So if there're more cores, *`spark.default.parallelism`* can be large, *defaultMaxSplitBytes* can be small, and no. of spark tasks/partitions can be large.
 
 In order to tweak the input no. of partitions the following parameters need to be set:
 
 |  Classification | Property | Description  |
 |---|---|---|
-|  spark-default | *spark.default.parallelism*   |  default: max(total number of vCores, 2)  |
-|  spark-default | *spark.sql.files.maxPartitionBytes*   | default: 128MB  |
+|  spark-default | *`spark.default.parallelism`*   |  default: max(total number of vCores, 2)  |
+|  spark-default | *`spark.sql.files.maxPartitionBytes`*   | default: 128MB  |
 
-If these parameters are modified, [*maximizeResourceAllocation*](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation) need to be disabled, as it would override *spark.default.parallelism parameter*.
+If these parameters are modified, [*maximizeResourceAllocation*](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#emr-spark-maximizeresourceallocation) need to be disabled, as it would override *`spark.default.parallelism parameter`*.
 
 Following some testing results using these parameters:
+
 ```
 CONF
 - Total number of vCores = 16 -> spark.default.parallelism = 16
@@ -1007,4 +1029,4 @@ ________________________________________________________________________________
 
 **Disclaimer**
 
-When writing a file the number of partitions in output will depends from the number of partitions in input that will be maintained if no shuffle operations are applied on the data processed, changed otherwise based on *spark.default.parallelism* for RDDs and *spark.sql.shuffle.partitions* for dataframes.
+When writing a file the number of partitions in output will depends from the number of partitions in input that will be maintained if no shuffle operations are applied on the data processed, changed otherwise based on *`spark.default.parallelism`* for RDDs and *`spark.sql.shuffle.partitions`* for dataframes.

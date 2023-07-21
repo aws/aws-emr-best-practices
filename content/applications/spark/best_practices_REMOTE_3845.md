@@ -16,9 +16,9 @@ Spark workloads may require different types of hardware for different job charac
 
 | Instance Type | Instance | EC2 price | EMR price | Cores | Memory in GiB | CPU:memory ratio |
 --------|----------------|------------|-----------|--------|------------|------------|
-| Compute | m5.4xlarge |  $3.06 |  0.27 | 72 | 144 | 2 |
-| Memory | m6g.4xlarge |  $3.02 |  0.27 | 48 | 384 | 8 |
-| General | m5.16xlarge |  $3.07 |  0.27 | 64 | 256 | 4 |
+| Compute | m5.4xlarge |  \$3.06 |  0.27 | 72 | 144 | 2 |
+| Memory | m6g.4xlarge |  \$3.02 |  0.27 | 48 | 384 | 8 |
+| General | m5.16xlarge |  \$3.07 |  0.27 | 64 | 256 | 4 |
 
 * **Storage-optimized** instances like i3ens, d2 are good candidates for I/O intensive workloads. If your use case is CPU/memory bound but also consumes a lot of I/O, and demands high disk throughput and low read or write latencies from transient HDFS storage, you can consider using instances backed by SSD storage like r5ds, c5ds, m5ds etc.. For jobs that perform massive shuffles (when dynamic allocation is enabled), Spark external shuffle service will write the shuffle data blocks to the local disks of each node running executors.
 * **GPU instances** such as p3 family for Spark ML and intensive analytical workloads like image processing. From EMR 6.2, you can also use [Nvidia RAPIDS accelerator](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-rapids.html) plugin to improve your GPU instance performance without any changes to your code or data processing pipelines.
@@ -37,7 +37,8 @@ This is the default deploy mode for Spark applications in EMR. In this deploy mo
 
 ![BP - 4](images/spark-bp-4.png)
 
-Use this deploy mode if :-
+Use this deploy mode if:
+
 * You are running only one or two Spark applications at a time in a cluster. This deploy mode is not ideal if you are running multiple applications at the same time on the same cluster since all those drivers running on a single node can lead to resource contention.
 * You want to be more in control of your Spark driver configurations. In client mode, Spark driver resources will not compete with YARN resources and can be adjusted separately without affecting the resource procurement of your applications.
 * If you are running too many executors (1000+). Since Spark driver manages and monitors tasks and executors, too many executors will slow down the driver since they have to send heartbeats, poll task status etc. Since EMR allows you to specify a different instance type for master instance, you can choose a very powerful instance like z1d and allocate the memory and CPU resources to Spark drivers especially if you are running a very high number of executors.
@@ -49,7 +50,8 @@ In cluster deploy mode, your Spark driver will be colocated within the Applicati
 
 ![BP - 5](images/spark-bp-5.png)
 
-Use cluster deploy mode if :-
+Use cluster deploy mode if:
+
 * You are submitting multiple applications at the same time or have higher job or EMR step concurrency. Since drivers will be launched within the AM, for multiple applications, the driver resources will be spread across the cluster considering AM will be launched on one of the worker nodes.
 * If there are relatively fewer number of executors per application. i.e., the Spark driver process does not have to do intensive operations like manage and monitor from too many executors.
 * You are storing results in S3/HDFS and there is no need to print output to the console.
@@ -75,6 +77,7 @@ Use splittable compression formats like BZ2, LZO etc. Parquet uses Snappy compre
 ![BP - 7](images/spark-bp-7.png)
 
 You can also apply columnar encryption using KMS.
+
 ```
 sc.hadoopConfiguration.set("parquet.encryption.kms.client.class" ,"org.apache.parquet.crypto.keytools.mocks.InMemoryKMS")
 // Explicit master keys (base64 encoded) - required only for mock InMemoryKMS
@@ -93,7 +96,7 @@ val df2 = spark.read.parquet("/path/to/table.parquet.encrypted")
 
 Partitioning your data is very important if you are going to run your code or queries with filter conditions. Partitioning helps you arrange your data files into S3 prefixes based on the partition key. It helps minimize read/write access footprint i.e., you will be able to only read files from partition folder specified in your where clause - thus skipping a full read. Partitioning can also help if your data ingestion is incremental in nature. However, partitioning can reduce read throughput if you are performing full table scans.
 
-You can choose your partition field based on :-
+You can choose your partition field based on:
 
 * Query pattern. i.e., if you find workloads use 1-2 columns frequently as filter fields more so than other columns, it is recommended to consider using them as partitioning field.
 * Ingestion pattern. i.e., if you load data into your table once everyday, if you want to avoid re-writing historical data, you can partition your data based on date field (typically in YYYY-MM-DD format)
@@ -101,10 +104,11 @@ You can choose your partition field based on :-
 * File sizes per partition. It is highly recommended that your individual file sizes within each partition is ~128 MB and not too small since that would be optimal for Spark executor JVM to process.
 
 Also, number of shuffle partitions will determine the number of output files per partition.
+
 ```
 df.repartition(400).write.partitionBy("datecol").parquet("s3://bucket/output/")
 ```
-The above code will create maximum of 400 files per datecol partition. You can use repartitioning to control the file size in destination. i.e., for merging smaller files. But for splitting large files, you can use the property "spark.sql.files.maxPartitionBytes".
+The above code will create maximum of 400 files per datecol partition. You can use repartitioning to control the file size in destination. i.e., for merging smaller files. But for splitting large files, you can use the property `spark.sql.files.maxPartitionBytes`.
 
 Partitioning ensures that pruning takes place during reads and writes. Pruning makes sure that only necessary partition(s) are read from S3 or HDFS. Query plan can be studied from Spark UI to ensure that pruning takes place while reading and writing to partitioned tables from Spark.
 
@@ -115,6 +119,7 @@ EMR defaults are aimed at smaller JVM sizes. For example, following are the defa
 ## ** BP 5.6 -  Use Kryo serializer by registering custom classes especially for Dataset schemas **
 
 Spark uses Java Serializer by default. From Spark 2.0+, Spark internally uses Kryo Serializer when shuffling RDDs with simple types, arrays of simple types, or string type. It is highly recommended that you use Kryo Serializer and also register your classes in the application.
+
 ```
 val spark = SparkSession
                   .builder
@@ -132,7 +137,9 @@ val spark = SparkSession
                   .config("spark.kryo.registrationRequired", "true")
                   .getOrCreate
 ```
-If you do not specify classesToRegister, then there will be a Kryo conversion overhead. So, it is highly recommended to register classes in your application. Especially, if you are using data sets, consider registering your data set schema classes along with classes used in Spark internally based on the data types and structures used in your program.
+
+If you do not specify `classesToRegister`, then there will be a Kryo conversion overhead. So, it is highly recommended to register classes in your application. Especially, if you are using data sets, consider registering your data set schema classes along with classes used in Spark internally based on the data types and structures used in your program.
+
 ```
 val conf = new SparkConf()
         conf.registerKryoClasses(
@@ -171,17 +178,19 @@ val conf = new SparkConf()
         )
     }
 ```
-You can also fine tune the following Kryo configs :-
 
-**spark.kryo.unsafe** - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
-**spark.kryoserializer.buffer.max** - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
-**spark.kryoserializer.buffer** - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
+You can also fine tune the following Kryo configs:
+
+* *`spark.kryo.unsafe`* - Set to false for faster serialization. This is not unsafer for same platforms but should not be used if your EMR cluster has a mix of AMD and intel types for example.
+* *`spark.kryoserializer.buffer.max`* - Maximum size of Kryo buffer. Default is 64m. Recommended to increase but this property upto 1024m value should be below 2048m
+* *`spark.kryoserializer.buffer`* - Initial size of Kryo's serialization buffer. Default is 64k. Recommended to increase up to 1024k.
 
 ## ** BP 5.7  -   Use appropriate garbage collector **
 
 By default, EMR Spark uses Parallel Garbage Collector which works well in most cases. You can change the GC to G1GC if your GC cycles are slow since G1GC may provide better performance in some cases specifically by reducing GC pause times. Also, since G1GC is the default garbage collector since Java 9, you may want to switch to G1GC for forward compatibility.
 
-Following is the spark configuration :-
+Following is the spark configuration:
+
 ```
 [{
 "classification": "spark-defaults",
@@ -192,12 +201,15 @@ Following is the spark configuration :-
 "configurations": []
 }]
 ```
-You can also tune the GC parameters for GC performance. You can see the comprehensive list of parameters [here](https://www.oracle.com/technical-resources/articles/java/g1gc.html) for G1GC and [here](https://docs.oracle.com/en/java/javase/11/gctuning/parallel-collector1.html) for ParallelGC. Some useful ones are below :-
 
+You can also tune the GC parameters for GC performance. You can see the comprehensive list of parameters [here](https://www.oracle.com/technical-resources/articles/java/g1gc.html) for G1GC and [here](https://docs.oracle.com/en/java/javase/11/gctuning/parallel-collector1.html) for ParallelGC. Some useful ones are below:
+
+```
 -XX:ConcGCThreads=n
 -XX:ParallelGCThreads=n
 -XX:InitiatingHeapOccupancyPercent=45
 -XX:MaxGCPauseMillis=200
+```
 
 You can also monitor GC performance using Spark UI. the GC time should be ideally <= 1% of total task runtime. If not, tune the GC settings or executor size. For example, we see below in the Spark UI that GC takes almost 25% of task runtime which is a poor GC performance.
 
@@ -210,18 +222,20 @@ When using spark APIs, try to go with the most optimal choice if your use case p
 ### repartition vs coalesce
 
 Both repartition and coalesce are used for changing the number of shuffle partitions. Repartition is used for both increasing and decreasing the shuffle partitions whereas coalesce is used for only decreasing the number of shuffle partitions. If your goal is to decrease the number of shuffle partitions, consider using coalesce instead of repartition. The reason is, repartition triggers a full shuffle but coalesce triggers only a partial shuffle and thus minimizes the amount of data shuffled by keeping a few nodes as receivers of shuffle data.
+
 ```
 df.coalesce(1) //instead of df.repartition(1)
 ```
+
 But please note that when you coalesce (or repartition) to a very small number, your JVM will process a lot of data which can lead to OOM issues or disk space issues due to shuffle spill.
 
 ### groupByKey vs reduceByKey
 
-Use reduceByKey instead of groupByKey wherever possible. With groupByKey, data will be transferred over the network and collected on the reduced workers. This can lead to OOMs since all data is sent across the network. Whereas, with reduceByKey, data is combined at partition-level, with only one output for one key at each partition to send over the network. reduceByKey required combining all your values into another value with the exact same type.
+Use `reduceByKey` instead of `groupByKey` wherever possible. With `groupByKey`, data will be transferred over the network and collected on the reduced workers. This can lead to OOMs since all data is sent across the network. Whereas, with `reduceByKey`, data is combined at partition-level, with only one output for one key at each partition to send over the network. `reduceByKey` required combining all your values into another value with the exact same type.
 
 ### orderBy vs sortBy or sortWithinPartitions
 
-orderBy does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or sortWithinPartitions does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or sortWithinPartitions if global sorting is not necessary - especially during writes. Try to avoid orderBy clause. Values can be aggregated across partitions in your queries if needed.
+`orderBy` does global sorting. i.e., all data is sorted in a single JVM. Whereas, sortBy or `sortWithinPartitions` does local sorting i.e., data is sorted within each partition but it does not preserve global ordering. Use sortBy or `sortWithinPartitions` if global sorting is not necessary - especially during writes. Try to avoid `orderBy` clause. Values can be aggregated across partitions in your queries if needed.
 
 ## ** BP 5.9 -   Leverage spot nodes with managed autoscaling **
 
@@ -241,7 +255,8 @@ For Spark workloads, we observed ~50% gains compared to custom autoscaling clust
 
 ## ** BP 5.10  -   For workloads with fixed/predictable pattern, disable dynamic allocation **
 
-Dynamic allocation is enabled in EMR by default. It is a great feature when your cluster is set for autoscaling and
+Dynamic allocation is enabled in EMR by default. It is a great feature when your cluster is set for autoscaling
+
 ```
 [{
     "classification": "spark-defaults",
@@ -275,7 +290,7 @@ However,  while using this architecture, please make sure that you are sizing yo
 
 ## ** BP 5.12  -   Spark speculation with EMRFS **
 
-In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to data loss or duplicate data. By default, “spark.speculation” is turned off. Only enable spark.speculation if you are doing one of the following.
+In Hadoop/Spark, speculative execution is a concept where a slower task will be launched in parallel on another node using a different JVM (based on resource availability). Whichever task completes first (original or speculated task), will write the output to S3. This works well for HDFS based writes. However, for EMRFS, turning on spark.speculation may lead to data loss or duplicate data. By default, `spark.speculation` is turned off. Only enable spark.speculation if you are doing one of the following:
 
 * Writing Parquet files to S3 using EMRFSOutputCommitter
 * Using HDFS as temporary storage (in an understanding that final output will be written to S3 using S3DistCp)
@@ -322,6 +337,7 @@ case class DeviceIoTData (
   timestamp: Long
 )
 ```
+
 This provides you type-safety. When there are changes to your schema, it can be consolidated and tracked in a single class. This can be considered as an industry standard. While using Spark dataframes, you can achieve something similar by maintaining the table columns in a list.
 
 ## ** BP 5.15  -   Data Skew **
