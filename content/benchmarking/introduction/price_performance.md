@@ -1,6 +1,8 @@
 # ** Price Performance **
 
-In the context this guide, price-performance refers to the Price ($) to run a workload for a given performance (run time in seconds). Using price-performance is critical for benchmarking to understand the impact of variables that cannot be made the same. For example, deployment models, competitor pricing, container scheduling or engines. For variables within our control, such as infrastructure sizing or application configurations, it’s important to keep these consistent across all benchmarks. 
+In the context of this guide, "price-performance" refers to the cost (in dollars) of running a workload for a specified level of performance (measured in run time, in seconds). Utilizing price-performance is crucial for benchmarking to grasp the implications of variables that cannot be standardized. These variables may include deployment models, competitor pricing, container scheduling, or engines.
+
+For variables that are within our control, such as infrastructure sizing or application configurations, it's essential to maintain consistency across all benchmarks.
 
 Below examples illustrates the importance of price-performance.
 
@@ -13,7 +15,7 @@ Below examples illustrates the importance of price-performance.
 |Engine	|OSS Spark Runtime	|EMR Spark Runtime	|
 |Cost ($)	|600	|300	|
 
-In the above example, Cluster #1 that is running OSS spark completes in 12s with 50 nodes, while EMR Spark completes in 30s with 10 nodes. However, when we look at total cost, cluster #2 total cost is lower than cluster #1 making it a better option. Comparing cost in relation to the work being done considers the difference in # of nodes and engine. Assuming performance is linear, lets look at what happens when we increase the # of nodes in cluster 2.
+In the above example, Cluster #1 is running OSS spark and completes in 12s with 50 nodes, while EMR Spark completes in 30s with 10 nodes. However, when we look at total cost, cluster #2 total cost is lower than cluster #1 making it a better option. Comparing cost in relation to the work being done considers the difference in # of nodes and engine. Assuming performance is linear, lets look at what happens when we increase the # of nodes in cluster 2.
 
 **Example 2:** Customer wants to compare Open Source Software (OSS) Spark vs EMR Spark  with same cluster sizes
 
