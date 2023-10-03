@@ -54,20 +54,20 @@ nav:
           - Purpose: 'benchmarking/introduction/purpose.md'
           - Price Performance: 'benchmarking/introduction/price_performance.md'
           - Benchmarking Variables: 'benchmarking/introduction/benchmarking_variables.md'
-        - Planning:
-          - Selecting Workloads to Benchmark: 'benchmarking/planning/selecting_workloads.md'
-          - Deciding on Experiment Configs: 'benchmarking/planning/experiment_configs.md'
-          - Performance Metrics: 'benchmarking/planning/performance_metrics.md'
+#        - Planning:
+#          - Selecting Workloads to Benchmark: 'benchmarking/planning/selecting_workloads.md'
+#          - Deciding on Experiment Configs: 'benchmarking/planning/experiment_configs.md'
+#          - Performance Metrics: 'benchmarking/planning/performance_metrics.md'
         - Running:
           - Setting Up the Benchmark Environment: 'benchmarking/running/setting_up_environment.md'
           - Benchmark Checklist: 'benchmarking/running/benchmarking_checklist.md'
         - Analyzing: 
-            - How to Calculate Costs: 'benchmarking/analyzing/calculate_cost.md'
+#            - How to Calculate Costs: 'benchmarking/analyzing/calculate_cost.md'
             - How to retrieve the Spark Event Logs: 'benchmarking/analyzing/retrieve_event_logs.md'
             - How to Read the Spark Web UI / Spark History Server: 'benchmarking/analyzing/read_spark_UI.md'
-        - Scenarios:
-          - OTF Comparison: 'benchmarking/scenarios/otf_comparison.md'
-          - Streaming: 'benchmarking/scenarios/streaming.md'
+#        - Scenarios:
+#          - OTF Comparison: 'benchmarking/scenarios/otf_comparison.md'
+#          - Streaming: 'benchmarking/scenarios/streaming.md'
 markdown_extensions:
     - toc:
         permalink: true
