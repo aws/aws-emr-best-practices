@@ -19,6 +19,7 @@ We currently have published guides for the following topics:
 	- Notebooks
 	- Datalake Storage
 - Amazon EMR utilities github [here](https://github.com/aws-samples/aws-emr-utilities)
+- Amazon EMR Benchmarking Guide 
 
 ## Contributing
 We encourage you to contribute to these guides. If you have implemented a practice that has proven to be effective, please share it with us by opening an issue or a pull request. Similarly, if you discover an error or flaw in the guidance we've already published, please submit a PR to correct it.

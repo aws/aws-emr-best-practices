@@ -1,0 +1,3 @@
+# ** Purpose **
+
+The purpose of this guide is to provide AWS field teams a methodology for how to run Spark benchmarks on EMR.  By following this guide, field teams will be able to identify the lowest price-performance option to run customer Spark workloads, across a variety of variables such as engine type (EMR, OSS), deployment models (EC2, EKS, Serverless) or Hardware options (M, C, R, family). The focus of this guide is price-performance, other considerations such as features, user experience or compatibility with other services are out of scope. These are also important to evaluate based on customers use cases and needs. 
