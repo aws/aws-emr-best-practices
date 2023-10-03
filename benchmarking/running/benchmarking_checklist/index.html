@@ -1239,7 +1239,7 @@
 <tr>
 <td>Are all instances the same family, size and generation</td>
 <td><img alt="🔲" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f532.svg" title=":black_square_button:" /></td>
-<td>The total amount of compute (vCPU and Memory) should be consistent across benchamark runs. Compute will determine the performance of the application. Additionally, instances can vary in network performance. Additionally, if using Karpenter or Instancefleet, you should ensure the set of instances provided are the same. Note that depending on when the job is submitted, your results may vary</td>
+<td>The total amount of compute (vCPU and Memory) should be consistent across benchmark runs. Compute will determine the performance of the application. Additionally, instances can vary in network performance. Additionally, if using Karpenter or Instancefleet, you should ensure the set of instances provided are the same. Note that depending on when the job is submitted, your results may vary</td>
 </tr>
 <tr>
 <td>If cluster scaling is enabled, does each deployment model have the same scaling configurations. (min, max)</td>
@@ -1254,7 +1254,7 @@
 <tr>
 <td>Are the Application versions the same across deployment models, OSS and vendors?</td>
 <td><img alt="🔲" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f532.svg" title=":black_square_button:" /></td>
-<td>Spark versions should be the same or the latest version thats offered</td>
+<td>Spark versions should be the same or the latest version that's offered</td>
 </tr>
 <tr>
 <td>Is the same data catalog being used across benchmarks?</td>
@@ -1264,7 +1264,7 @@
 <tr>
 <td>Is the infrastructure being deployed in the same AZ?</td>
 <td><img alt="🔲" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f532.svg" title=":black_square_button:" /></td>
-<td>AZ's may have differerences in network latency or instance availablity.</td>
+<td>AZ's may have differences in network latency or instance availability.</td>
 </tr>
 <tr>
 <td>Are the benchmarks starting from the same state and size. For example, cold start vs warm pool and the # of starting instances</td>
@@ -1289,7 +1289,7 @@
 <tr>
 <td>Are there differences in the AMI, bootstrap actions or container Image?</td>
 <td><img alt="🔲" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f532.svg" title=":black_square_button:" /></td>
-<td>This can impact compute initilization as well as job startup. For example, eliminating the need to load a specific library before executing the job</td>
+<td>This can impact compute initialization as well as job startup. For example, eliminating the need to load a specific library before executing the job</td>
 </tr>
 <tr>
 <td>Are JDK settings consistent across deployment models</td>
@@ -1351,7 +1351,7 @@
 <tr>
 <td>Is there any data or library caching that impacts future runs?</td>
 <td><img alt="🔲" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f532.svg" title=":black_square_button:" /></td>
-<td>Generally, the first run will be slower than future runs because of caching. Keep this in mind when determining how many iterations of a run you want to do. Additional runs will negate any impact of caching but has a tradeoff of cost and time</td>
+<td>Generally, the first run will be slower than future runs because of caching. Keep this in mind when determining how many iterations of a run you want to do. Additional runs will negate any impact of caching but has a trade off of cost and time</td>
 </tr>
 <tr>
 <td>Is the applications JVM settings the same?</td>

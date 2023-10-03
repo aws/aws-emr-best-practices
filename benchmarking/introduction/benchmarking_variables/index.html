@@ -1164,7 +1164,7 @@
 <p>The purpose of your benchmark will determine which variables are independent or controlled. For example, If I wanted to benchmark the difference in price performance between OSS Spark and EMR Spark, my independent variables would be the OSS and EMR Spark runtime engines, while my controlled variables would be workload , hardware type, input/output data, and purchasing options. However, If I wanted to benchmark the different in price performance between M family instances and R family instances on EMR Spark, then hardware now becomes an independent variable while runtime engine is a controlled variable. </p>
 <p>To accurately measure the effect of the variables of interest (independent) its important to understand which variables should be controlled and which ones should be kept consistent. The variables of interest are typically product differentiators and only by keeping other variables consistent, will you be able to measure the impact of these differentiators to price-performance. Lets look at each of these variables below. </p>
 <p><strong>Pricing Model</strong> 
-Pricing model refers to how workloads are billed for both Infrastructure, storage and service overhead depending on the amount of usage.  We’ll look at all EMR deployment models, OSS and Databricks. </p>
+Pricing model refers to how workloads are billed for both Infrastructure, storage and service overhead depending on the amount of usage. We’ll look at all EMR deployment models, OSS and Vendors. </p>
 <table>
 <thead>
 <tr>
@@ -1177,15 +1177,15 @@ Pricing model refers to how workloads are billed for both Infrastructure, storag
 <tbody>
 <tr>
 <td>EMR on EC2</td>
-<td>- Price dependent on Infstrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
-<td>- Price dependent on Infstrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
-<td>- Standard EBS pricing depedent on size of EBS volumes attached to instances</td>
+<td>- Price dependent on Infrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
+<td>- Price dependent on Infrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
+<td>- Standard EBS pricing dependent on size of EBS volumes attached to instances</td>
 </tr>
 <tr>
 <td>EMR on EKS</td>
-<td>- Price dependent on Infstrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
+<td>- Price dependent on Infrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
 <td>- vCPU and memory resources used from the time you start to download your EMR application image until the EKS Pod terminates, rounded up to the nearest second. Pricing is based on requested vCPU and memory resources for the Task or Pod.</td>
-<td>- Standard EBS pricing depedent on size of EBS volumes attached to instances/pods</td>
+<td>- Standard EBS pricing dependent on size of EBS volumes attached to instances/pods</td>
 </tr>
 <tr>
 <td>EMR Serverless</td>
@@ -1195,15 +1195,15 @@ Pricing model refers to how workloads are billed for both Infrastructure, storag
 </tr>
 <tr>
 <td>Databricks</td>
-<td>- Price dependent on Infstrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
-<td>- Databricks has multiple compute types. SQL, All Purpose ETL, ML and more. Each compute type has a different price per Datbricks Billing Unit (DBU) depending on the features offered. <br>- Every instance has their own DBU/hour. Depending on the instance selected, the cost will be the instances [DBU/Hr] x [the compute type price]</td>
-<td>- Standard EBS pricing depedent on size of EBS volumes attached to instances/pods</td>
+<td>- Price dependent on Infrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
+<td>- Databricks has multiple compute types. SQL, All Purpose ETL, ML and more. Each compute type has a different price per Databricks Billing Unit (DBU) depending on the features offered. <br>- Every instance has their own DBU/hour. Depending on the instance selected, the cost will be the instances [DBU/Hr] x [the compute type price]</td>
+<td>- Standard EBS pricing dependent on size of EBS volumes attached to instances/pods</td>
 </tr>
 <tr>
 <td>OSS</td>
-<td>- Price dependent on Infstrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
+<td>- Price dependent on Infrastructure Size <br>- Billed per-second, with a one-minute minimum</td>
 <td>N/A</td>
-<td>- Standard EBS pricing depedent on size of EBS volumes attached to instances/pods</td>
+<td>- Standard EBS pricing dependent on size of EBS volumes attached to instances/pods</td>
 </tr>
 </tbody>
 </table>
@@ -1258,7 +1258,7 @@ Suppose you run a Spark application that requires two r5.4xlarge (16 vCPU, 128 G
 <p>Assumptions</p>
 <ul>
 <li>Assumed engine performance is the same across all deployment models </li>
-<li>Assumed 100% utilization across all EMR deployment models and Databricks</li>
+<li>Assumed 100% utilization across all EMR deployment models</li>
 <li>Assumed x86, on-demand pricing in US-WEST-2</li>
 <li>EMR on EC2 requires 1 extra instance because of primary node</li>
 <li>Pricing for EMR-S is x86</li>
@@ -1288,7 +1288,7 @@ Hardware selection refers to the instance types and storage used for benchmarkin
 <p><strong>Key Takeaway:</strong> Use the same instance type, family and size while benchmarking. Changes in these variables will result in differences in price-performance. Changing hardware is only useful when isolating the change to hardware. For example, comparing performance of R and M with EMR on EC2. </p>
 <p><strong>Workload</strong>
 Workload refers to the job that is being benchmarked. An application includes the input data being read, the type of job (streaming, batch, sql), processing or logic in the code and the output data being written. All of these variables impact price-performance and need to be kept consistent. For example, if one benchmark has the same amount of data but slightly more data skew, more compute or cost may be required to complete the same job. Similarly, if one benchmark is written in parquet and the other in avro and based on the data distribution, parquet can write files in a more compact format, then less compute and cost would be required. </p>
-<p>Another important workload consideration is the Open Table Format (OTF). Iceberg, Delta and Hudi are increasingly more common in customers workloads and can significantly impact the performance of reading and writing. When it comes to OTF, we also want to keep this variable consistent across benchmarks. Vendors like Databricks have optimizations that differ from the OSS version supported by EMR. In these cases, we can either consider if other OTF support the same functionality or factor that optimization as part of the overall price-performance. </p>
+<p>Another important workload consideration is the Open Table Format (OTF). Iceberg, Delta and Hudi are increasingly more common in customers workloads and can significantly impact the performance of reading and writing. When it comes to OTF, we also want to keep this variable consistent across benchmarks. In these cases, we can either consider if other OTF support the same functionality or factor that optimization as part of the overall price-performance. </p>
 <p>Scenarios when you want to make Workload an independent variable is when you want to compare the performance across different types of applications for a given engine or deployment model. For example, the behavior of an IO, CPU or memory bound job can be different across spark engines. </p>
 <p><strong>Key Takeaway:</strong> Keep everything with the workload constant between benchmarks. This extend beyond application code and also includes data input, output, OTF, compression, data distribution and caching</p>
 <p><strong>Application Configuration</strong> 
@@ -1303,7 +1303,7 @@ Runtime performance is the speed a job is completed. It is one of the key differ
 <p><strong>Key Takeaway:</strong> Runtime performance is a key differentiator that has a significant impact to price-performance. By having runtime performance as your independent variable and keeping all other variables controlled, you can properly measure the effect of runtime on price-performance.  Runtime performance is not applicable when comparing across deployment models because all deployments use the same engine.</p>
 <p><strong>Infrastructure Provisioning and Scaling</strong> 
 Infrastructure provisioning and scaling is the time it takes compute to be available for applications to run and the time it takes for compute to shutdown. The longer it takes for infrastructure to provision or scale, the higher the cost.
-Provisioning and scaling up is compute time that cant be used so it counts towards underutilization. Similar is true for scaling down. </p>
+Provisioning and scaling up is compute time that cant be used so it counts towards under utilization. Similar is true for scaling down. </p>
 <p>Infrastructure provisioning  also includes the time it takes to install applications. This means that container Image based deployments will have reduced provisioning time compared to virtual machines, that download and install libraries after the infrastructure is ready. If the deployment models are used as long running compute, infrastructure provisioning is reduced. In addition to provisioning and termination time for scaling, another aspect is the scaling efficiency. For example, how fast does scaling react to change in usage or the accuracy of scaling to meet demand. Taking too long to scale or over scaling has a negative impact to overall cost. </p>
 <p>When it comes to benchmarking,  infrastructure provisioning and scaling are unique to each deployment model. These are control plane features that are key differentiators and should be considered an independent variable. </p>
 <p><strong>Key Takeaway:</strong> Similar to Runtime performance, infrastructure provisioning and scaling are key differentiators but at the control plane layer instead of data plane. The impact to price-performance will be reflected in the overall cost of the job through compute utilization. </p>
