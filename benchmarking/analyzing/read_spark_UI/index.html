@@ -58,6 +58,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#spark-ui-and-spark-history-server-analysis" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -885,74 +890,11 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_2" type="checkbox" id="__nav_8_2" >
       
       <label class="md-nav__link" for="__nav_8_2">
-        Planning
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="Planning" data-md-level="2">
-        <label class="md-nav__title" for="__nav_8_2">
-          <span class="md-nav__icon md-icon"></span>
-          Planning
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/selecting_workloads.md" class="md-nav__link">
-        Selecting Workloads to Benchmark
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/experiment_configs.md" class="md-nav__link">
-        Deciding on Experiment Configs
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/performance_metrics.md" class="md-nav__link">
-        Performance Metrics
-      </a>
-    </li>
-  
-
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3" type="checkbox" id="__nav_8_3" >
-      
-      <label class="md-nav__link" for="__nav_8_3">
         Running
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Running" data-md-level="2">
-        <label class="md-nav__title" for="__nav_8_3">
+        <label class="md-nav__title" for="__nav_8_2">
           <span class="md-nav__icon md-icon"></span>
           Running
         </label>
@@ -998,30 +940,18 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_4" type="checkbox" id="__nav_8_4" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3" type="checkbox" id="__nav_8_3" checked>
       
-      <label class="md-nav__link" for="__nav_8_4">
+      <label class="md-nav__link" for="__nav_8_3">
         Analyzing
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Analyzing" data-md-level="2">
-        <label class="md-nav__title" for="__nav_8_4">
+        <label class="md-nav__title" for="__nav_8_3">
           <span class="md-nav__icon md-icon"></span>
           Analyzing
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../calculate_cost/" class="md-nav__link">
-        How to Calculate Costs
-      </a>
-    </li>
-  
-
           
             
   
@@ -1046,62 +976,85 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          How to Read the Spark Web UI / Spark History Server
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         How to Read the Spark Web UI / Spark History Server
       </a>
       
-    </li>
-  
-
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
     
-    <li class="md-nav__item md-nav__item--nested">
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_5" type="checkbox" id="__nav_8_5" >
+        <li class="md-nav__item">
+  <a href="#spark-history-server" class="md-nav__link">
+    Spark History Server
+  </a>
+  
+</li>
       
-      <label class="md-nav__link" for="__nav_8_5">
-        Scenarios
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="Scenarios" data-md-level="2">
-        <label class="md-nav__title" for="__nav_8_5">
-          <span class="md-nav__icon md-icon"></span>
-          Scenarios
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
+        <li class="md-nav__item">
+  <a href="#stages" class="md-nav__link">
+    Stages
+  </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    Storage
+  </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    Environment
+  </a>
   
-    <li class="md-nav__item">
-      <a href="../../scenarios/otf_comparison.md" class="md-nav__link">
-        OTF Comparison
-      </a>
-    </li>
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executors" class="md-nav__link">
+    Executors
+  </a>
   
-
-          
-            
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqldataframe" class="md-nav__link">
+    SQL/DataFrame
+  </a>
   
+</li>
+      
+    </ul>
   
-  
-    <li class="md-nav__item">
-      <a href="../../scenarios/streaming.md" class="md-nav__link">
-        Streaming
-      </a>
+</nav>
+      
     </li>
   
 
@@ -1125,6 +1078,80 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-history-server" class="md-nav__link">
+    Spark History Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stages" class="md-nav__link">
+    Stages
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    Storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    Environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executors" class="md-nav__link">
+    Executors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqldataframe" class="md-nav__link">
+    SQL/DataFrame
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
@@ -1135,9 +1162,102 @@
                   </a>
                 
                 
-                  <h1>How to Read the Spark Web UI / Spark History Server</h1>
-                
-                
+                <h1 id="spark-ui-and-spark-history-server-analysis"><strong> Spark UI and Spark History Server Analysis </strong><a class="headerlink" href="#spark-ui-and-spark-history-server-analysis" title="Permanent link">&para;</a></h1>
+<p>In this section we’re going to explore the Spark Web UI to understand what are the main sections and information it provides, to better understand how we can leverage this tool to review our benchmark results. </p>
+<h4 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h4>
+<p>The Spark Web UI is a web interface that can be found on each EMR on EC2 cluster where Spark is installed. The interface can be accessed in two ways: </p>
+<ul>
+<li>
+<p><strong>Spark Driver Web UI</strong> The Spark Driver by default exposes the Spark Web UI using information from the live application. This is the most comprehensive interface, as you can see live data of your applications in terms of disk and memory utilization. You can easily locate and connect to this intefacte by connecting on the YARN Resource Manger and then opening the Application Master URL available for the running Spark application.</p>
+</li>
+<li>
+<p><strong>Spark History Server</strong> This is a service that Spark provides to review completed or running applications on the cluster. The interface is available on the EMR Primary (MASTER) node of the cluster and can be reached at the following address: http://master-public-dns-name:18080/. It’s important to note that this interface uses the Spark Event Logs to populate the information that are available only at runtime (e.g. caching) might not be present in this interface.</p>
+</li>
+</ul>
+<h4 id="spark-history-server">Spark History Server<a class="headerlink" href="#spark-history-server" title="Permanent link">&para;</a></h4>
+<p>Once opened, the service will show us a summary of all the applications that are stored in the default Spark Event Log directory (<em>hdfs:///var/log/spark/apps</em>). Each application provides summary information as the Spark version used for the job (typically the same version installed on the cluster), the YARN application ID, it’s name (if you defined in your code) and time details to determine the application duration. Specifically the duration field is a useful field as it provides a metrics for the duration of the application since the Spark driver was launched and terminated, excluding additional submission details that are specific for different deployment models, so it can be useful to compare the Spark runtime across different versions or providers.   </p>
+<p><img alt="Benchmark - 2" src="../images/benchmark-2.png" /></p>
+<p>Once selected an application, you’ll be redirected to the corresponding application page where you can have a summarized view of all the Spark Jobs executed in your application. A Spark Job is triggered by a <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html#actions">Spark RDD Action</a> (or any Spark Dataset API which internally relies on the previously mentioned API) so it can give you a good indication of which portions of your code took more time to execute and you can also use it to compare two jobs executed in different environments or with different configurations to spot differences in terms of time processing. In those last cases is useful to sort your Jobs by Duration using the interface. </p>
+<p><img alt="Benchmark - 3" src="../images/benchmark-3.png" /></p>
+<p>Additionally, this page provides additional information on the top left page: </p>
+<ul>
+<li><strong>User</strong> The user who launched the application. In Amazon EMR this typically match the hadoop user unless you’re using the Hadoop impersonation. </li>
+<li><strong>Total Uptime</strong> Time since the Spark application started till the completion of the last Job</li>
+<li><strong>Scheduling Mode</strong> The <a href="https://spark.apache.org/docs/latest/job-scheduling.html#scheduling-within-an-application">internal scheduler</a> used within the Spark Application to execute the Spark Jobs. By default Spark uses a FIFO (First In First Out) scheduler.</li>
+</ul>
+<p>Lastly, this page allows you you to review the lifecycle of your application, by expanding the <strong>Event Timeline</strong> section where you can review how the different Spark Jobs were executed during the time, as also Spark Executors launch and termination, that can give you useful information to detect slow-downs due to the lack of resources (e.g. you’re using the Spark Dynamic allocation along with a cluster managed scaler and the nodes took too much time to be added to the cluster). </p>
+<p><img alt="Benchmark - 4" src="../images/benchmark-4.png" /></p>
+<p>Finally the top bar on top of the page (see picture), allows you to review additional information related to the Spark Application. </p>
+<p><img alt="Benchmark - 5" src="../images/benchmark-5.png" /></p>
+<p>In the next sections, we’re going to review each of them. </p>
+<h4 id="stages">Stages<a class="headerlink" href="#stages" title="Permanent link">&para;</a></h4>
+<p>As for the Jobs page, you can review also all the Stages that have been processed in your application. This pages can be reached directly from the Web UI, and in this case it will display all the Stages of the application, or you can select a single Spark Job in the <strong>Jobs</strong> section if you’re only interested to the Stages processed in an individual Spark Job.</p>
+<p>The main Stage page provides information about duration and submission of a stage, along with related tasks processed and aggregated metrics for input/output data read from the stage, along with related shuffle metrics. </p>
+<p><img alt="Benchmark - 6" src="../images/benchmark-6.png" /></p>
+<p>If you expand an individual Stage, you’ll be redirected on a more detailed page where you can examine aggregated metrics of the Tasks processed in the stage. </p>
+<p><img alt="Benchmark - 7" src="../images/benchmark-7.png" /></p>
+<h4 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h4>
+<p>The <strong>Storage page</strong> contains information about RDD blocks that have been cached or persisted in memory or on the local disks of the cluster. This page will show some details only if you explicitly invoke a persist or cache operation against a Spark Dataframe. More in detail, the page shows for each RDD: </p>
+<ul>
+<li><strong>Name</strong> Typically a logical name identified by the spark relation that created the RDD blocks</li>
+<li><strong>Storage Level</strong> Where the data has been cached (Memory only) or persisted (Memory / Disk / Memory and Disk)</li>
+<li><strong>Cache Partitions</strong> Number of RDD partitions cached</li>
+<li><strong>Fraction Cached</strong> Percentage of the data in the cache</li>
+<li><strong>Size In Memory</strong> Portion of data that have been stored on the Spark Executor Memory</li>
+<li><strong>Size On Disk</strong> Portion of data stored on the local disks of the nodes of the cluster</li>
+</ul>
+<p>Below an example of a Spark DataFrame persisted both in Memory and on local Disks, with serialized and replicated data (StorageLevel.MEMORY_AND_DISK_SER_2).  </p>
+<p><img alt="Benchmark - 8" src="../images/benchmark-8.png" /></p>
+<p>Besides, you can can also access a more detailed paged about the cached element by selecting the RDD of interest. In this case a new page will be opened, with additional information about the distribution and storage footprint of the object along with storage locations of the cached blocks. </p>
+<p><img alt="Benchmark - 9" src="../images/benchmark-9.png" /></p>
+<p>As mentioned, this information are typically available only on a running application, so either if your application is caching some data, you might not be able to see this information if you open a completed application in the Spark History UI.</p>
+<h4 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h4>
+<p><img alt="Benchmark - 10" src="../images/benchmark-10.png" /></p>
+<p>The <strong>Environment</strong> page display all the main configurations that have been used to execute the Spark Application. Within this section there are seven sections: </p>
+<ul>
+<li><strong>Runtime Information</strong> Core details about the Java and Scala versions used to run the job</li>
+<li><strong>Spark Properties</strong> Contains Spark configurations defined while launching the application and retrieved from the <em>/etc/spark/conf/spark-defaults.conf</em> configuration file. Additional Spark main configurations that are mandatory to run a job are also visualized with their defaults if not overridden. </li>
+<li><strong>Resource Profiles</strong> Contains profiles for the Spark Executors requests that are going to be submitted to the Resource Manager where the job will run (e.g. Hadoop, Kubernetes, etc.)</li>
+<li><strong>Hadoop Properties</strong> As for the Spark section, it contains Hadoop configurations required by the job as detected by the Hadoop configurations files, typically stored in <em>/etc/hadoop/conf/</em>.</li>
+<li><strong>System Properties</strong> Environmental variables and java properties that are configured in the Spark Drivers and Executors.</li>
+<li><strong>Metric Properties</strong> Spark metrics configurations as defined while launching the application, or inferred from the <em>/etc/spark/conf/metrics.properties</em> configuration file.</li>
+<li><strong>Classpath Entries</strong> Contains JAR dependencies used by Spark and the Application</li>
+</ul>
+<h4 id="executors">Executors<a class="headerlink" href="#executors" title="Permanent link">&para;</a></h4>
+<p>Within the <strong>Executors</strong> page, you can find aggregated statistics and details about all the Spark Task that have been processed in the job. In detail, the page contains two main sections: Summary and Executors. </p>
+<p>The <strong>Summary</strong> section provide aggregated information across all the Spark Executors. This main box can give you an idea of Executors terminated and that were active within the application lifecycle. On the other side, the <strong>Executor</strong> box gives you the same information (with additional details) aggregated for each executor (driver included) that was used in the application. </p>
+<p><img alt="Benchmark - 11" src="../images/benchmark-11.png" /></p>
+<p>There are several information available in this page, and they can typically be useful when sizing or trying to optimize an application in terms of consumption. Below a list of the most important parameters:</p>
+<ul>
+<li><strong>Storage Memory</strong> Identifies the memory used / total memory available in the executor memory for storing cached data. By default this corresponds to 0.5 of the Spark Memory defined as (<strong>Container Heap Memory - Reserved Memory) * spark.memory.fraction</strong></li>
+<li><strong>On Heap Storage Memory</strong> Similar to the previous entry, but also provides a split across On Heap and Off Heap Storage Memory used</li>
+<li><strong>Disk Used 
+    </strong></li>
+<li><strong>Peak JVM Memory</strong> Provides an aggregated view of the memory utilization across the Spark Driver/Executor utilization. This includes both Spark Storage and Execution memory and Reserved Memory.</li>
+<li><strong>Peak Execution Memory</strong> Shows the memory utilization for the Spark Execution Memory. This portion of the memory is used by Spark to process tasks and is the memory the get spilled on the disks when Spark requires more memory to complete a task</li>
+<li><strong>Peak Storage Memory</strong> This highlights the peak memory utilization ot the Storage Memory used for caching RDDs</li>
+<li><strong>Cores</strong> Number of CPU cores available in the executors launched. The number of cores is typically a static value defined while launching a Spark application (unless you’re using the EMR hetherogeneous executors), and defines the maximum number of tasks that can be processed in parallel on the Executor</li>
+<li><strong>Active Tasks</strong> Number of Spark tasks currently running on the executor</li>
+<li><strong>Failed Tasks</strong> Number of Spark tasks that failed on the executor</li>
+<li><strong>Complete Tasks</strong> Aggregated total count of all the tasks processed by an executor</li>
+<li><strong>Total Tasks</strong> Overall total number of Spark tasks processed (active + failed + complete)</li>
+<li><strong>Task Time (GC Time)</strong> Aggregated time required to process the task that were running on the executors. This also includes Garbage Collection aggregated time. When the GC Time is greater than 10% of the Task time the box will be displayed with a red background to highlight an excessive number of GC operations</li>
+<li><strong>Input</strong> Bytes read from the Executors from a Storage source (e.g. HDFS, Amazon S3, etc.)</li>
+<li><strong>Shuffle Read</strong> Total bytes of shuffle data read from an Executor. This includes both local and remote shuffle data</li>
+<li><strong>Shuffle Write</strong>Total bytes of shuffle data written on the local disk of the Spark Executor</li>
+</ul>
+<h4 id="sqldataframe">SQL/DataFrame<a class="headerlink" href="#sqldataframe" title="Permanent link">&para;</a></h4>
+<p>Finally, the SQL/DataFrame page is another important page, which summarize all Spark Queries executed in a Spark Application. This page is only visible in the UI if your application is using Dataset or DataFrame Spark APIs. If you don’t see this page in your application, you can infer the following information: </p>
+<ul>
+<li>Your application is using the old RDD APIs </li>
+<li>Your application migth not be using Spark at its best as most of the Spark optimizations techniques are applied by the Spark Catalyst Optimizer that is only used when working with Dataset/ DataFrame APIs. So if possible try to upgrade your application to use the new APIs. </li>
+</ul>
+<p>The summary page provides, a description of the Query ID, its duration and the Spark Jobs that were launched to execute the specific query (Job IDs)</p>
+<p><img alt="Benchmark - 12" src="../images/benchmark-12.png" /></p>
+<p>If you select a single query, you’ll be redirected to a more detailed page where you can examine a visual graph of the Spark operations performed in the application. </p>
+<p><img alt="Benchmark - 13" src="../images/benchmark-13.png" /></p>
+<p>The graph can simplify the analysis on an application as each stage provides aggregated information about the number of rows and data processed. Additionally, you can also review the Spark Plans generated by the application expanding the Details section below the graph. </p>
+<p><img alt="Benchmark - 14" src="../images/benchmark-14.png" /></p>
                 
               
               
