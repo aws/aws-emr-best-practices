@@ -68,6 +68,11 @@ nav:
 #        - Scenarios:
 #          - OTF Comparison: 'benchmarking/scenarios/otf_comparison.md'
 #          - Streaming: 'benchmarking/scenarios/streaming.md'
+
+  - 8 - Ranger:
+      - 8.1 Plugins:
+        - Trino-Ranger-Plugin: 'ranger/plugins/trino.md'
+
 markdown_extensions:
     - toc:
         permalink: true
