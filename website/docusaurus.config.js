@@ -16,12 +16,12 @@ const config = {
   url: 'https://aws.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/aws-open-data-analytics/',
+  baseUrl: '/aws-emr-best-practices/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'aws', // Usually your GitHub org/user name.
-  projectName: 'aws-open-data-analytics', // Usually your repo name.
+  projectName: 'aws-emr-best-practices', // Usually your repo name.
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -60,7 +60,7 @@ const config = {
       navbar: {
         title: 'AWS Open Data Analytics',
         logo: {
-          alt: 'AWS Open Data Analytic',
+          alt: 'AWS Open Data Analytics',
           src: 'img/logo.svg',
         },
         items: [

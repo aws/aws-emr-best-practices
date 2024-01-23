@@ -2,7 +2,7 @@
 
 A best practices guide for submitting spark applications, integration with hive metastore, security, storage options, debugging options and performance considerations.
 
-Return to [Live Docs](https://aws.github.io/aws-open-data-analytics/).
+Return to [Live Docs](https://aws.github.io/aws-emr-best-practices/).
 
 ## License Summary
 
