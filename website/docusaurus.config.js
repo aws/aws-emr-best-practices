@@ -93,7 +93,7 @@ const config = {
             items: [
               {
                 label: 'Github',
-                href: 'https://aws.github.io/aws-emr-best-practices/',
+                href: 'https://github.com/aws/aws-emr-best-practices/tree/main',
               },
             ],
           },
@@ -105,6 +105,7 @@ const config = {
         darkTheme: prismThemes.dracula,
       },
     }),
+plugins: [require.resolve('docusaurus-lunr-search')],
 };
 
 export default config;
