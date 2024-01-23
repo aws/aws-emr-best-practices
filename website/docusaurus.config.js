@@ -76,6 +76,12 @@ const config = {
             position: 'left',
             label: 'Benchmarks'
           },
+                    {
+            type: 'doc',
+            docId: 'utilities/README',
+            position: 'left',
+            label: 'Utilities'
+          },
        
         ],
       },
