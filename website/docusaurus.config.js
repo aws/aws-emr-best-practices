@@ -82,6 +82,12 @@ const config = {
             position: 'left',
             label: 'Utilities'
           },
+                    {
+            type: 'doc',
+            docId: 'migration/introduction',
+            position: 'left',
+            label: 'Migration'
+          },          
        
         ],
       },
