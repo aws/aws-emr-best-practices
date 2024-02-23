@@ -1030,3 +1030,55 @@ ________________________________________________________________________________
 **Disclaimer**
 
 When writing a file the number of partitions in output will depends from the number of partitions in input that will be maintained if no shuffle operations are applied on the data processed, changed otherwise based on *`spark.default.parallelism`* for RDDs and *`spark.sql.shuffle.partitions`* for dataframes.
+
+## ** BP 5.1.23  - Common heath checks recommendations **
+Below are the recommended steps to monitor the health of your cluster:
+
+●	**Resource Manager UI** : Yarn is the resource manager of the EMR cluster. You can access the Resource Manage persistent UI to get a high level cluster metrics like Apps submitted, Apps Pending, Containers Running,Physical Mem Used % etc. You can also check Cluster node level metric, Scheduler Metrics and application level information and access the Resource Manager UI from the application tab of EMR cluster.
+
+●	**NameNode UI**: NameNode is the HDFS master. You can access this UI to get information on HDFS status such as Configured Capacity, DFS Used, DFS Remaining, Live Nodes,Decommissioning Nodes. Datanode information tab tells the status of the datanode,datanode volume failures, snapshot and startup progress. The UI also gives utilities like metrics, log level information etc about the HDFS cluster. You can access the namenode UI from the application tab of EMR cluster
+
+●	You can get cluster **performance graphs** from the Monitoring Tab, the metrics there are of three categories, Cluster Status, Node Status and Inputs and outputs.
+
+**Cloudwatch Metrics** : [EMR cluster Metrics](https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html#UsingEMR_ViewingMetrics_MetricsReported) can be monitored while key metrics for lookout are YarnavailableMemoryPercentage, IsIdel, ContainerPendingRatio, CoreNodesPending and CoreNodesRunning. You can create custom [cloudwatch metrics as well](https://repost.aws/knowledge-center/emr-custom-metrics-cloudwatch).
+
+●	EMR metrics Dashboard can be created directly form the EMR monitoring tab or from the Cloudwatch by picking and choosing the EMR metric for the dashboard.
+
+●	Set alarms by specifying metrics and conditions. Search the EMR cluster that you would like to create an alarm on then select the metric of EMR. Select the statistics and time period. Then select the condition for the alarm. Select the Alarm trigger, create or choose the SNS topic, subscribe to the SNS topic. You will get an email for the confirmation, confirm the subscription of the topic. Name the alarm and select create alarm.
+
+●	[Why did my Spark job in Amazon EMR fail?](https://repost.aws/knowledge-center/emr-troubleshoot-failed-spark-jobs)
+## ** BP 5.1.24  -  Support Reach Out Best Practice **
+
+Try to troubleshoot your spark issues based on the above steps mentioned in the document and refer to additional [troubleshooting steps. Reach out to Support if needed by following the below best practices:](https://repost.aws/knowledge-center/emr-troubleshoot-failed-spark-jobs)
+
+1.	Make sure to open the Support Case using an IAM User / Role in the account(s) with affected resources. Cross Account Support is provided for some customers.
+2.	Open a support case with right severity level and clearly identify the business impact, urgency and add sufficient contact details in the ‘Description’ field in your ticket.
+3.	**NEVER** include keys, credentials, passwords, or other sensitive information.
+4.	Provide the system impact explanation and include necessary details such as logs, regions, AZ’s instance ID’s, Cluster Ids, resource ARNs, etc.
+5. For a faster response use the Chat / Phone options, and use a dedicated resource on your end who will be the point of contact. Escalate to your Technical Account Manager (TAM) if needed.
+
+Sample template that can be used while raising support case for AWS EMR service
+```
+Issue Details:
+
+Cluster ID:
+
+Error timeline:
+
+Use case Description:
+
+Similar/new occurrence
+```
+Please attach the logs as needed. Find the below logs and log location: 
+
+| Log Name | Log Location |
+--------|---------------------------------------------------------------|
+| Container logs | ```<s3_log_bucket>/<prefix>/<j-xxxxxxx>/containers ```|
+| Step logs | ```<s3_log_bucket>/<prefix>/<j-xxxxxxx>/<Step-ID>/stederr``` | 
+| Driver logs | S3 bucket → Container → ```/application_id/container_XXX_YYYY_00001``` In case of client mode → step id and check the step logs which will have driver logs.
+ Executor logs| Container → ```/application_id/container_XXX_YYYY_0000X```
+  YARN ResourceManager (Master Node) logs|node/application/yarn → yarn-resourcemanager-XXX.gz
+   NodeManager Logs(Core Node) logs| ```sudo stop spark-history-server``` ```sudo start spark-history-server``` Amazon EMR 5.30.0 and later release versions ```systemctl stop spark-history-server``` ```systemctl start spark-history-server```
+
+   
+
