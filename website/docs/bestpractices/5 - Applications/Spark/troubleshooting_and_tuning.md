@@ -1,6 +1,6 @@
-#**5.2 - Spark troubleshooting and performance tuning**
+# 5.2 - Spark troubleshooting and performance tuning
 
-##**5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK**
+## 5.2.1  -  Spark Structured Streaming applications have high Connection Create Rate to Amazon MSK
 
 **Symptom**: Amazon MSK cluster has high CPU usage and MSK metrics indicate high connection create rate to the cluster.
 
@@ -44,7 +44,7 @@ Test4: no minPartitions 20:06 - 20:30
 2. On EMR 5.x (Spark 2.x), only set min partitions when needed - for example, if you have data skew or if your stream is falling behind. Min partitions will allow you to increase parallelism and process records faster but at the expense of high connection rates and CPU.  
 
 
-##**5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data**
+## **5.2.2 - spark.driver.maxResultSize error on an EMR heterogeneous cluster but the driver is not collecting data**
 **Symptom**: Spark jobs fail from time to time and below error is seen in the log:
 
 `
@@ -127,14 +127,14 @@ Spark 3 provides more options to control`maxSplitBytes` as below
 
 Setting either of the above two parameters has the same effect as `spark.default.parallelism` on `maxSplitBytes`.
 
-##**5.2.3  -  Issues related to Spark logs**
+## **5.2.3  -  Issues related to Spark logs**
 
 ### 5.2.3.1 Spark events logs not getting pushed to S3
 
 **Symptom**: This might be caused if the spark logs properties is configured with HDFS location, not with S3 location.
 
 **Troubleshooting Steps:**:
-1. Check the appusher logs of the cluster for the time of the issue where the app pusher log location on your 21EMR logs bucket is <s3_log_bucket>/<prefix>/j- xxxxxxx>/daemons/apppusher.log.gz
+1. Check the appusher logs of the cluster for the time of the issue where the app pusher log location on your 21EMR logs bucket is `<s3_log_bucket>/<prefix>/j- xxxxxxx>/daemons/apppusher.log.gz`
 2. Look for error java.util.concurrent.ExecutionException: java.lang.IllegalArgumentException: Wrong FS: 23 s3://demo-bucket/testing-prod/spark/logs,expected: hdfs://ip-XX-XX-XXX-XXX.eu-west- 241.compute.internal:8020
  By default, Spark Structured Streaming Kafka connector has a 1:1 mapping relation of MSK TopicPartitions to Spark tasks. Between micro batches, Spark tries to (best effort) assign the same MSK TopicPartitions to the same executors which in turn reuses the Kafka consumers and connections. 
  3. Check the spark-defaults.conf file found in the location /etc/spark/conf.dist on the master node for the 26configurationsmentionedbelow: 27spark.eventLog.dir : The spark jobs themselves must be configured to log events, and to log them to the same 28shared,writabledirectory 29spark.history.fs.logDirectory: For the filesystem history provider, the URL to the directory containing 30application event logs to load.
@@ -196,11 +196,11 @@ Setting either of the above two parameters has the same effect as `spark.default
 
 Check the instance state logs ```<s3_log_bucket>/<prefix>/<j-xxxxxxx>/deamon/instance-state/```(find the log as per the error time frame) of the your EMR instances and search for df -h and check for the /mnt usage for that particular instance. Below parameters can be configured.
 
-●	```spark.eventLog.rolling.enabled``` – Turns on event log rolling based on size. This is deactivated by default.
+-	```spark.eventLog.rolling.enabled``` – Turns on event log rolling based on size. This is deactivated by default.
 
-●	```spark.eventLog.rolling.maxFileSize``` – When rolling is activated, specifies the maximum size of the event log file before it rolls over.
+-	```spark.eventLog.rolling.maxFileSize``` – When rolling is activated, specifies the maximum size of the event log file before it rolls over.
 
-●	```spark.history.fs.eventLog.rolling.maxFilesToRetain``` – Specifies the maximum number of non-compacted event log files to retain. 
+-	```spark.history.fs.eventLog.rolling.maxFilesToRetain``` – Specifies the maximum number of non-compacted event log files to retain. 
 
 *Note: Instance-state logs are snapshots captured at the instance level every 15 min.*
 
@@ -208,17 +208,16 @@ Check the instance state logs ```<s3_log_bucket>/<prefix>/<j-xxxxxxx>/deamon/ins
 
 **Symptom**: To access your old EMR cluster logs, go to application history and relevant log files for active and terminated clusters. The logs are available for 30 days after the application ends. On the Application user interfaces tab or the cluster Summary page for your cluster in the old console for Amazon EMR 5.30.1 or 6.x, choose the YARN timeline server, Tez UI, or Spark history server link. Starting from EMR version 5.25.0, persistent application user interface (UI) links are available for Spark History Server, which doesn't require you to set up a web proxy through a SSH connection and can be directly accessed via the AWS EMR Web Console. Navigate to the terminated cluster whose logs you require, clicking on Application user interfaces tab (on old EMR console) or Applications tab and select Persistent application UIs (on new EMR console) and finally clicking on [Spark History Server link](https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html#app-history-spark-UI-event-logs)
 
-##**5.2.4  - Issues Related to Spark session**
+## **5.2.4  - Issues Related to Spark session**
 
 ### 5.2.4.1  -Spark session not getting generated with Missing std out
 **Symptom**: You might encounter below listed spark session issues
 
-●	Error when trying to run jupyter note book for spark.
+-	Error when trying to run jupyter note book for spark.
 
-●	```The code failed because of a fatal error: Invalid status code '500' from http://localhost:8998/sessions with error payload: "java.lang.NullPointerException".java.net.ConnectException: Connection refused```
+-	```The code failed because of a fatal error: Invalid status code '500' from http://localhost:8998/sessions with error payload: "java.lang.NullPointerException".java.net.ConnectException: Connection refused```
 
-●	```ERROR SparkContext: Error initializing SparkContext.
-org.apache.hadoop.util.DiskChecker$DiskErrorException: Could not find any valid local directory for s3ablock-0001-```
+- ```ERROR SparkContext: Error initializing SparkContext.org.apache.hadoop.util.DiskChecker$DiskErrorException: Could not find any valid local directory for s3ablock-0001-```
 
 **Probable Root cause**
 
@@ -261,13 +260,13 @@ To know more about the livy we you can go over the following [resource](https://
 ### 5.2.4.3  -Spark application failure due to Disk space or CPU Load
 **Symptom**: You might encounter disk space/CPU related issues due to:
 
-●	The log pusher service is not running or consuming high CPU, to know more check the [instance-state logs](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html#emr-plan-debugging-logs) for the CPU, memory state, and garbage collector threads of the node.
+-	The log pusher service is not running or consuming high CPU, to know more check the [instance-state logs](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html#emr-plan-debugging-logs) for the CPU, memory state, and garbage collector threads of the node.
 
-●	Local disk of the node is getting full, as application logs might be stored on the nodes local disk where your application is running, so a long running application can fill in the local disk of a node
+-	Local disk of the node is getting full, as application logs might be stored on the nodes local disk where your application is running, so a long running application can fill in the local disk of a node
 
-●	There might be another app which is running on the cluster at the same time could be filling up disk space/consuming CPU cycles.
+-	There might be another app which is running on the cluster at the same time could be filling up disk space/consuming CPU cycles.
 
-●	High retention period of the spark event and the yarn container logs
+-	High retention period of the spark event and the yarn container logs
 
 *Note: Disk space or CPU load may not always cause an application failure, however could lead to performance regression*
 
@@ -311,7 +310,7 @@ yarn-site.xml
 
 8. [You can prevent hadoop and spark user cache consuming disk space](https://repost.aws/knowledge-center/user-cache-disk-space-emr)
 
-##**5.2.5  - Spark application failure**
+## **5.2.5  - Spark application failure**
 
 ### 5.2.5.1 Spark app class not found exception
 Refer to the the [blog post](https://repost.aws/knowledge-center/emr-spark-classnotfoundexception) to troubleshoot spark app class not found exception.
@@ -322,43 +321,43 @@ Refer to the the [blog post](https://repost.aws/knowledge-center/emr-spark-class
 
 **Probable Root causes:**
 
-●	Bucket policies and IAM policies related issue
+-	Bucket policies and IAM policies related issue
 
-●	AWS s3 ACL setting
+-	AWS s3 ACL setting
 
-●	S3 block Public Access setting
+-	S3 block Public Access setting
 
-●	S3 object lock settings
+-	S3 object lock settings
 
-●	VPC endpoint policy
+-	VPC endpoint policy
 
-●	AWS organization policies
+-	AWS organization policies
 
-●	Access point setting
+-	Access point setting
 
 **Troubleshooting Steps:**
 
-●	Check the application logs to confirm the error Status Code: 403; Error Code:AccessDenied and check the probable root causes
+-	Check the application logs to confirm the error Status Code: 403; Error Code:AccessDenied and check the probable root causes
 
-● Generate [Amazon S3 request ID for AWS support to help in debugging the issue](https://docs.aws.amazon.com/AmazonS3/latest/userguide/get-request-ids.html)
+- Generate [Amazon S3 request ID for AWS support to help in debugging the issue](https://docs.aws.amazon.com/AmazonS3/latest/userguide/get-request-ids.html)
 
 **Best practices and Recommendations:**
 
-●	Aws recommends using "s3://" instead of S3a:// S3n:// which is based on EMRFS as it is build and maintained by AWS and supports additional features.
+-	Aws recommends using "s3://" instead of S3a:// S3n:// which is based on EMRFS as it is build and maintained by AWS and supports additional features.
 
-●	[403 S3 Error troubleshooting](https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshoot-403-errors.html)
+-	[403 S3 Error troubleshooting](https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshoot-403-errors.html)
 
-●	[Cross Account Bucket Access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-walkthroughs-managing-access-example2.html#access-policies-walkthrough-example2a)
+-	[Cross Account Bucket Access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-walkthroughs-managing-access-example2.html#access-policies-walkthrough-example2a)
 
 ### 5.2.5.3 Cluster mode job failure
 
 **Symptom**: In the absence of correct parameters and the dependencies installed before running a job in the cluster mode, you can encounter cluster mode job failures as below:
 
-●	 ERROR Client: Application diagnostics message: User application exited with status 1
+-	 ERROR Client: Application diagnostics message: User application exited with status 1
 
-●	 exitCode: 13
+-	 exitCode: 13
 
-●	 User application exited with status 1
+-	 User application exited with status 1
 
 **Troubleshooting Steps:**
 1.	Inspect the container of application master logs containers/application_xx_0002/container_xx_0002_01_000001
@@ -394,23 +393,23 @@ Refer to the the [blog post](https://repost.aws/knowledge-center/emr-spark-class
 
 **Configuration to consider:**
 
-●	spark.reducer.maxBlocksInFlightPerAddress:  limits the number of remote blocks being fetched per reduce task from a given host port.
+-	spark.reducer.maxBlocksInFlightPerAddress:  limits the number of remote blocks being fetched per reduce task from a given host port.
 
-●	spark.reducer.maxSizeInFlight:  Maximum size of map outputs to fetch simultaneously from each reduce task.
+-	spark.reducer.maxSizeInFlight:  Maximum size of map outputs to fetch simultaneously from each reduce task.
 
-●	spark.shuffle.io.retryWait (Netty only): How long to wait between retries of fetches. 
+-	spark.shuffle.io.retryWait (Netty only): How long to wait between retries of fetches. 
 
-●	spark.shuffle.io.maxRetries (Netty only): Fetches that fail due to IO-related exceptions are automatically retried if this is set to a non-zero value.
+-	spark.shuffle.io.maxRetries (Netty only): Fetches that fail due to IO-related exceptions are automatically retried if this is set to a non-zero value.
 
-●	spark.shuffle.io.backLog: Length of the accept queue for the shuffle service. 
+-	spark.shuffle.io.backLog: Length of the accept queue for the shuffle service. 
 
-●	Increasing the memory for NodeManager Deamon on EMR cluster startup ```
+-	Increasing the memory for NodeManager Deamon on EMR cluster startup ```
 yarn-env = YARN_NODEMANAGER_HEAPSIZE": "10000"```
 
-●	Tuning number of Partitions and Spark parallelism(```spark.default.parallelism```) for your cluster/job. This may limit the number of shuffles that's happening per job and consequently reduce the load on all NodeManager's.
+-	Tuning number of Partitions and Spark parallelism(```spark.default.parallelism```) for your cluster/job. This may limit the number of shuffles that's happening per job and consequently reduce the load on all NodeManager's.
 Note that changing configuration can have performance impact.
 
-●	Keep the EMR default ```spark.shuffle.service.enabled true(spark-defaults.conf)```
+-	Keep the EMR default ```spark.shuffle.service.enabled true(spark-defaults.conf)```
 ```spark.dynamicAllocation.enabled set to true (EMR default)```
 
 
@@ -424,15 +423,15 @@ Note that changing configuration can have performance impact.
 
 [Optimize Spark performance](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html)
 
-##**5.2.6  - Spark SQL issue**
+## **5.2.6  - Spark SQL issue**
 
 ### Spark Query failures for jupyter notebook Python 3 
 
 **Symptom**: If EMR job fails with an error message [Exit status: -100. Diagnostics: Container released on a lost node](https://repost.aws/knowledge-center/emr-exit-status-100-lost-node), it might be because of 
 
-●	A core or task node is terminated because of high disk space utilization. 
+-	A core or task node is terminated because of high disk space utilization. 
 
-●	A node becomes unresponsive due to prolonged high CPU utilization or low available memory.
+-	A node becomes unresponsive due to prolonged high CPU utilization or low available memory.
 
 **Troubleshooting Steps:**
 
