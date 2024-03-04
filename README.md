@@ -4,6 +4,7 @@ A best practices guide for submitting spark applications, integration with hive 
 
 Return to [Live Docs](https://aws.github.io/aws-emr-best-practices/).
 
+
 ## License Summary
 
 The documentation is made available under the Creative Commons Attribution-ShareAlike 4.0 International License. See the LICENSE file.

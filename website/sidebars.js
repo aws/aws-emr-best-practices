@@ -39,6 +39,10 @@ const sidebars = {
       items: ['benchmarks/Resources/Benchmark_results','benchmarks/Resources/Utilities'],
     },    
   ],
+  migration: [
+    'migration/introduction',
+  ],
+
 
 };
 
