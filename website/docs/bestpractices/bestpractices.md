@@ -15,9 +15,10 @@ We currently have published guides for the following topics:
 	- Managed Scaling
 	- Spot Usage
 - Applications
-	- Spark
-	- Hive
+    - Hadoop
 	- HBase
+	- Hive
+	- Spark
 - Architecture
 	- Batch
 	- Ad Hoc

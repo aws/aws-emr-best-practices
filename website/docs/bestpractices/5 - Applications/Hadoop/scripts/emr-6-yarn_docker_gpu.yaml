@@ -1,0 +1,199 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: 'AWS CloudFormation EMR Sample Template:
+  Create an EMR cluster for GPU processing on docker containers.
+
+  **WARNING** You will be billed for the AWS resources used if you create a
+  stack from this template.'
+
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Project
+        Parameters:
+          - Project
+
+      - Label:
+          default: Network
+        Parameters:
+          - Vpc
+          - VpcNetwork
+          - Subnet
+
+      - Label:
+          default: EMR
+        Parameters:
+          - S3BootstrapLocation
+          - KeyName
+          - emrRelease
+          - emrMasterInstanceType
+          - emrCoreInstanceType
+          - emrCoreCount
+
+    ParameterLabels:
+      S3BootstrapLocation:
+        default: 'S3 Bootstrap Action'
+
+      KeyName:
+        default: 'SSH Key Name'
+      emrRelease:
+        default: 'Release Version'
+      emrMasterInstanceType:
+        default: 'MASTER Instance Type'
+      emrCoreInstanceType:
+        default: 'CORE Instance Type'
+      emrCoreCount:
+        default: 'CORE nodes count'
+
+Parameters:
+
+  S3BootstrapLocation:
+    Description: S3 Location of the Bootstrap Action. For example, s3://YOUR_BUCKET/emr-6-ba-yarn_docker_gpu.sh 
+    Type: String
+
+  Project:
+    Type: String
+    Description: Value of the `Project` tag attached to each resource
+    Default: aws-emr
+
+  Vpc:
+    Type: AWS::EC2::VPC::Id
+  Subnet:
+    Type: AWS::EC2::Subnet::Id
+  VpcNetwork:
+    Description: Network range for the Vpc (ex. 10.0.0.0/16)
+    Type: String
+    Default: 10.0.0.0/16
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+
+  emrMasterInstanceType:
+    Type: String
+    Default: m5.2xlarge
+    AllowedValues:
+      - m5.2xlarge
+      - m5.4xlarge
+  emrCoreCount:
+    Type: String
+    Default: 1
+  emrCoreInstanceType:
+    Type: String
+    Default: g4dn.2xlarge
+    AllowedValues:
+      - g4dn.2xlarge
+      - g4dn.12xlarge
+      - g5.2xlarge
+      - g5.12xlarge
+      - p3.2xlarge
+      - p3.8xlarge
+
+  emrRelease:
+    Type: String
+    Default: emr-6.15.0
+    AllowedValues:
+      - emr-6.15.0
+
+Resources:
+
+#===============================================================================
+# EMR security configuration
+#===============================================================================
+  emrAdditionalSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Open Up all Ranger Server ports
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          CidrIp: !Ref VpcNetwork
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+
+#===============================================================================
+# EMR cluster
+#===============================================================================
+  EmrCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name: !Sub ${Project}/emr-yarn_docker_gpu
+      JobFlowRole: 'EMR_EC2_DefaultRole'
+      ServiceRole: 'EMR_DefaultRole'
+      ReleaseLabel: !Ref emrRelease
+      LogUri: !Sub s3://aws-logs-${AWS::AccountId}-${AWS::Region}/elasticmapreduce/
+      VisibleToAllUsers: true
+      EbsRootVolumeSize: 15
+      Instances:
+        Ec2SubnetId: !Ref Subnet
+        Ec2KeyName: !Ref KeyName
+        AdditionalMasterSecurityGroups:
+          - !Ref emrAdditionalSecurityGroup
+        AdditionalSlaveSecurityGroups:
+          - !Ref emrAdditionalSecurityGroup
+        TerminationProtected: false
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: !Ref emrMasterInstanceType
+          Market: ON_DEMAND
+          Name: Master node
+        CoreInstanceGroup:
+          InstanceCount: !Ref emrCoreCount
+          InstanceType: !Ref emrCoreInstanceType
+          Market: ON_DEMAND
+          Name: Core instance
+
+      BootstrapActions:
+        - Name: Install Nvidia Docker 
+          ScriptBootstrapAction:
+            Path: !Ref S3BootstrapLocation
+
+      Applications:
+        - Name: Hadoop
+        - Name: Spark
+
+      Configurations:
+
+        ####################################
+        # YARN / Capacity Scheduler
+        ####################################
+        - Classification: yarn-site
+          ConfigurationProperties:
+            yarn.nodemanager.container-executor.class: "org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor"
+            yarn.nodemanager.linux-container-executor.cgroups.hierarchy: "yarn"
+            yarn.nodemanager.linux-container-executor.cgroups.mount: "true"
+            yarn.nodemanager.linux-container-executor.cgroups.mount-path: "/sys/fs/cgroup"
+            yarn.nodemanager.resource-plugins: "yarn.io/gpu"
+            yarn.nodemanager.resource-plugins.gpu.allowed-gpu-devices: "auto"
+            yarn.nodemanager.resource-plugins.gpu.path-to-discovery-executables: "/usr/bin"
+            yarn.resource-types: "yarn.io/gpu"
+            yarn.nodemanager.resource-plugins.gpu.docker-plugin: "nvidia-docker-v2"
+
+        - Classification: capacity-scheduler
+          ConfigurationProperties:
+            yarn.scheduler.capacity.resource-calculator: "org.apache.hadoop.yarn.util.resource.DominantResourceCalculator"
+
+        ####################################
+        # YARN DOCKER + GPU
+        ####################################
+        - Classification: container-executor
+          Configurations:
+            - Classification: docker
+              ConfigurationProperties:
+                docker.allowed.runtimes: "nvidia"
+                docker.trusted.registries: "library,centos"         
+            - Classification: gpu
+              ConfigurationProperties:
+                module.enabled: "true"  
+            - Classification: cgroups
+              ConfigurationProperties:
+                root: "/sys/fs/cgroup"
+                yarn-hierarchy: "yarn"
+
+      Tags:
+        - Key: Project
+          Value: !Ref Project
+        - Key: Name
+          Value: !Sub ${Project}/emr-node
