@@ -84,7 +84,6 @@ Parameters:
   Artifacts:
     Description: S3 Location of the Bootstrap Script. For example, s3://YOUR_BUCKET/yarn_labels_scaling.sh
     Type: String
-    Default: s3://ripani.dub/emr-bootstrap/yarn_labels_scaling.sh
 
   Vpc:
     Type: AWS::EC2::VPC::Id
