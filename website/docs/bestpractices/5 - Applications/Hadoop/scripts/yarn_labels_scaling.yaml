@@ -1,0 +1,431 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: 'AWS CloudFormation EMR Sample Template:
+  Create an EMR cluster configured to use YARN labels and queues. 
+
+  **WARNING** You will be billed for the AWS resources used if you create a
+  stack from this template.'
+
+Metadata:
+
+  License: Apache-2.0
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Project
+        Parameters:
+          - Project
+
+      - Label:
+          default: Network
+        Parameters:
+          - Vpc
+          - VpcNetwork
+          - Subnet
+
+      - Label:
+          default: EMR
+        Parameters:
+          - Artifacts
+          - KeyName
+          - emrRelease
+          - emrMasterInstanceType
+          - emrCoreInstanceType
+          - emrCoreCount
+          - emrTaskComputeInstanceType
+          - emrTaskComputeCount
+          - emrTaskComputeMaxCount
+          - emrTaskComputeScalingThreshold
+          - emrTaskMemoryInstanceType
+          - emrTaskMemoryCount
+          - emrTaskMemoryMaxCount
+          - emrTaskMemoryScalingThreshold
+
+    ParameterLabels:
+      Artifacts: 
+        default: 'S3 Bootstrap Script'
+      KeyName:
+        default: 'SSH Key Name'
+      emrRelease:
+        default: 'Release Version'
+      emrMasterInstanceType:
+        default: 'MASTER Instance Type'
+      emrCoreInstanceType:
+        default: 'CORE Instance Type'
+      emrCoreCount:
+        default: 'CORE nodes count'
+
+      emrTaskMemoryInstanceType:
+        default: 'TASK (Memory Optimized) Instance Type'
+      emrTaskMemoryCount:
+        default: 'TASK (Memory Optimized) Nodes count'
+      emrTaskMemoryMaxCount:
+        default: 'TASK (Memory Optimized) Nodes max count'
+      emrTaskMemoryScalingThreshold:
+        default: 'TASK (Memory Optimized) Scaling Threshold'
+
+      emrTaskComputeInstanceType:
+        default: 'TASK (Compute Optimized) Instance Type'
+      emrTaskComputeCount:
+        default: 'TASK (Compute Optimized) Nodes count'
+      emrTaskComputeMaxCount:
+        default: 'TASK (Compute Optimized) Nodes max count'
+      emrTaskComputeScalingThreshold:
+        default: 'TASK (Compute Optimized) Scaling Threshold'
+
+Parameters:
+
+  Project:
+    Type: String
+    Description: Value of the `Project` tag attached to each resource
+    Default: aws-emr
+  
+  Artifacts:
+    Description: S3 Location of the Bootstrap Script. For example, s3://YOUR_BUCKET/yarn_labels_scaling.sh
+    Type: String
+    Default: s3://ripani.dub/emr-bootstrap/yarn_labels_scaling.sh
+
+  Vpc:
+    Type: AWS::EC2::VPC::Id
+  Subnet:
+    Type: AWS::EC2::Subnet::Id
+  VpcNetwork:
+    Description: Network range for the Vpc (ex. 10.0.0.0/16)
+    Type: String
+    Default: 10.0.0.0/16
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+
+  emrMasterInstanceType:
+    Type: String
+    Default: m5.2xlarge
+    AllowedValues:
+      - m5.2xlarge
+      - m5.4xlarge
+  emrCoreCount:
+    Type: String
+    Default: 2
+  emrCoreInstanceType:
+    Type: String
+    Default: m5.2xlarge
+    AllowedValues:
+      - m5.2xlarge
+      - m5.4xlarge
+  emrTaskMemoryCount:
+    Type: String
+    Default: 1
+  emrTaskMemoryMaxCount:
+    Type: String
+    Default: 10
+  emrTaskMemoryScalingThreshold:
+    Type: String
+    Default: 5120
+    Description: Define the pending memory threshold (MB) that triggers a scale operation on the MEMORY OPTIMIZED instance group (Default 5120 = 5 * 1024 = 5GB)                    
+  emrTaskMemoryInstanceType:
+    Type: String
+    Default: r5.2xlarge
+    AllowedValues:
+      - r5.2xlarge
+      - r5.4xlarge
+      - r5.8xlarge
+  emrTaskComputeCount:
+    Type: String
+    Default: 1
+  emrTaskComputeMaxCount:
+    Type: String
+    Default: 10    
+  emrTaskComputeScalingThreshold:
+    Description: Define the pending vCores threshold that triggers a scale operation on the COMPUTE_OPTIMIZED instance group
+    Type: String
+    Default: 10        
+  emrTaskComputeInstanceType:
+    Type: String
+    Default: c5.2xlarge
+    AllowedValues:
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.9xlarge
+  emrRelease:
+    Type: String
+    Default: emr-6.15.0
+    AllowedValues:
+      - emr-6.15.0
+
+Resources:
+
+#===============================================================================
+# EMR security configuration
+#===============================================================================
+  emrAdditionalSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Open Up all Ranger Server ports
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          CidrIp: !Ref VpcNetwork
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+
+#===============================================================================
+# EMR cluster
+#===============================================================================
+  EmrCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name: !Sub ${Project}/emr-multitenant
+      AutoScalingRole: 'EMR_AutoScaling_DefaultRole'
+      JobFlowRole: 'EMR_EC2_DefaultRole'
+      ServiceRole: 'EMR_DefaultRole'
+      ReleaseLabel: !Ref emrRelease
+      LogUri: !Sub s3://aws-logs-${AWS::AccountId}-${AWS::Region}/elasticmapreduce/
+      VisibleToAllUsers: true
+      EbsRootVolumeSize: 15
+      Instances:
+        Ec2SubnetId: !Ref Subnet
+        Ec2KeyName: !Ref KeyName
+        AdditionalMasterSecurityGroups:
+          - !Ref emrAdditionalSecurityGroup
+        AdditionalSlaveSecurityGroups:
+          - !Ref emrAdditionalSecurityGroup
+        TerminationProtected: false
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: !Ref emrMasterInstanceType
+          Market: ON_DEMAND
+          Name: Master node
+        CoreInstanceGroup:
+          InstanceCount: !Ref emrCoreCount
+          InstanceType: !Ref emrCoreInstanceType
+          Market: ON_DEMAND
+          Name: Core instance
+          Configurations:
+            - Classification: yarn-site
+              ConfigurationProperties:
+                yarn.nodemanager.node-labels.provider: config
+                yarn.nodemanager.node-labels.provider.configured-node-partition: CORE
+        TaskInstanceGroups:
+          - Name: Compute Optimized
+            InstanceCount: !Ref emrTaskComputeCount
+            InstanceType: !Ref emrTaskComputeInstanceType
+            Market: ON_DEMAND
+            Configurations:
+              - Classification: yarn-site
+                ConfigurationProperties:
+                  yarn.nodemanager.node-labels.provider: config
+                  yarn.nodemanager.node-labels.provider.configured-node-partition: COMPUTE_OPTIMIZED            
+            AutoScalingPolicy:
+              Constraints: 
+                MaxCapacity: !Ref emrTaskComputeMaxCount
+                MinCapacity: !Ref emrTaskComputeCount
+              Rules: 
+                - Action: 
+                    SimpleScalingPolicyConfiguration: 
+                      AdjustmentType: PERCENT_CHANGE_IN_CAPACITY
+                      CoolDown: 300
+                      ScalingAdjustment: 20
+                  Description: "Scale-Out on pending vCores"
+                  Name: "COMPUTE_OPTIMIZED_SCALE_OUT"
+                  Trigger: 
+                    CloudWatchAlarmDefinition: 
+                      ComparisonOperator: GREATER_THAN_OR_EQUAL
+                      EvaluationPeriods: 1
+                      MetricName: COMPUTE_OPTIMIZED.PendingVCores
+                      Namespace: AWS/ElasticMapReduce
+                      Period: 120
+                      Statistic: AVERAGE
+                      Threshold: !Ref emrTaskComputeScalingThreshold
+                      Unit: COUNT
+                - Action: 
+                    SimpleScalingPolicyConfiguration: 
+                      AdjustmentType: PERCENT_CHANGE_IN_CAPACITY
+                      CoolDown: 300
+                      ScalingAdjustment: -20
+                  Description: "Scale-In on pending vCores"
+                  Name: "COMPUTE_OPTIMIZED_SCALE_IN"
+                  Trigger: 
+                    CloudWatchAlarmDefinition: 
+                      ComparisonOperator: LESS_THAN
+                      EvaluationPeriods: 1
+                      MetricName: COMPUTE_OPTIMIZED.PendingVCores
+                      Namespace: AWS/ElasticMapReduce
+                      Period: 120
+                      Statistic: AVERAGE
+                      Threshold: !Ref emrTaskComputeScalingThreshold
+                      Unit: COUNT
+
+          - Name: Memory Optimized
+            InstanceCount: !Ref emrTaskMemoryCount
+            InstanceType: !Ref emrTaskMemoryInstanceType
+            Market: ON_DEMAND
+            Configurations:
+              - Classification: yarn-site
+                ConfigurationProperties:
+                  yarn.nodemanager.node-labels.provider: config
+                  yarn.nodemanager.node-labels.provider.configured-node-partition: MEMORY_OPTIMIZED
+            AutoScalingPolicy:
+              Constraints: 
+                MaxCapacity: !Ref emrTaskMemoryMaxCount
+                MinCapacity: !Ref emrTaskMemoryCount
+              Rules: 
+                - Action: 
+                    SimpleScalingPolicyConfiguration: 
+                      AdjustmentType: PERCENT_CHANGE_IN_CAPACITY
+                      CoolDown: 300
+                      ScalingAdjustment: 20
+                  Description: "Scale-Out on pending memory"
+                  Name: "MEMORY_OPTIMIZED_SCALE_OUT"
+                  Trigger: 
+                    CloudWatchAlarmDefinition: 
+                      ComparisonOperator: GREATER_THAN_OR_EQUAL
+                      EvaluationPeriods: 1
+                      MetricName: MEMORY_OPTIMIZED.PendingMemory
+                      Namespace: AWS/ElasticMapReduce
+                      Period: 120
+                      Statistic: AVERAGE
+                      Threshold: !Ref emrTaskMemoryScalingThreshold
+                      Unit: COUNT
+                - Action: 
+                    SimpleScalingPolicyConfiguration: 
+                      AdjustmentType: PERCENT_CHANGE_IN_CAPACITY
+                      CoolDown: 300
+                      ScalingAdjustment: -20
+                  Description: "Scale-In on pending memory"
+                  Name: "MEMORY_OPTIMIZED_SCALE_IN"
+                  Trigger: 
+                    CloudWatchAlarmDefinition: 
+                      ComparisonOperator: LESS_THAN
+                      EvaluationPeriods: 1
+                      MetricName: MEMORY_OPTIMIZED.PendingMemory
+                      Namespace: AWS/ElasticMapReduce
+                      Period: 120
+                      Statistic: AVERAGE
+                      Threshold: !Ref emrTaskMemoryScalingThreshold
+                      Unit: COUNT
+
+      Applications:
+        - Name: Hadoop
+        - Name: Hive
+        - Name: Spark
+
+      Configurations:
+
+        ####################################
+        # YARN / Capacity Scheduler
+        ####################################
+        - Classification: mapred-site
+          ConfigurationProperties:
+            mapreduce.job.am.node-label-expression: 'CORE'     
+
+        - Classification: yarn-site
+          ConfigurationProperties:
+
+            # Driver on CORE nodes only
+            yarn.node-labels.enabled: true
+            yarn.node-labels.am.default-node-label-expression: 'CORE'
+
+            # YARN Preemption
+            yarn.resourcemanager.scheduler.monitor.enable: true
+            yarn.resourcemanager.scheduler.monitor.policies: org.apache.hadoop.yarn.server.resourcemanager.monitor.capacity.ProportionalCapacityPreemptionPolicy
+            yarn.resourcemanager.monitor.capacity.preemption.monitoring_interval: 3000
+            yarn.resourcemanager.monitor.capacity.preemption.max_wait_before_kill: 15000
+            yarn.resourcemanager.monitor.capacity.preemption.max_ignored_over_capacity: 0.1
+            yarn.resourcemanager.monitor.capacity.preemption.natural_termination_factor: 0.2
+            yarn.resourcemanager.monitor.capacity.preemption.total_preemption_per_round: 0.1
+      
+
+        - Classification: capacity-scheduler
+          ConfigurationProperties:
+
+            yarn.scheduler.capacity.resource-calculator: "org.apache.hadoop.yarn.util.resource.DominantResourceCalculator"
+
+            # am configurations
+            yarn.scheduler.capacity.maximum-am-resource-percent: 1
+
+            # define capacity of each cluster partitions
+            yarn.scheduler.capacity.root.accessible-node-labels: "*"
+            yarn.scheduler.capacity.root.accessible-node-labels.CORE.capacity: 100
+            yarn.scheduler.capacity.root.accessible-node-labels.COMPUTE_OPTIMIZED.capacity: 100
+            yarn.scheduler.capacity.root.accessible-node-labels.MEMORY_OPTIMIZED.capacity: 100
+
+            # queue definition
+            yarn.scheduler.capacity.root.queues: default, analytics, engineering
+
+            # default queue
+            yarn.scheduler.capacity.root.default.capacity: 20
+            yarn.scheduler.capacity.root.default.maximum-capacity: 100
+            yarn.scheduler.capacity.root.default.accessible-node-labels: "*"
+            yarn.scheduler.capacity.root.default.accessible-node-labels.CORE.capacity: 20
+            yarn.scheduler.capacity.root.default.accessible-node-labels.COMPUTE_OPTIMIZED.capacity: 20
+            yarn.scheduler.capacity.root.default.accessible-node-labels.MEMORY_OPTIMIZED.capacity: 20
+
+            # analytics queue
+            yarn.scheduler.capacity.root.analytics.capacity: 40
+            yarn.scheduler.capacity.root.analytics.maximum-capacity: 100
+            yarn.scheduler.capacity.root.analytics.accessible-node-labels: "*"
+            yarn.scheduler.capacity.root.analytics.accessible-node-labels.CORE.capacity: 40
+            yarn.scheduler.capacity.root.analytics.accessible-node-labels.COMPUTE_OPTIMIZED.capacity: 40
+            yarn.scheduler.capacity.root.analytics.accessible-node-labels.MEMORY_OPTIMIZED.capacity: 40
+
+            # engineering queue
+            yarn.scheduler.capacity.root.engineering.capacity: 40
+            yarn.scheduler.capacity.root.engineering.maximum-capacity: 100
+            yarn.scheduler.capacity.root.engineering.accessible-node-labels: "*"
+            yarn.scheduler.capacity.root.engineering.accessible-node-labels.CORE.capacity: 40
+            yarn.scheduler.capacity.root.engineering.accessible-node-labels.COMPUTE_OPTIMIZED.capacity: 40
+            yarn.scheduler.capacity.root.engineering.accessible-node-labels.MEMORY_OPTIMIZED.capacity: 40
+
+      Tags:
+        - Key: Project
+          Value: !Ref Project
+        - Key: Name
+          Value: !Sub ${Project}/emr-node
+
+#===============================================================================
+# EMR steps
+#===============================================================================
+  EmrStepCreateLabelOne:
+    Type: AWS::EMR::Step
+    DependsOn: EmrCluster
+    Properties:
+      Name: 'Create YARN label'
+      JobFlowId: !Ref EmrCluster
+      ActionOnFailure: 'CONTINUE'
+      HadoopJarStep:
+        Args:
+          - yarn
+          - rmadmin
+          - -addToClusterNodeLabels
+          - "COMPUTE_OPTIMIZED(exclusive=false)"
+        Jar: command-runner.jar
+
+  EmrStepCreateLabelTwo:
+    Type: AWS::EMR::Step
+    DependsOn: EmrCluster
+    Properties:
+      Name: 'Create YARN label'
+      JobFlowId: !Ref EmrCluster
+      ActionOnFailure: 'CONTINUE'
+      HadoopJarStep:
+        Args:
+          - yarn
+          - rmadmin
+          - -addToClusterNodeLabels
+          - "MEMORY_OPTIMIZED(exclusive=false)"
+        Jar: command-runner.jar
+
+  EmrStepCwYarnMetrics:
+    Type: AWS::EMR::Step
+    DependsOn: EmrCluster
+    Properties:
+      Name: 'Install custom metric agent'
+      JobFlowId: !Ref EmrCluster
+      ActionOnFailure: 'CONTINUE'
+      HadoopJarStep:
+        Jar: !Sub "s3://${AWS::Region}.elasticmapreduce/libs/script-runner/script-runner.jar"
+        Args:
+          - !Ref Artifacts
