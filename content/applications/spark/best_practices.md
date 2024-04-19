@@ -681,6 +681,18 @@ Performing a Cartesian product followed by a filter can be extremely inefficient
 #### Solution: 
 Bucketing/Binning Technique To overcome the performance challenges of range joins in Spark, a more efficient approach is to use a bucketing or binning technique. This technique involves partitioning the data into buckets or bins based on the range condition, allowing Spark to leverage its partitioning and sorting capabilities for optimized join performance.
 
+Example Code with Range Join:
+
+```
+df_final = spark.sql(
+    """
+        SELECT *
+        FROM df LEFT JOIN ips
+        ON (df.ip_int >= ips.network_start_integer AND df.ip_int <= ips.network_last_integer)
+    """
+).drop("ip_int", "network_start_integer", "network_last_integer").cache()
+```
+
 Here's an example of how you can implement the bucketing/binning technique in Spark:
 
 ```
