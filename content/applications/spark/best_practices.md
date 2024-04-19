@@ -739,10 +739,10 @@ This bucketing/binning technique can provide substantial performance improvement
 ![BP - 29](images/spark-bp-range-join-before.png)
 
 #### After applying bucketing technique to code:
-Notice that Sort merge join was introduced before range comparison happening leading to efficient job execution.
 
 ![BP - 29](images/spark-bp-range-join-after.png)
 
+By introducing the sort merge join before the range comparison, the bucketing/binning technique effectively replaced the inefficient Cartesian product followed by a filter approach, which would have been the default behavior for a non-equality join condition in Spark. This optimization enabled efficient data partitioning and pruning, leading to significant performance improvements in the execution of the range join operation, especially when dealing with large datasets.
 
 ## ** BP 5.1.18  - Consider Spark Blacklisting for large clusters **
 
