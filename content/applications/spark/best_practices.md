@@ -723,10 +723,10 @@ By bucketing the data based on the range condition, we significantly reduce the 
 This bucketing/binning technique can provide substantial performance improvements for range joins, especially when dealing with large datasets. However, it's important to note that the appropriate bucketing strategy may vary depending on the characteristics of your data and the specific range condition you're working with.
 
 Prior to applying bucketing technique:
-![BP - 29](images/spark-bp-29.png)
+![BP - 29](images/spark-bp-range-join-before.png)
 
 After applying bucketing technique to code:
-![BP - 29](images/spark-bp-29.png)
+![BP - 29](images/spark-bp-range-join-after.png)
 
 
 ## ** BP 5.1.18  - Consider Spark Blacklisting for large clusters **
