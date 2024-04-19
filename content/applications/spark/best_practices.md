@@ -673,12 +673,12 @@ Range Joins are often used in scenarios such as:
 2. Time-series data analysis, where you need to associate events or measurements with time intervals or periods.
 3. IP address mapping, where you need to map IP addresses to their corresponding network ranges or subnets.
 
-#### The Challenge: 
+#### Challenge: 
 In Apache Spark, if you attempt to perform a range join using a non-equality join condition (e.g., df.ip_int >= ips.network_start_integer AND df.ip_int <= ips.network_last_integer), Spark will treat it as a Cartesian product followed by a filter operation. This is because Spark's default join implementation, BroadcastNestedLoopJoin, is optimized for equality-based join conditions and cannot efficiently handle range conditions out of the box.
 
 Performing a Cartesian product followed by a filter can be extremely inefficient, especially when dealing with large datasets. The computational complexity of this approach is quadratic (O(n*m)), where n and m are the sizes of the input datasets. As the dataset sizes grow, the performance degradation becomes more severe, leading to long execution times and high resource consumption.
 
-#### The Solution: 
+#### Solution: 
 Bucketing/Binning Technique To overcome the performance challenges of range joins in Spark, a more efficient approach is to use a bucketing or binning technique. This technique involves partitioning the data into buckets or bins based on the range condition, allowing Spark to leverage its partitioning and sorting capabilities for optimized join performance.
 
 Here's an example of how you can implement the bucketing/binning technique in Spark:
