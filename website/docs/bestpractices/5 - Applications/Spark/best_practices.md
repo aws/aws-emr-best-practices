@@ -664,6 +664,84 @@ val crossJoinDF = df1.join(broadcast(df2), df1("l_partkey") >= df2("l_partkey"))
 ```
 ![BP - 29](images/spark-bp-29.png)
 
+### Range Join
+A Range Join is a specialized type of join operation that is optimized for joining two datasets based on a range condition. It is particularly useful when one of the datasets contains ranges or intervals, and the other dataset contains values that fall within those ranges. The Range Join operation efficiently matches the values from the second dataset with the corresponding ranges in the first dataset.
+
+Range Joins are often used in scenarios such as:
+
+1. Geospatial data processing, where you need to match points or locations with geographic regions or boundaries.
+2. Time-series data analysis, where you need to associate events or measurements with time intervals or periods.
+3. IP address mapping, where you need to map IP addresses to their corresponding network ranges or subnets.
+
+#### Challenge: 
+In Apache Spark, if you attempt to perform a range join using a non-equality join condition (e.g., df.ip_int >= ips.network_start_integer AND df.ip_int <= ips.network_last_integer), Spark will treat it as a Cartesian product followed by a filter operation. This is because Spark's default join implementation, BroadcastNestedLoopJoin, is optimized for equality-based join conditions and cannot efficiently handle range conditions out of the box.
+
+Performing a Cartesian product followed by a filter can be extremely inefficient, especially when dealing with large datasets. The computational complexity of this approach is quadratic (O(n*m)), where n and m are the sizes of the input datasets. As the dataset sizes grow, the performance degradation becomes more severe, leading to long execution times and high resource consumption.
+
+#### Solution: 
+Bucketing/Binning Technique To overcome the performance challenges of range joins in Spark, a more efficient approach is to use a bucketing or binning technique. This technique involves partitioning the data into buckets or bins based on the range condition, allowing Spark to leverage its partitioning and sorting capabilities for optimized join performance.
+
+Example Code with Range Join (Original):
+
+```
+df_final = spark.sql(
+    """
+        SELECT *
+        FROM df LEFT JOIN ips
+        ON (df.ip_int >= ips.network_start_integer AND df.ip_int <= ips.network_last_integer)
+    """
+).drop("ip_int", "network_start_integer", "network_last_integer").cache()
+```
+
+Here's an example of how you can implement the bucketing/binning technique in Spark (Modified):
+
+```
+from pyspark.sql.functions import explode, sequence, col
+# Create the bucketed version of the geolocation table
+b_geo = spark.sql("""
+  WITH b_geo AS (
+    SELECT
+      explode(
+        sequence(
+          CAST(network_start_integer / 256 AS INT),
+          CAST(network_last_integer / 256 AS INT)
+        )
+      ) AS bucket_id,
+      *
+    FROM ips
+  )
+  SELECT * FROM b_geo
+""")
+# Create the bucketed version of the events table
+b_events = df.selectExpr("CAST(ip_int / 256 AS INT) AS bucket_id", "*")
+# Perform the join using the bucketed tables
+df_final = b_events.join(
+    b_geo,
+    (b_events.bucket_id == b_geo.bucket_id) &
+    (b_events.ip_int >= b_geo.network_start_integer) &
+    (b_events.ip_int <= b_geo.network_last_integer),
+    "left"
+).drop("ip_int", "network_start_integer", "network_last_integer", "bucket_id")
+```
+In this example, we first create a bucketed version of the geolocation table (ips) by exploding the range of IP addresses into individual buckets based on the first two bytes of the IP address (network_start_integer / 256 and network_last_integer / 256). We then create a bucketed version of the events table (df) by extracting the first two bytes of the IP address as the bucket ID.
+
+Next, we perform a join between the bucketed versions of the two tables, ensuring that the bucket IDs match and the IP address from the events table falls within the range of the corresponding bucket in the geolocation table.
+
+By bucketing the data based on the range condition, we significantly reduce the number of combinations that Spark needs to explore during the join operation. Instead of performing a full Cartesian product, Spark can leverage its partitioning and sorting capabilities to efficiently join the relevant partitions and prune irrelevant data.
+
+This bucketing/binning technique can provide substantial performance improvements for range joins, especially when dealing with large datasets. However, it's important to note that the appropriate bucketing strategy may vary depending on the characteristics of your data and the specific range condition you're working with.
+
+#### Prior to applying bucketing technique:
+
+![BP - 29](images/spark-bp-range-join-before.png)
+
+#### After applying bucketing technique to code:
+
+![BP - 29](images/spark-bp-range-join-after.png)
+
+By introducing the sort merge join before the range comparison, the bucketing/binning technique effectively replaced the inefficient Cartesian product followed by a filter approach, which would have been the default behavior for a non-equality join condition in Spark. This optimization enabled efficient data partitioning and pruning, leading to significant performance improvements in the execution of the range join operation, especially when dealing with large datasets.
+
+
 ##  BP 5.1.18  - Consider Spark Blacklisting for large clusters 
 
 Spark provides blacklisting feature which allows you to blacklist an executor or even an entire node if one or more tasks fail on the same node or executor for more than configured number of times. Spark blacklisting properties may prove to be very useful especially for very large clusters (100+ nodes) where you may rarely encounter an impaired node. We discussed this issue briefly in BPs 5.1.13 and 5.1.14.
