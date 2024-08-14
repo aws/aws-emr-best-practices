@@ -1125,7 +1125,7 @@ Cloudwatch Metrics : [EMR cluster Metrics](https://docs.aws.amazon.com/emr/lates
 ●	Set alarms by specifying metrics and conditions. Search the EMR cluster that you would like to create an alarm on then select the metric of EMR. Select the statistics and time period. Then select the condition for the alarm. Select the Alarm trigger, create or choose the SNS topic, subscribe to the SNS topic. You will get an email for the confirmation, confirm the subscription of the topic. Name the alarm and select create alarm.
 
 ●	[Why did my Spark job in Amazon EMR fail?](https://repost.aws/knowledge-center/emr-troubleshoot-failed-spark-jobs)
-##  BP 5.1.24  -  Support Reach Out Best Practice 
+##  BP 5.1.24  -  Support Reach Out Best Practice
 
 Try to troubleshoot your spark issues based on the above steps mentioned in the document and refer to additional [troubleshooting steps. Reach out to Support if needed by following the below best practices:](https://repost.aws/knowledge-center/emr-troubleshoot-failed-spark-jobs)
 
@@ -1159,4 +1159,208 @@ Please attach the logs as needed. Find the below logs and log location:
    NodeManager Logs(Core Node) logs| ```sudo stop spark-history-server``` ```sudo start spark-history-server``` Amazon EMR 5.30.0 and later release versions ```systemctl stop spark-history-server``` ```systemctl start spark-history-server```
 
    
+
+## BP 5.1.25 - Long running thrift server
+
+Spark Thrift Server allows JDBC/ODBC clients to execute SQL queries on Spark. It is recommended to follow the best practices outlined below.
+
+* [Ensure Application Masters only run on an On Demand Node](https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Features/Spot%20Usage/best_practices/#bp-422-ensure-application-masters-only-run-on-an-on-demand-node)
+
+* As the query results are collected by thrift server,  ensure Spark driver core/memory and ` spark.driver.maxResultSize` are properly configured. Use `--driver-memory` insted of `--conf spark.driver.memory` as thrift server is running at client mode
+
+* Long running thrift server can generate large amount of Spark event logs. [Activate the Spark event log rolling and compaction feature](https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html#app-history-spark-UI-large-event-logs)
+
+* Thrift server log file size can be huge as by default the log are accumulated.   Try to configure custom log4j2 properties file to use rolling file appender
+
+  ```
+  /usr/lib/spark/sbin/start-thriftserver.sh -Dlog4j.configurationFile=/home/hadoop/thriftlog4j2.properties" --driver-cores 8 --driver-memory 10G
+  ```
+
+  **thriftlog4j2.properties** example as below:
+
+  ```
+  property.basePath = /var/log/spark/
+  
+  rootLogger.level = info
+  rootLogger.appenderRef.rolling.ref = fileLogger
+  
+  appender.rolling.type = RollingFile
+  appender.rolling.name = fileLogger
+  appender.rolling.fileName = ${basePath}spark-root-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-application.log
+  appender.rolling.filePattern = ${basePath}spark-root-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-application.%d{MM-dd-yy}-%i.log
+  appender.rolling.layout.type = PatternLayout
+  appender.rolling.layout.pattern = %d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n
+  appender.rolling.policies.type = Policies
+  appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+  appender.rolling.policies.size.size = 100MB
+  appender.rolling.strategy.type = DefaultRolloverStrategy
+  appender.rolling.strategy.max = 10
+  
+  appender.console.type = Console
+  appender.console.name = console
+  appender.console.target = SYSTEM_ERR
+  appender.console.layout.type = PatternLayout
+  appender.console.layout.pattern = %d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n
+  
+  # Set the default spark-shell/spark-sql log level to WARN. When running the
+  # spark-shell/spark-sql, the log level for these classes is used to overwrite
+  # the root logger's log level, so that the user can have different defaults
+  # for the shell and regular Spark apps.
+  logger.repl.name = org.apache.spark.repl.Main
+  logger.repl.level = warn
+  
+  logger.thriftserver.name = org.apache.spark.sql.hive.thriftserver.SparkSQLCLIDriver
+  logger.thriftserver.level = warn
+  
+  # Settings to quiet third party logs that are too verbose
+  logger.jetty1.name = org.sparkproject.jetty
+  logger.jetty1.level = warn
+  logger.jetty2.name = org.sparkproject.jetty.util.component.AbstractLifeCycle
+  logger.jetty2.level = error
+  logger.replexprTyper.name = org.apache.spark.repl.SparkIMain$exprTyper
+  logger.replexprTyper.level = info
+  logger.replSparkILoopInterpreter.name = org.apache.spark.repl.SparkILoop$SparkILoopInterpreter
+  logger.replSparkILoopInterpreter.level = info
+  logger.parquet1.name = org.apache.parquet
+  logger.parquet1.level = error
+  logger.parquet2.name = parquet
+  logger.parquet2.level = error
+  logger.hudi.name = org.apache.hudi
+  logger.hudi.level = warn
+  
+  # SPARK-9183: Settings to avoid annoying messages when looking up nonexistent UDFs in SparkSQL with Hive support
+  logger.RetryingHMSHandler.name = org.apache.hadoop.hive.metastore.RetryingHMSHandler
+  logger.RetryingHMSHandler.level = fatal
+  logger.FunctionRegistry.name = org.apache.hadoop.hive.ql.exec.FunctionRegistry
+  logger.FunctionRegistry.level = error
+  
+  # For deploying Spark ThriftServer
+  # SPARK-34128: Suppress undesirable TTransportException warnings involved in THRIFT-4805
+  appender.console.filter.1.type = RegexFilter
+  appender.console.filter.1.regex = .*Thrift error occurred during processing of message.*
+  appender.console.filter.1.onMatch = deny
+  appender.console.filter.1.onMismatch = neutral
+  appender.rolling.filter.1.type = RegexFilter
+  appender.rolling.filter.1.regex = .*Thrift error occurred during processing of message.*
+  appender.rolling.filter.1.onMatch = deny
+  appender.rolling.filter.1.onMismatch = neutral
+  ```
+
+  
+
+## BP 5.1.26  -  Monitor Spark Structured Streaming query progress
+
+To avoid Spark Structured Streaming jobs stuck for long time, try to monitor `QueryProgressEvent` per query id, take action if no `QueryProgressEvent` for the max time to process events (e.g. 60mins).
+
+
+
+Below is an example code of registering a listener for  `QueryProgressEvent`  which will stop the query then more than 60 minutes no query progress event .
+
+```scala
+import org.apache.log4j.Logger
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.streaming.Trigger
+import org.apache.spark.sql.streaming.StreamingQueryListener
+import org.apache.spark.sql.streaming.StreamingQueryListener._
+
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.{TimeUnit, Executors, ConcurrentHashMap, ScheduledFuture}
+import scala.util.control.NonFatal
+
+object QueryProgressListenerExample {
+  lazy val logger: Logger = Logger.getLogger(QueryProgressListenerExample.getClass)
+  private val queryTimerMap = new ConcurrentHashMap[String, ScheduledFuture[_]]()
+
+  private val threadCounter = new AtomicInteger(0)
+  private val threadFactory: ThreadFactory = new ThreadFactory {
+
+    override def newThread(r: Runnable): Thread = {
+      val t = new Thread(r)
+      t.setDaemon(true) // Set the thread as a daemon thread
+      t.setName(s"QueryProgressListenerThread-${threadCounter.getAndIncrement()}")
+      t
+    }
+
+  }
+  
+  private val myListener = new StreamingQueryListener {
+    override def onQueryStarted(event: QueryStartedEvent): Unit = {
+      startTimer(event.id.toString)
+    }
+
+    override def onQueryProgress(event: QueryProgressEvent): Unit = {
+      val queryId = event.progress.id.toString
+      val scheduledTask = queryTimerMap.get(queryId)
+      if (scheduledTask != null) {
+        logger.info(s"Resetting the timeout for stream query ${event.progress.id}")
+        resetTimer(queryId, scheduledTask)
+      }
+    }
+
+    override def onQueryTerminated(event: QueryTerminatedEvent): Unit = {
+      cancelTimer(event.id.toString)
+    }
+  }
+
+  private def startTimer(queryId: String): Unit = {
+    val executor = Executors.newSingleThreadScheduledExecutor(threadFactory)
+    val scheduledTask = executor.schedule(new Runnable {
+      override def run(): Unit = {
+        try {
+          val query = spark.streams.get(queryId)
+          logger.info(s"Query $queryId timed out after 60 minutes. Stopping the query.")
+          query.stop()
+        } catch {
+          case NonFatal(e) => logger.error(s"Error stopping query $queryId: ${e.getMessage}", e)
+        }
+      }
+    },
+      60, 
+      TimeUnit.MINUTES)
+    queryTimerMap.put(queryId, scheduledTask)
+  }
+
+  private def resetTimer(queryId: String, scheduledTask: ScheduledFuture[_]): Unit = {
+    scheduledTask.cancel(false)
+    startTimer(queryId)
+  }
+
+  private def cancelTimer(queryId: String): Unit = {
+    val scheduledTask = queryTimerMap.remove(queryId)
+    if (scheduledTask != null) {
+      scheduledTask.cancel(true)
+    }
+  }
+
+  private lazy val spark: SparkSession = SparkSession.builder()
+    .appName("QueryProgressListenerExample")
+    .master("local[*]")
+    .getOrCreate()
+
+  // run `nc -lk 9999` in terminal first
+  def main(args: Array[String]): Unit = {
+    spark.streams.addListener(myListener)
+
+    // Create a streaming DataFrame
+    val lines = spark.readStream
+      .format("socket")
+      .option("host", "localhost")
+      .option("port", 9999)
+      .load()
+      .select(expr("value as word"))
+    
+    val query = lines
+      .writeStream
+      .outputMode("append")
+      .format("console")
+      .trigger(Trigger.ProcessingTime("15 seconds"))
+      .start()
+
+    query.awaitTermination()
+
+  }
+}
+```
 
