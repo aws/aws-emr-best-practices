@@ -18,12 +18,13 @@ Alternatively, to understand the YARN resource allocation on your cluster instan
 
 ```bash
 $ yarn node -list -showDetails
+```
+![YARN Node List Details](images/mru-1.png)
 
-# Optimizing Resource Utilization
 
-## Example: r7g.2xlarge Instance Type
+For example, consider the `r7g.2xlarge` instance type, which has 64 GiB (65,536 MiB) of memory and 8 cores. Out of this, EMR allocates 54,272 MiB to YARN.
 
-Consider the `r7g.2xlarge` instance type, which has 64 GiB (65,536 MiB) of memory and 8 cores. Out of this, EMR allocates 54,272 MiB to YARN.
+![r7g.2xlarge Config Details](images/mru-2.png)
 
 ### Allocated vs. Utilized
 
@@ -81,8 +82,9 @@ Starting with EMR 7.2, Amazon EMR on EC2 introduced Application Master (AM) Labe
      }
    }
 ]
+```
 
-## 4) Spot Instance Usage Considerations
+#### 4) Spot Instance Usage Considerations
 
 Consider using Spot instances for tasks that can be interrupted and resumed (interruption rates are extremely low) or for workloads that can exceed an SLA. Spot instances are also a good choice for testing and development workloads or when testing new applications.
 
@@ -98,23 +100,23 @@ To mitigate the effects of Spot interruptions, reserve core nodes exclusively fo
 1. Amazon EMR managed scaling only works with YARN applications, such as Spark, Hadoop, Hive, and Flink. It does not support applications that are not based on YARN, such as Presto and HBase. This also implies it won’t work as expected if you are using external tools to consume all EC2 memory outside of YARN. YARN metrics play a critical role in determining managed scaling events.
 2. To evaluate Managed Scaling effectiveness specifically, assess utilization for periods when `YARNMemoryAllocated` or `AppsRunning` is above zero.
 
-## Tailored Optimization Strategies for Specific Use-Cases
+### Tailored Optimization Strategies for Specific Use-Cases
 
-### 1) Use Cases Involving Peak and Non-Peak Hours in a Long-Running Cluster
+#### 1) Use Cases Involving Peak and Non-Peak Hours in a Long-Running Cluster
 
 In use cases with distinct peak and non-peak hours, a uniform configuration for both maximum and minimum resources may not be effective. During peak hours, it might be beneficial to elevate the managed scaling minimum to reduce the time required for the cluster to scale up, which could be approximately 4 minutes or more. During non-peak hours, reduce the managed scaling minimum. This adjustment can be implemented using a custom script.
 
-### 2) Use Cases with Spiky Workloads
+#### 2) Use Cases with Spiky Workloads
 
 In scenarios with spiky workloads (characterized by sudden spikes in resource requirements for a short time), clusters frequently scale to their maximum capacity, even when the job may not need all the provisioned resources. This inefficiency arises because instances are provisioned after a substantial portion of the job is already completed. By the time these instances are up and running, the job no longer requires the new scaled-up resources. Use the MS Dampener script for a gradual and configurable scaling approach, ensuring more efficient resource utilization.
 
-### 3) Use Cases with Recurring Jobs
+#### 3) Use Cases with Recurring Jobs
 
 Evaluate whether Managed Scaling aligns with your workload’s characteristics. Consider factors such as the predictability of resource usage and the potential cost savings versus the overhead (including the time it takes for a node to become available and accept resources when scaling up) of managing scaling policies. If your workload has consistent resource requirements, disabling Managed Scaling may be appropriate. However, if your workload experiences fluctuations in resource demand, enabling Managed Scaling with appropriate minimum and maximum values is recommended.
 
-## Adjusting Container Sizes at the Application Level
+### Adjusting Container Sizes at the Application Level
 
-### Spark
+#### Spark
 
 As previously mentioned, configuration settings for resource allocation to YARN containers are specific to processing frameworks such as Spark. Generally, default configurations set by EMR are sufficient for most workloads. A YARN container represents a collection of resources, including CPU and memory. Each Spark executor operates within a YARN container. Spark applications consist of tasks executed by these executors, which are JVM processes running on cluster nodes.
 
@@ -124,7 +126,7 @@ For more details on tuning Spark applications, refer to the [EMR Best Practices 
 
 If you are diversifying instance types, ensure that you set the configuration parameter `spark.yarn.heterogeneousExecutors.enabled` to `true` (which is the default). If you are using the same instance types or a combination with similar vCPUs to memory ratios, you can set it to `false`.
 
-## Selecting the Right EC2 Instance Type
+### Selecting the Right EC2 Instance Type
 
 To optimize cluster utilization, conduct benchmarking to identify the ideal instance type that aligns with your application's requirements. Start with general instance types like `m6gs` or `m7gs` and monitor the OS and YARN metrics from CloudWatch to determine system bottlenecks at peak load, including CPU, memory, storage, and I/O. Determine the optimal vCPUs to memory ratio for your workload, identifying whether CPU-intensive, memory-intensive, or general-purpose instances best suit your use case.
 
