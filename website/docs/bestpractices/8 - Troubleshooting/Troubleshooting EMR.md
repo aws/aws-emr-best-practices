@@ -266,7 +266,7 @@ Review the cluster level and node level metrics to understand if there is a CPU 
                         * Investigate process further to understand if the specific application, Hadoop daemon or container is using high CPU.
 
         * **Review LiveDataNode to understand percentage of data nodes that are receiving work from Hadoop.** 
-        * You can check the metrics from CloudWatch console or using `hdfs dfsadmin -repor*t` command.
+        * You can check the metrics from CloudWatch console or using `hdfs dfsadmin -report` command.
         * If only some of the DataNodes are active, There can be resource contention. Identify timeline since issue started. 
                 * Check the Instance state logs of primary or other cluster node types based on the timeline identified since the issue started. These contain information about the CPU, memory state, and garbage collector threads of the node. [View log files](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-view-web-log-files.html). 
                 * Check if any of service or application is using the high CPU over a period and have become unresponsive due to high CPU utilisation and resulting in  instance becoming unresponsive. 
