@@ -45,7 +45,7 @@ const config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-	googleAnalytics: {
+	      googleAnalytics: {
           trackingID: 'G-MF59LKNSDN',
           anonymizeIP: true,
         },      
@@ -63,10 +63,6 @@ const config = {
       image: 'img/AWS_logo_RGB.png',
       navbar: {
         title: 'AWS Open Data Analytics',
-        logo: {
-          alt: 'AWS Open Data Analytics',
-          src: 'img/logo.svg',
-        },
         items: [
                     {
             type: 'doc',
