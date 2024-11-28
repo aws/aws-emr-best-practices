@@ -5,13 +5,13 @@ sidebar_label: Price-Performance
 
 # Price Performance
 
-In the context of this guide, "price-performance" refers to the cost (in dollars) of running a workload for a specified level of performance (measured in run time, in seconds). Utilizing price-performance is crucial for benchmarking to grasp the implications of variables that cannot be standardized. These variables may include deployment models, competitor pricing, container scheduling, or engines.
+In the scope of this tutorial, "price-performance" signifies the monetary expense associated with executing a given workload while maintaining a specific degree of performance, expressed in terms of execution duration (seconds). Evaluating price-performance plays a vital role in understanding the impact of factors that are not easily quantifiable, such as deployment architectures, competitive offerings, container allocation strategies, and processing engines.
 
-For variables that are within our control, such as infrastructure sizing or application configurations, it's essential to maintain consistency across all benchmarks.
+For variables that are within our control, such as infrastructure sizing or application settings, ensuring uniformity among all benchmarks is indispensable for accurate comparisons.
 
-Below examples illustrates the importance of price-performance.
+The following examples highlight the importance of price-performance.
 
-**Example 1:** Customer wants to compare OSS Spark vs EMR Spark with different cluster sizes
+**Example 1:** Customer wants to compare Open Source Software (OSS) Spark vs EMR Spark with different cluster sizes
 
 |	|Cluster #1	|Cluster #2	|
 |---	|---	|---	|
@@ -31,11 +31,11 @@ In the above example, Cluster #1 is running OSS spark and completes in 12s with 
 |Engine	|OSS Spark Runtime	|EMR Spark Runtime	|
 |Cost ($)	|600	|300	|
 
-After increasing the # of nodes to be the same across both clusters, runtime is reduced to 6seconds on Cluster #2 and cost remains the same at 300$. Our conclusion from the first example remains the same. Cluster #2 is the best option from a price-performance perspective. 
+After increasing the # of nodes to be the same across both clusters, runtime is reduced to 6seconds on Cluster #2 and cost remains the same at 300$. Our conclusion from the first example remains the same. Cluster #2 is the best option from a price-performance perspective.
 
-It’s important to note that price-performance is not always linear. This is often seen when workloads have data skew. In these cases, adding more compute does not reduce runtime proportionally and adds costs. 
+It’s important to note that price-performance is not always linear. This is often seen when workloads have data skew. In these cases, adding more compute does not reduce runtime proportionally and adds costs.
 
-**Example 3:** Same workload across different # of nodes - data skew 
+**Example 3:** Same workload across different # of nodes - data skew
 
 |	|Run #1	|Run #2	|
 |---	|---	|---	|
@@ -44,7 +44,7 @@ It’s important to note that price-performance is not always linear. This is of
 |Engine	|EMR Spark Runtime	|EMR Spark Runtime	|
 |Cost ($)	|1000	|1500	|
 
-In the above example, performance is not linear. While runtime reduced to 75s, overall cost increased. In these cases, it’s important ensure the # of nodes are the same for both comparisons. 
+In the above example, performance is not linear. While runtime reduced to 75s, overall cost increased. In these cases, it’s important ensure the # of nodes are the same for both comparisons.
 
 Another scenario where price-performance is useful is when comparing different pricing models or vendors. Take the example below:
 
@@ -57,7 +57,7 @@ Another scenario where price-performance is useful is when comparing different p
 |$/s	|1	|1.5	|
 |Cost ($)	|500	|600	|
 
-In the above , the same workload on vendor runs in 40s, while EMR runs in 50s. While vendor may seem faster, when we factor in price-performance, we see total cost is lower with EMR. If runtime is a key requirement, we can increase the # of nodes in relation to performance as illustrated in example 5.
+In the above example, the same workload on vendor runs in 40s, while EMR runs in 50s. While vendor may seem faster, when we factor in price-performance, we see total cost is lower with EMR. If runtime is a key requirement, we can increase the # of nodes in relation to performance as illustrated in example 5.
 
 **Example 5:** Same workload across different pricing models with different # of nodes
 
@@ -68,4 +68,4 @@ In the above , the same workload on vendor runs in 40s, while EMR runs in 50s. W
 |$/s	|1	|1	|1.5	|
 |Cost ($)	|500	|500	|600	|
 
-The goal with benchmarking should always be to have like-for-like comparisons. This is especially true for factors such as application configuration settings such as executor sizes, input and output dataset, cluster size and instances. However, factors like vendor/aws pricing model, engine optimizations, and schedulers cannot be made the same. As such, it’s important to use price-performance as a key factor. 
+The goal with benchmarking should always be to have like-for-like comparisons. This is especially true for factors such as application configuration settings such as executor sizes, input and output dataset, cluster size and instances. However, factors like vendor/aws pricing model, engine optimizations, and schedulers cannot be made the same. As such, it’s important to use price-performance as a key factor.

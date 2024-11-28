@@ -5,12 +5,11 @@ sidebar_label: Benchmarking Checklist
 
 # Benchmarking Checklist
 
-##Environment and Infrastructure Checklist**
+## Environment and Infrastructure
 
 The following checklist assumes you are running benchmarks across deployment models (EC2 vs EKS vs Serverless) or vendors (EMR vs Databricks vs OSS).  Comparing at the deployment model or vendor level takes into consideration a number of variables such as runtime performance, scaling and pricing model. 
 
-If running a benchmark for other purposes such as difference in hardware within the same deployment model, items in the checklist will not apply. 
-
+If running a benchmark for other purposes such as difference in hardware within the same deployment model, items in the checklist will not apply.
 
 |Checklist	|	|Notes	|
 |---	|---	|---	|
@@ -28,7 +27,7 @@ If running a benchmark for other purposes such as difference in hardware within 
 |Are there differences in the AMI, bootstrap actions or container Image?	|:black_square_button:	|This can impact compute initialization as well as job startup. For example, eliminating the need to load a specific library before executing the job	|
 |Are JDK settings consistent across deployment models	|:black_square_button:	|We've seen improved performance with JDK17. Ensure the versions are consistent across benchmarks	|
 
-##Workload Checklist**
+## Workload
 
 |Checklist	|	|Notes	|
 |---	|---	|---	|
