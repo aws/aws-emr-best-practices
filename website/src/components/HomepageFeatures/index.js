@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Best Practices',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/best_practices.svg').default,
     description: (
       <>
        Best Practices for using AWS Open Data Analytics Services
@@ -14,7 +14,7 @@ const FeatureList = [
   },
   {
     title: 'Benchmarks',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('@site/static/img/benchmark.svg').default,
     description: (
       <>
         AWS Benchmarks!
@@ -23,7 +23,7 @@ const FeatureList = [
   },
   {
     title: 'Utilities',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('@site/static/img/utilities.svg').default,
     description: (
       <>
         A repository of solutions and utilities for using AWS Open Data Analytics Services

@@ -19,8 +19,8 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/bestpractices/">
-            Click here to get started!
+            to="/docs/bestpractices/introduction">
+            Get Started!
           </Link>
         </div>
       </div>
@@ -32,8 +32,8 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from AWS Open Data Analytics`}
-      description="Description will go into a meta tag in <head />">
+      title={`AWS Open Data Analytics`}
+      description="Amazon EMR Best Practice guides">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

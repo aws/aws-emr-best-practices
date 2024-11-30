@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-sidebar_label: Introduction
+sidebar_label: Benchmarks
 ---
 
-# Introduction
+# Benchmarks
 
 The purpose of this guide is to provide a methodology for running Spark benchmarks on EMR. By following this guide, you will be able to identify the lowest price-performance option for running Spark workloads, considering various variables such as engine type (EMR, OSS), deployment models (EC2, EKS, Serverless), or hardware options (M, C, R, family).
 

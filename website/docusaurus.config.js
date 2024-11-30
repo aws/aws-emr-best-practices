@@ -4,13 +4,12 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'AWS Open Data Analytics',
   tagline: 'All your AWS Open Data Analytics Needs',
-  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://aws.github.io',
@@ -45,10 +44,10 @@ const config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-	      googleAnalytics: {
+        googleAnalytics: {
           trackingID: 'G-MF59LKNSDN',
           anonymizeIP: true,
-        },      
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -64,38 +63,37 @@ const config = {
       navbar: {
         title: 'AWS Open Data Analytics',
         items: [
-                    {
+          {
             type: 'doc',
-            docId: 'bestpractices/bestpractices',
+            docId: 'bestpractices/introduction',
             position: 'left',
             label: 'Best Practices'
-          },   
+          },
           {
             type: 'doc',
             docId: 'benchmarks/introduction',
             position: 'left',
             label: 'Benchmarks'
           },
-                    {
-            type: 'doc',
-            docId: 'utilities/README',
-            position: 'left',
-            label: 'Utilities'
-          },
-                    {
+          {
             type: 'doc',
             docId: 'migration/introduction',
             position: 'left',
             label: 'Migration'
-          },          
-       
+          },
+          {
+            type: 'doc',
+            docId: 'utilities/introduction',
+            position: 'left',
+            label: 'Utilities'
+          },
         ],
       },
       footer: {
         style: 'dark',
         links: [
           {
-            title: 'Get Involved',
+            title: 'Contributing',
             items: [
               {
                 label: 'Github',
@@ -111,7 +109,7 @@ const config = {
         darkTheme: prismThemes.dracula,
       },
     }),
-plugins: [require.resolve('docusaurus-lunr-search')],
+  plugins: [require.resolve('docusaurus-lunr-search')],
 };
 
 export default config;
