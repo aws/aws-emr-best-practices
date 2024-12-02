@@ -9,7 +9,10 @@ sidebar_label: Best Practices
 
 ## Keep core nodes constant and scale with only task nodes
 
-Scaling with only task nodes improves the time for nodes to scale in and out because task nodes do not coordinate storage as part of HDFS. During scale up, task nodes do not need to install data node daemons and during scale down, task nodes do not need rebalance HDFS blocks. Improvement in the time it takes to scale in and out improves performance and reduces cost. When scaling down with core nodes, you also risk saturating the remaining nodes' disk volume during HDFS rebalance. If the nodes disk utilization exceeds 90%, it’ll mark the node as unhealthy, making it unusable by YARN.
+Scaling solely based on task nodes enhances the speed at which nodes join or leave the cluster due to their lack of involvement in managing HDFS storage.
+During the addition of more nodes to the cluster (scale up), task nodes avoid the necessity of installing data node daemons. Similarly, upon removal of nodes (scale down), task nodes escape the requirement of participating in HDFS block redistribution activities. These optimizations lead to enhanced performance through reduced scaling times and lower operational costs.
+
+On the other hand, when diminishing the quantity of core nodes, there exists a danger of overwhelming the remaining nodes' disk volumes during HDFS rebalance. Should any node reach a 90% disk utilization rate, it could be flagged as unhealthy, effectively excluding it from YARN's purview.
 
 In order to only scale with task nodes, you keep the number of core nodes constant and right size your core node EBS volumes for your HDFS usage. Remember to consider the HDFS replication factor which is configured via dfs.replication in hdfs-site.xml. It is recommended that at a minimum, you keep 2 core nodes and set dfs.replication=2.
 
@@ -19,23 +22,20 @@ Below is a managed scaling configuration example where the cluster will scale on
 
 ## Monitor Managed Scaling with Cloudwatch Metrics
 
-You can monitor your managed scaling cluster with CloudWatch metrics. This is useful if you want to better understand how your cluster is resizing to the change in job load/usage.
-
-Lets looks at an example:
+You can monitor your managed scaling cluster with CloudWatch metrics. This is useful if you want to better understand how your cluster is resizing to the change in job load/usage. Lets looks at an example:
 
 ![!BP - 2](images/bp-3.png)
 
 At 18:25, `YARNMemoryAvailablePercentage` starts at 100%. This means that no jobs are running. At 18:27 a job starts and we see `YARNMemoryAvailablePercentage` begin to drop, reaching 0% at 18:29. This triggers managed scaling to start a resize request - represented by the increase in the metric `TotalNodesRequested`. After 5-6 mins, at 18:35 the nodes finish provisioning and are considered `RUNNING`. We see an increase in the metric, `TotalNodesRunning`. Around the same time, we see `YARNMemoryAvailablePercentage` begin increasing back to 100%.
 
-For a full list of metrics and description of each, see
-[https://docs.aws.amazon.com/emr/latest/ManagementGuide/managed-scaling-metrics.html](https://docs.aws.amazon.com/emr/latest/ManagementGuide/managed-scaling-metrics.html)
+For a full list of metrics and description of each, see [Understanding managed scaling metrics in Amazon EMR](https://docs.aws.amazon.com/emr/latest/ManagementGuide/managed-scaling-metrics.html).
 
 ## Consider adjusting YARN decommissioning timeouts depending on your workload
 
 There are two decommissioning timeouts that are important in managed scaling:
 
-1. *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`:* This is the maximal time to wait for running containers and applications to complete before transition a `DECOMMISSIONING` node into `DECOMMISSIONED`.
-2. *`spark.blacklist.decommissioning.timeout`:* This is the maximal time that Spark does not schedule new tasks on executors running on that node. Tasks already running are allowed to complete.
+1. *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`* This is the maximal time to wait for running containers and applications to complete before transition a `DECOMMISSIONING` node into `DECOMMISSIONED`.
+2. *`spark.blacklist.decommissioning.timeout`* This is the maximal time that Spark does not schedule new tasks on executors running on that node. Tasks already running are allowed to complete.
 
 When managed scaling triggers a scale down, YARN will put nodes it wants to decomission in a `DECOMMISSIONING` state. Spark will detect this and add these nodes to a “black list” (_AWS acknowledges the use of non-inclusive language in this codebase and will work with the Spark community to update_). In this state, Spark will not assign any new tasks to the node and once all tasks are completed, YARN will finish decommissioning the node. If the task runs longer than *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`*, the node is force-terminated and the task will be reassigned to another node.
 
@@ -52,17 +52,13 @@ With *`yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs`*, co
 
 For more information, see:
 
-(https://aws.amazon.com/blogs/big-data/spark-enhancements-for-elasticity-and-resiliency-on-amazon-emr/)
-
-(https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot-error-resource-3.html)
-
-(https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#spark-decommissioning)
+* [Configuring node decommissioning behavior](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html#spark-decommissioning)
+* [Spark enhancements for elasticity and resiliency on Amazon EMR](https://aws.amazon.com/blogs/big-data/spark-enhancements-for-elasticity-and-resiliency-on-amazon-emr/)
+* [Amazon EMR cluster error: Deny-listed nodes](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot-error-resource-3.html)
 
 ## EMR Managed Scaling compared to Custom Automatic Scaling
 
-The following link highlights the key differences between EMR managed scaling vs. custom automatic scaling:
-
-(https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scale-on-demand.html)
+The following [document](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scale-on-demand.html) highlights the key differences between EMR managed scaling vs. custom automatic scaling.
 
 In general, we recommend using EMR managed scaling since the metric evaluation is every 5-10 seconds. This means your EMR cluster will adjust quicker to the change in the required cluster resources. In addition, EMR managed scaling also supports instance fleets and the the scaling policy is simpler to configure because EMR managed scaling only requires min and max amounts for purchasing options (On-Demand/Spot) and node type (core/task).
 

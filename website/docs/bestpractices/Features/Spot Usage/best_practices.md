@@ -120,11 +120,11 @@ yarn.node-labels.enabled: true
 yarn.node-labels.am.default-node-label-expression: 'CORE'
 ```
 
-When you allow AM's to run on all nodes and are using managed scaling, consider increasing `yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs` so AM's are not automatically terminated after the 1hr timeout in the event of a scale down. See BP 4.1.3 for more details.
+When you allow AM's to run on all nodes and are using managed scaling, consider increasing `yarn.resourcemanager.nodemanager-graceful-decommission-timeout-secs` so AM's are not automatically terminated after the 1hr timeout in the event of a scale down.
 
 ## Reserve core nodes for only application masters (am)
 
-This is not necessarily related to Spot, but An alternative to BP 4.2.2 is to reserve core nodes for only application masters/spark drivers. This means tasks spawned from executors or AMs will only run on the task nodes. The approach keeps the “CORE” label for core nodes and specifies it as `exclusive=true`. This means that containers will only be allocated to CORE nodes when it matches the node partition during job submission. By default, EMR will set AM=Core and as long as users are not specifying node label = core, all containers will run on task.
+This is not necessarily related to Spot, but an alternative to the [previous section](#ensure-application-masters-only-run-on-an-on-demand-node) is to reserve core nodes for only application masters/spark drivers. This means tasks spawned from executors or AMs will only run on the task nodes. The approach keeps the “CORE” label for core nodes and specifies it as `exclusive=true`. This means that containers will only be allocated to CORE nodes when it matches the node partition during job submission. By default, EMR will set AM=Core and as long as users are not specifying node label = core, all containers will run on task.
 
 Add EMR step during EMR provisioning:
 
