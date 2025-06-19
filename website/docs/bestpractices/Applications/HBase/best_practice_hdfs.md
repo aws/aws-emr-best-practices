@@ -64,7 +64,7 @@ The following configurations allow HBase to directly read store files on the loc
     "Properties": {
       "dfs.client.read.shortcircuit": "true",
       "dfs.client.socket-timeout": "60000", 
-      "dfs.domain.socket.path": "/var/run/hadoop-hdfs/dn_socket"
+      "dfs.domain.socket.path": "/var/lib/hadoop-hdfs/dn_socket"
     }
   }
 ]
