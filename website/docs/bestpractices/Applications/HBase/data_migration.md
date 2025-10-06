@@ -237,22 +237,82 @@ The migration path from HBase 1.x to HBase 2.x, can be accomplished using HBase 
 
 ### When using Amazon S3
 
-If you're using Amazon S3 as storage layer for HBase, you can directly migrate any EMR cluster using an HBase version >= 1.x to an Amazon EMR release using HBase `<= 2.2.x`.
+When HBase is backed by Amazon S3, the migration process depends on the target EMR version. The schema and metadata structure differ significantly between HBase 1.x and 2.x, and certain HBase 2.x releases (starting with EMR 6.4.0) introduce breaking changes to the hbase:meta table.
 
-**Note** If you try to update to a more recent version of HBase (e.g. HBase 2.4.4 from HBase 1.x), the HBase master will fail to correctly start due to some breaking changes in the way HBase load the meta table information in newest releases. You might see a similar error in your HMaster logs:
+#### Migration from EMR 5.x to EMR ≤ 6.3.1
 
-```log
-Caused by: org.apache.hadoop.hbase.ipc.RemoteWithExtrasException(org.apache.hadoop.hbase.regionserver.NoSuchColumnFamilyException): org.apache.hadoop.hbase.regionserver.NoSuchColumnFamilyException: Column family table does not exist in region hbase:meta,,1.1588230740 in table 'hbase:meta', {TABLE_ATTRIBUTES => {IS_META => 'true', coprocessor$1 => '|org.apache.hadoop.hbase.coprocessor.MultiRowMutationEndpoint|536870911|'}}, {NAME => 'info', VERSIONS => '3', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'NONE', IN_MEMORY => 'true', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '8192', METADATA => {'CACHE_DATA_IN_L1' => 'true'}}
-    at org.apache.hadoop.hbase.regionserver.HRegion.checkFamily(HRegion.java:8685)
-    at org.apache.hadoop.hbase.regionserver.HRegion.getScanner(HRegion.java:3125)
-    at org.apache.hadoop.hbase.regionserver.HRegion.getScanner(HRegion.java:3110)
+If your target EMR release includes HBase ≤ 2.2.x (e.g., EMR 6.3.1), you can migrate directly from any EMR 5.x cluster running HBase 1.x. These versions maintain backward compatibility and automatically handle metadata evolution during cluster initialization.
+
+**Steps**
+
+- Shut down the HBase 1.x cluster gracefully, flushing and disabling all the tables to prevent any data loss.
+- Launch a new EMR cluster (version ≤ 6.3.1) using the same S3 bucket for storage.
+- Allow HBase to initialize. The system will perform automatic schema upgrades as needed.
+- Verify access to tables.
+
+#### Migration from EMR 5.x to EMR ≥ 6.4.0 or 7.x
+
+From EMR 6.4.0 onward, HBase introduces additional metadata column families and schema validations. Direct migration from older HBase 1.x clusters can lead to startup failures and schema incompatibilities.
+
+Attempting a direct migration from an older HBase 1.x cluster, will fail to initialize the HMaster service with the following exception:
+
+```
+org.apache.hadoop.hbase.regionserver.NoSuchColumnFamilyException: Column family table does not exist in region hbase:meta ...
 ```
 
-In this case to migrate to the latest version, you can perform a two step migration:
+##### **Option 1: Staged Migration (Recommended for EMR 6.4.x – 7.3.x)**
 
-* First, disable all your HBase tables in the Amazon EMR cluster using HBase 1.x. Once all the tables are disabled, terminate this cluster.
-* Launch a new Amazon EMR cluster using EMR 6.3.0 as release and wait for all the tables/regions to be assigned. Once completed, disable all the tables again and shutdown the cluster.
-* Finally, launch the latest EMR Version you want to use.
+This two-phase migration approach leverages EMR 6.3.1 (HBase 2.2.6) as an intermediary step to safely handle schema evolution.
+
+**Steps**
+
+- Stage 1 — Source Cluster Preparation (EMR 5.x)
+    - Flush and disable all tables to prevent any data loss.
+    - Terminate the cluster to prevent having two active clusters.
+
+- Stage 2 — Intermediate Migration (EMR 6.3.1)
+    - Launch an EMR 6.3.1 cluster pointing to the same S3 location.
+    - Allow HBase 2.2.6 to initialize and add missing column families automatically.
+    - Once stable, disable all tables again.
+
+- Stage 3 — Final Migration (EMR ≥ 6.4.x or 7.x)
+    - Launch the target EMR cluster version.
+    - Re-enable all tables.
+    - Validate data.
+
+##### **Option 2: Direct Migration with Schema Fix (For EMR ≥ 7.4)**
+
+**Steps**
+
+- Step 1 — Source Cluster Preparation (EMR 5.x)
+    - Flush and disable all tables to prevent any data loss.
+    - Terminate the cluster to prevent having two active clusters.
+
+- Step 2 — Configure Store File Tracking
+    - Launch the target cluster to leverage the `DefaultStoreFileTracker` implementation by adding the following to your EMR configurations:
+    ```json
+    {
+        "Classification": "hbase-site",
+        "Properties": {
+            "hbase.store.file-tracker.impl": "org.apache.hadoop.hbase.regionserver.storefiletracker.DefaultStoreFileTracker"
+        }
+    }
+    ```
+
+- Step 3 — Initialize HMaster
+
+    - On the first startup, HMaster will fail after automatically adding missing column families.
+    - It will abort with a PleaseRestartMasterException.
+    - Systemd will restart HMaster automatically, and subsequent initialization will succeed.
+
+- Step 4 — Post-Migration Actions
+    - Once HMaster is stable, enable all tables.
+    - Convert tables to the new Store File Tracker format if required. For example:
+    ```
+    change_sft 'table_name','FILE'
+    ```
+
+For additional guidance on this procedure, see [Migrating to Amazon EMR version 7.4.0 or later](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hbase-migrate.html) in the Amazon EMR documentation.
 
 ## Summary
 
