@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.5.2",
-    "@docusaurus/plugin-google-analytics": "^3.6.1",
+    "@docusaurus/plugin-google-analytics": "^3.5.2",
     "@docusaurus/preset-classic": "^3.5.2",
     "@docusaurus/theme-search-algolia": "^3.1.0",
     "@mdx-js/react": "^3.0.0",
@@ -43,5 +43,8 @@
   },
   "engines": {
     "node": ">=18.0"
+  },
+  "overrides": {
+    "serialize-javascript": "7.0.4"
   }
 }
