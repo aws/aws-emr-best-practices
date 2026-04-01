@@ -36,6 +36,8 @@ const sidebars = {
   ],
   migration: [
     'migration/introduction',
+    'migration/Overview',
+    'migration/emr-migration',
   ],
   utilities: [
     'utilities/introduction',
