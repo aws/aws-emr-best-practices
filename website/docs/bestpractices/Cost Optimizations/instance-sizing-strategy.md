@@ -4,103 +4,79 @@ sidebar_label: Instance Sizing Strategy
 
 # Instance Sizing Strategy: Vertical vs Horizontal Scaling
 
-Selecting the right instance family and size affects both performance and cost of EMR workloads. This guide covers two key decisions: instance family selection and vertical vs horizontal scaling.
+One of the first questions teams face when setting up EMR clusters is: should we use a few large nodes or many smaller ones? And which instance family — R, M, C? There's no single right answer, but there are patterns worth understanding before you start benchmarking.
 
-## Instance Family Selection
+## Rethinking Instance Family Choices
 
-When optimizing for price-performance, it is worth evaluating general-purpose instances alongside memory-optimized or compute-optimized options.
+A common assumption is that Spark workloads need memory-optimized instances (R-family) because Spark is memory-hungry. In practice, this isn't always the case.
 
-**Key observations**:
+We've seen teams move from R8G to M8G instances of the same size and observe minimal performance difference — while saving significantly on cost. This can be counterintuitive, especially when EMR sizing tools recommend the same CPU-to-memory ratio as R instances. But many Spark jobs don't actually use all that extra memory, particularly if shuffle spill and caching aren't dominant factors in the workload.
 
-- Moving from R6G to R8G improves performance, but the higher instance price can offset the gains — resulting in similar price-performance
-- General-purpose instances (e.g., M8G) can deliver comparable performance to memory-optimized instances (e.g., R8G) of the same size at lower cost
-- This holds even when sizing tools recommend the same CPU/memory ratio as R-family instances
+On the other hand, moving from an older generation (say R6G) to a newer one (R8G) does improve raw performance — but the per-instance price also goes up. The net effect on price-performance can be a wash.
 
-**Recommendation**: Benchmark with general-purpose (M-family) instances alongside memory-optimized (R-family) before committing to a fleet configuration.
+**Bottom line**: Don't default to R-family out of habit. Run your workload on M-family instances of the same size and compare. You may find the cost savings are substantial with little to no performance trade-off.
 
-## Vertical vs Horizontal Scaling
+## Vertical vs Horizontal: What's the Trade-off?
 
-The following example illustrates the difference between vertical and horizontal scaling for the same total compute capacity:
+Consider two ways to get roughly the same total compute — 288 vCPUs and ~2,300 GB of memory:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    VERTICAL SCALING                                  │
-│              3 x r8gd.24xlarge nodes                                │
-│                                                                     │
-│  ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐  │
-│  │  r8gd.24xlarge    │ │  r8gd.24xlarge    │ │  r8gd.24xlarge    │  │
-│  │  96 vCPU          │ │  96 vCPU          │ │  96 vCPU          │  │
-│  │  768 GB RAM       │ │  768 GB RAM       │ │  768 GB RAM       │  │
-│  │                   │ │                   │ │                   │  │
-│  │  ~6 executors     │ │  ~6 executors     │ │  ~6 executors     │  │
-│  │  (large heap)     │ │  (large heap)     │ │  (large heap)     │  │
-│  └───────────────────┘ └───────────────────┘ └───────────────────┘  │
-│                                                                     │
-│  Total: 288 vCPU | 2,304 GB RAM | ~18 executors                    │
-│  ✔ Less network shuffle    ✔ Handles data skew well                 │
-│  ✔ Fewer fetch failures    ✗ Larger GC pauses                       │
-└─────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────┐
-│                   HORIZONTAL SCALING                                 │
-│              36 x r8gd.2xlarge nodes                                │
-│                                                                     │
-│  ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐  │
-│  │.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  │  │
-│  │8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU │  │
-│  │64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB │  │
-│  └──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘  │
-│  ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐  │
-│  │.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  │  │
-│  │8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU │  │
-│  │64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB │  │
-│  └──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘  │
-│                        ... + 20 more nodes                          │
-│                                                                     │
-│  Total: 288 vCPU | 2,304 GB RAM | ~36 executors                    │
-│  ✔ Better GC behavior     ✔ Better fault tolerance                  │
-│  ✔ Scales well with DRA   ✗ More network shuffle                    │
-└─────────────────────────────────────────────────────────────────────┘
+  VERTICAL: 3 × r8gd.24xlarge                HORIZONTAL: 36 × r8gd.2xlarge
+  ┌────────────────────────┐                  ┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐
+  │    r8gd.24xlarge       │                  │.2xl ││.2xl ││.2xl ││.2xl ││.2xl ││.2xl │
+  │    96 vCPU / 768 GB    │                  │8vCPU││8vCPU││8vCPU││8vCPU││8vCPU││8vCPU│
+  │    ~6 large executors  │                  │64 GB││64 GB││64 GB││64 GB││64 GB││64 GB│
+  ├────────────────────────┤                  └─────┘└─────┘└─────┘└─────┘└─────┘└─────┘
+  │    r8gd.24xlarge       │                  ┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐
+  │    96 vCPU / 768 GB    │                  │.2xl ││.2xl ││.2xl ││.2xl ││.2xl ││.2xl │
+  │    ~6 large executors  │                  │8vCPU││8vCPU││8vCPU││8vCPU││8vCPU││8vCPU│
+  ├────────────────────────┤                  │64 GB││64 GB││64 GB││64 GB││64 GB││64 GB│
+  │    r8gd.24xlarge       │                  └─────┘└─────┘└─────┘└─────┘└─────┘└─────┘
+  │    96 vCPU / 768 GB    │                             ... + 24 more nodes
+  │    ~6 large executors  │
+  └────────────────────────┘
+  Total: ~18 executors                        Total: ~36 executors
 ```
 
-### Instance Family Comparison
+Same total resources, very different behavior. Here's why.
 
-For the same workload, here is how different instance families compare at the same size:
+### Why Vertical Works Well for Some Workloads
 
-| Configuration | vCPU | Memory | On-Demand Price (approx) | Notes |
+When Spark shuffles data — during joins, aggregations, or repartitions — it moves data between executors over the network. With larger instances, more of that data stays local. An executor on a 24xlarge node has enough memory to hold large partitions without spilling to disk, and there are fewer executors to coordinate with during shuffle.
+
+This matters most when:
+
+- **Joins are large and complex** — think multi-way joins on big tables, like TPC-DS style queries. The executor can hold both sides of a join partition in memory.
+- **Data is skewed** — if one partition is 10x larger than the rest, a big executor can absorb it. On a small instance, that same partition causes GC pressure, heartbeat timeouts, and eventually task failures.
+- **Shuffle is the bottleneck** — fewer executors means fewer network connections, fewer fetch requests, and fewer "FetchFailedException" errors that plague large clusters.
+
+### Why Horizontal Works Well for Other Workloads
+
+Smaller instances aren't just "worse vertical." They have real advantages:
+
+- **Garbage collection is dramatically better** with smaller heaps. A 4 GB executor heap rarely causes long GC pauses. A 64 GB heap can pause for seconds during full GC — and that pause can cascade into missed heartbeats and task re-launches.
+- **Fault tolerance improves** — if a node dies, you lose 1 out of 36 executors instead of 1 out of 3 nodes (taking ~6 executors with it). Recovery is faster and less disruptive.
+- **Dynamic Resource Allocation (DRA)** works better in smaller increments. EMR Serverless in particular benefits from this — it can spin up and release capacity more granularly.
+- **Multi-tenant or high-concurrency setups** share resources more effectively across many small executors than a few large ones.
+
+### Instance Family Comparison at a Glance
+
+| Configuration | vCPU | Memory | Relative Cost | Best For |
 |---|---|---|---|---|
-| r8gd.4xlarge (memory-optimized) | 16 | 128 GB | Higher | Best raw performance per node |
-| m8g.4xlarge (general-purpose) | 16 | 64 GB | Lower | Often comparable performance at lower cost |
-| r8gd.24xlarge (vertical) | 96 | 768 GB | Higher per node, fewer nodes | Better for shuffle-heavy, skewed workloads |
-| r8gd.2xlarge (horizontal) | 8 | 64 GB | Lower per node, more nodes | Better for GC-sensitive, high-concurrency workloads |
+| r8gd.24xlarge × 3 nodes | 288 | 2,304 GB | Higher per node, fewer nodes | Shuffle-heavy, skewed, complex joins |
+| r8gd.2xlarge × 36 nodes | 288 | 2,304 GB | Lower per node, more nodes | GC-sensitive, high-concurrency, DRA |
+| m8g.4xlarge × 18 nodes | 288 | 1,152 GB | Lower overall | Cost-optimized when memory isn't the bottleneck |
 
-## When to Choose Vertical Scaling
+## Matching Strategy to Workload
 
-Larger instances with fewer executors tend to perform better for:
-
-- **Shuffle-heavy workloads**: More data stays local to the executor, reducing network shuffle overhead
-- **Large joins**: Executors have enough memory to hold intermediate data without spilling to disk
-- **Skewed workloads**: Hot partitions have more CPU/memory headroom before causing heartbeat timeouts, GC pauses, or disk spill
-- **Coordination overhead**: Fewer executors means fewer network connections during shuffle and fewer fetch failures
-
-## When to Choose Horizontal Scaling
-
-Smaller instances with more executors are better for:
-
-- **GC-sensitive workloads**: Smaller heap sizes lead to better garbage collection behavior and more predictable latency
-- **Fault tolerance**: Losing one executor out of 36 is less disruptive than losing one out of 18
-- **Dynamic Resource Allocation (DRA)**: Easier to scale up/down in smaller increments, particularly effective with EMR Serverless
-- **High-concurrency environments**: Better resource sharing across many concurrent jobs
-
-## Workload-Specific Guidance
-
-| Workload Type | Recommended Approach | Reason |
+| Workload Profile | Approach | Why |
 |---|---|---|
-| Complex joins and aggregations (e.g., TPC-DS) | Vertical (larger instances) | Less shuffle, more local processing |
-| Many small jobs / analyst workloads | Horizontal (smaller instances) | Better concurrency and resource sharing |
-| Latency-sensitive pipelines | Horizontal (smaller instances) | More predictable GC behavior |
-| Large ETL with data skew | Vertical (larger instances) | Headroom for hot partitions |
+| Complex analytical queries (TPC-DS style) | Vertical | Less shuffle, executors can hold large join partitions |
+| Many small concurrent jobs (analyst notebooks, ad-hoc queries) | Horizontal | Better sharing, faster scale-up/down |
+| Latency-sensitive streaming or micro-batch | Horizontal | Predictable GC, consistent tail latency |
+| Large ETL with known data skew | Vertical | Headroom to absorb hot partitions without spill |
+| Mixed or unknown workloads | Start horizontal, test vertical | Horizontal is safer as a default; vertical is an optimization |
 
 :::tip
-When benchmarking, distinguish between optimizing for benchmark numbers (e.g., TPC-DS) and optimizing for your actual production workload. The optimal instance strategy may differ between the two.
+If you're running benchmarks like TPC-DS to evaluate instance choices, keep in mind that benchmark workloads tend to favor vertical scaling (complex joins, large shuffles). Your production workloads — especially if they include many smaller jobs or interactive queries — may behave quite differently. Test with representative production queries before finalizing your configuration.
 :::
