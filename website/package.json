@@ -45,6 +45,7 @@
     "node": ">=18.0"
   },
   "overrides": {
-    "serialize-javascript": "7.0.4"
+    "serialize-javascript": "7.0.4",
+    "path-to-regexp": "0.1.13"
   }
 }
