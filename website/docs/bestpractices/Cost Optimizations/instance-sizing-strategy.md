@@ -18,7 +18,63 @@ When optimizing for price-performance, it is worth evaluating general-purpose in
 
 **Recommendation**: Benchmark with general-purpose (M-family) instances alongside memory-optimized (R-family) before committing to a fleet configuration.
 
-## Vertical Scaling (Larger Instances)
+## Vertical vs Horizontal Scaling
+
+The following example illustrates the difference between vertical and horizontal scaling for the same total compute capacity:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    VERTICAL SCALING                                  │
+│              3 x r8gd.24xlarge nodes                                │
+│                                                                     │
+│  ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐  │
+│  │  r8gd.24xlarge    │ │  r8gd.24xlarge    │ │  r8gd.24xlarge    │  │
+│  │  96 vCPU          │ │  96 vCPU          │ │  96 vCPU          │  │
+│  │  768 GB RAM       │ │  768 GB RAM       │ │  768 GB RAM       │  │
+│  │                   │ │                   │ │                   │  │
+│  │  ~6 executors     │ │  ~6 executors     │ │  ~6 executors     │  │
+│  │  (large heap)     │ │  (large heap)     │ │  (large heap)     │  │
+│  └───────────────────┘ └───────────────────┘ └───────────────────┘  │
+│                                                                     │
+│  Total: 288 vCPU | 2,304 GB RAM | ~18 executors                    │
+│  ✔ Less network shuffle    ✔ Handles data skew well                 │
+│  ✔ Fewer fetch failures    ✗ Larger GC pauses                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                   HORIZONTAL SCALING                                 │
+│              36 x r8gd.2xlarge nodes                                │
+│                                                                     │
+│  ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐  │
+│  │.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  │  │
+│  │8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU │  │
+│  │64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB │  │
+│  └──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘  │
+│  ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐  │
+│  │.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  ││.2xl  │  │
+│  │8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU ││8vCPU │  │
+│  │64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB ││64 GB │  │
+│  └──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘  │
+│                        ... + 20 more nodes                          │
+│                                                                     │
+│  Total: 288 vCPU | 2,304 GB RAM | ~36 executors                    │
+│  ✔ Better GC behavior     ✔ Better fault tolerance                  │
+│  ✔ Scales well with DRA   ✗ More network shuffle                    │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Instance Family Comparison
+
+For the same workload, here is how different instance families compare at the same size:
+
+| Configuration | vCPU | Memory | On-Demand Price (approx) | Notes |
+|---|---|---|---|---|
+| r8gd.4xlarge (memory-optimized) | 16 | 128 GB | Higher | Best raw performance per node |
+| m8g.4xlarge (general-purpose) | 16 | 64 GB | Lower | Often comparable performance at lower cost |
+| r8gd.24xlarge (vertical) | 96 | 768 GB | Higher per node, fewer nodes | Better for shuffle-heavy, skewed workloads |
+| r8gd.2xlarge (horizontal) | 8 | 64 GB | Lower per node, more nodes | Better for GC-sensitive, high-concurrency workloads |
+
+## When to Choose Vertical Scaling
 
 Larger instances with fewer executors tend to perform better for:
 
@@ -27,18 +83,16 @@ Larger instances with fewer executors tend to perform better for:
 - **Skewed workloads**: Hot partitions have more CPU/memory headroom before causing heartbeat timeouts, GC pauses, or disk spill
 - **Coordination overhead**: Fewer executors means fewer network connections during shuffle and fewer fetch failures
 
-## Horizontal Scaling (Smaller Instances)
+## When to Choose Horizontal Scaling
 
 Smaller instances with more executors are better for:
 
 - **GC-sensitive workloads**: Smaller heap sizes lead to better garbage collection behavior and more predictable latency
-- **Fault tolerance**: Losing one executor out of 100 is less disruptive than losing one out of 10
+- **Fault tolerance**: Losing one executor out of 36 is less disruptive than losing one out of 18
 - **Dynamic Resource Allocation (DRA)**: Easier to scale up/down in smaller increments, particularly effective with EMR Serverless
 - **High-concurrency environments**: Better resource sharing across many concurrent jobs
 
 ## Workload-Specific Guidance
-
-The right choice depends on your workload profile:
 
 | Workload Type | Recommended Approach | Reason |
 |---|---|---|
