@@ -37,7 +37,188 @@ const sidebars = {
   migration: [
     'migration/introduction',
     'migration/Overview',
+    {
+      type: 'category',
+      label: 'Starting Your Journey',
+      items: [
+        'migration/starting-your-journey/migration-approaches',
+        'migration/starting-your-journey/prototyping',
+        'migration/starting-your-journey/choosing-a-team',
+        'migration/starting-your-journey/general-best-practices',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Gathering Requirements',
+      items: [
+        'migration/gathering-requirements/obtaining-on-premises-metrics',
+        'migration/gathering-requirements/cost-estimation-and-optimization',
+        'migration/gathering-requirements/optimizing-costs',
+        'migration/gathering-requirements/storage-optimization',
+        'migration/gathering-requirements/compute-optimization',
+        'migration/gathering-requirements/cost-estimation-summary',
+        'migration/gathering-requirements/optimizing-yarn-applications',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Cluster Segmentation',
+      items: [
+        'migration/cluster-segmentation/cluster-characteristics',
+        'migration/cluster-segmentation/common-segmentation-schemes',
+        'migration/cluster-segmentation/additional-considerations',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Securing Your Resources',
+      items: [
+        'migration/securing-resources/emr-security-best-practices',
+        'migration/securing-resources/authentication',
+        'migration/securing-resources/authorization',
+        'migration/securing-resources/encryption',
+        'migration/securing-resources/perimeter-security',
+        'migration/securing-resources/network-security',
+        'migration/securing-resources/auditing',
+        'migration/securing-resources/software-patching',
+        'migration/securing-resources/software-upgrades',
+        'migration/securing-resources/common-customer-use-cases',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Data Migration',
+      items: [
+        'migration/data-migration/s3-central-data-repository',
+        'migration/data-migration/large-data-ongoing',
+        'migration/data-migration/event-streaming-data',
+        'migration/data-migration/optimizing-s3-repository',
+        'migration/data-migration/optimizing-cost-performance',
+        'migration/data-migration/s3-tables-managed-iceberg',
+        'migration/data-migration/s3-express-one-zone',
+        'migration/data-migration/data-transfer-acceleration',
+        'migration/data-migration/apache-iceberg-on-emr',
+        'migration/data-migration/emr-serverless-data-migration',
+        'migration/data-migration/zero-etl-federated-query',
+        'migration/data-migration/validation-and-observability',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Data Catalog Migration',
+      items: [
+        'migration/data-catalog-migration/hive-metastore-deployment-patterns',
+        'migration/data-catalog-migration/hive-metastore-migration-options',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Multitenancy on EMR',
+      items: [
+        'migration/multitenancy/silo-mode',
+        'migration/multitenancy/shared-mode',
+        'migration/multitenancy/considerations',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'ETL on Amazon EMR',
+      items: [
+        'migration/etl/orchestration',
+        'migration/etl/migrating-spark',
+        'migration/etl/migrating-hive',
+        'migration/etl/emr-notebooks',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Incremental Data Processing',
+      items: [
+        'migration/incremental-data-processing/apache-hudi-considerations',
+        'migration/incremental-data-processing/sample-architecture',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Ad Hoc Query Capabilities',
+      items: [
+        'migration/ad-hoc-query/presto-considerations',
+        'migration/ad-hoc-query/hbase-workloads',
+        'migration/ad-hoc-query/migrating-impala',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Operational Excellence',
+      items: [
+        'migration/operational-excellence/upgrading-emr-versions',
+        'migration/operational-excellence/general-best-practices',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Testing and Validation',
+      items: [
+        'migration/testing-and-validation/data-quality-overview',
+        'migration/testing-and-validation/check-ingestion-pipeline',
+        'migration/testing-and-validation/data-quality-policy',
+        'migration/testing-and-validation/estimating-impact',
+        'migration/testing-and-validation/data-quality-tools',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'EMR on AWS Outposts',
+      items: [
+        'migration/emr-on-outposts/limitations-and-considerations',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Support for Your Migration',
+      items: [
+        'migration/support/emr-migration-program',
+        'migration/support/professional-services',
+        'migration/support/aws-partners',
+        'migration/support/aws-support',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'EMR Serverless ✨',
+      items: [
+        'migration/emr-serverless/introduction',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Spark Agents ✨',
+      items: [
+        'migration/spark-agents/introduction',
+      ],
+    },
+    'migration/contributors',
+    'migration/additional-resources',
+    'migration/document-revisions',
     'migration/emr-migration',
+    {
+      type: 'category',
+      label: 'Appendix',
+      items: [
+        'migration/appendix/questionnaire-requirements-gathering',
+        'migration/appendix/security-requirements',
+        'migration/appendix/tco-considerations',
+        'migration/appendix/emr-kerberos-workflow',
+        'migration/appendix/kerberos-kdc-one-way-trust',
+        'migration/appendix/kerberos-hue-access',
+        'migration/appendix/kerberos-hiveserver2',
+        'migration/appendix/kerberos-cluster-startup',
+        'migration/appendix/sample-ldap-configurations',
+        'migration/appendix/ldap-hadoop-group-mapping',
+        'migration/appendix/ldap-hue',
+        'migration/appendix/data-catalog-migration-faqs',
+      ],
+    },
   ],
   utilities: [
     'utilities/introduction',

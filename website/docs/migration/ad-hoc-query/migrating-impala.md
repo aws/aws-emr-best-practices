@@ -1,8 +1,8 @@
 ---
-sidebar_label: Overview
+sidebar_label: Migrating Apache Impala
 ---
 
-# Migration Guide Overview
+# Migrating Apache Impala
 
 :::note Contribution Needed
 This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR.

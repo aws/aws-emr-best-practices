@@ -1,8 +1,8 @@
 ---
-sidebar_label: Overview
+sidebar_label: Spark Agents ✨
 ---
 
-# Migration Guide Overview
+# Spark Agents
 
 :::note Contribution Needed
 This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR.
