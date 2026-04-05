@@ -22,3 +22,5 @@ This section provides best practice guides and tools to migrate data processing 
     2. [Hive Glue Catalog Sync Agent](https://github.com/awslabs/aws-glue-catalog-sync-agent-for-hive)
 
 For further assistance reach out to [aws-bdms-emr@amazon.com](mailto:aws-bdms-emr@amazon.com?subject=EMR%20Best%20Practices:%20Migration%20Question)
+
+*Last updated: April 2026*
