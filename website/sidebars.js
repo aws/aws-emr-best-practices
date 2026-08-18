@@ -52,6 +52,9 @@ const sidebars = {
       label: 'Gathering Requirements',
       items: [
         'migration/gathering-requirements/obtaining-on-premises-metrics',
+        'migration/gathering-requirements/workload-inventory',
+        'migration/gathering-requirements/configuration-dependency-mapping',
+        'migration/gathering-requirements/requirements-gathering-checklist',
         'migration/gathering-requirements/cost-estimation-and-optimization',
         'migration/gathering-requirements/optimizing-costs',
         'migration/gathering-requirements/storage-optimization',
