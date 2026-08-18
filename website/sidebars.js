@@ -76,6 +76,7 @@ const sidebars = {
         'migration/securing-resources/emr-security-best-practices',
         'migration/securing-resources/authentication',
         'migration/securing-resources/authorization',
+        'migration/securing-resources/trusted-identity-propagation',
         'migration/securing-resources/encryption',
         'migration/securing-resources/perimeter-security',
         'migration/securing-resources/network-security',
