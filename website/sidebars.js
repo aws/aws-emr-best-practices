@@ -107,6 +107,7 @@ const sidebars = {
       type: 'category',
       label: 'Data Catalog Migration',
       items: [
+        'migration/data-catalog-migration/choosing-a-catalog-strategy',
         'migration/data-catalog-migration/hive-metastore-deployment-patterns',
         'migration/data-catalog-migration/hive-metastore-migration-options',
       ],
