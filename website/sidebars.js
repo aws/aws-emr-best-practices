@@ -68,6 +68,7 @@ const sidebars = {
       label: 'Cluster Segmentation',
       items: [
         'migration/cluster-segmentation/cluster-characteristics',
+        'migration/cluster-segmentation/deployment-options',
         'migration/cluster-segmentation/common-segmentation-schemes',
         'migration/cluster-segmentation/additional-considerations',
       ],
