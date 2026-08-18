@@ -175,6 +175,16 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'EMR Observability',
+      items: [
+        'migration/observability/cloudwatch-monitoring',
+        'migration/observability/prometheus-grafana',
+        'migration/observability/logging-best-practices',
+        'migration/observability/migration-considerations',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Support for Your Migration',
       items: [
         'migration/support/emr-migration-program',
