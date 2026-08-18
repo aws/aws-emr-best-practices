@@ -115,8 +115,10 @@ const sidebars = {
       type: 'category',
       label: 'Multitenancy on EMR',
       items: [
+        'migration/multitenancy/multi-tenancy-models',
         'migration/multitenancy/silo-mode',
         'migration/multitenancy/shared-mode',
+        'migration/multitenancy/hybrid-mode',
         'migration/multitenancy/considerations',
       ],
     },
