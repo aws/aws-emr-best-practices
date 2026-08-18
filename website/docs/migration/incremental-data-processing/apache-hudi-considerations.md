@@ -2,8 +2,128 @@
 sidebar_label: Apache Hudi Considerations
 ---
 
-# Considerations for using Apache Hudi on Amazon EMR
+# Apache Hudi
 
-:::note Contribution Needed
-This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR.
-:::
+## Section 1: Apache Hudi
+
+Apache Hudi is an open-source data management framework used to simplify incremental data processing and data pipeline development by providing record-level insert, update, upsert, and delete capabilities. Upsert refers to the ability to insert records into an existing dataset if they do not already exist or to update them if they do. By efficiently managing how data is laid out in Amazon S3, Hudi allows data to be ingested and updated in near real time. Hudi carefully maintains metadata of the actions performed on the dataset to help ensure that the actions are atomic and consistent.
+
+Hudi is integrated with Apache Spark, Apache Hive, Presto, Trino (from EMR 6.1.0+), and Apache Flink. With Amazon EMR release version 5.28.0 and later, Amazon EMR installs Hudi components by default when Spark, Hive, Presto, or Flink are installed. You can use Spark or the Hudi HoodieStreamer utility to create or update Hudi datasets. You can use Hive, Spark, Presto, Trino, or Flink to query a Hudi dataset written on Amazon S3. Hudi maintains the metadata of the actions performed on the Hudi dataset in index and data files, making it easy to reuse the same data for a variety of use cases.
+
+Amazon EMR 7.12.0 ships Hudi 1.0.2, which includes a redesigned storage engine, improved indexing, non-blocking concurrency control, and a record-level metadata system. These improvements deliver significant performance gains for both read and write workloads.
+
+Note for customers migrating from Hudi 0.x: Starting with Hudi 1.0, the DeltaStreamer ingestion utility has been renamed to HoodieStreamer. The class name, configuration prefix, and CLI entry point have all changed. If you are migrating existing pipelines from Hudi 0.x (EMR 6.x releases), update your job submission scripts and configuration files to reference org.apache.hudi.utilities.streamer.HoodieStreamer instead of the deprecated org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer. The old class name may still work as a compatibility alias in transitional releases but is not guaranteed in future versions.
+
+When writing datasets, Hudi supports two table types:
+
+- Copy on Write: Stores data in columnar format (Parquet) only. Write operations on this table result in updating the version and rewriting the files using a merge.
+
+- Merge on Read: Stores data in both columnar (Parquet) and row-based (Apache Avro) formats.
+
+Write operations results in updates stored as delta files. Compactions are required to run at a scheduled frequency to arrive at new columnar files (synchronously or asynchronously).
+
+In addition to the ability to perform upserts (updates/inserts), Hudi also provides snapshot isolation for readers (queries), atomic writes of batch of records, incremental pulls, de-duplication of data, and time travel queries.
+
+### Considerations for using Apache Hudi on Amazon EMR
+
+#### *Assess fit for use case*
+
+Consider using Hudi to efficiently solve the problems with incrementally ingesting data into a data lake, enforcing data privacy regulations where consumers might choose to be forgotten/erased (GDPR/CCPA), applying change data capture to data lake, bringing data freshness within minutes to your data marts on S3, and providing point-in-time views of the data in your data lake. Evaluate your use case data freshness SLA, concurrency needs, query latency and data access patterns to assess if Hudi is the right solution for your workload. Note that Hudi is not a replacement for online transactional processing (OLTP) systems and not ideal where your incoming stream of data is used in an append-only fashion (for example, dataset is primarily not mutable).
+
+#### *Writing Hudi datasets*
+
+Hudi provides two ways to write datasets.
+
+- DeltaStreamer is a utility included with Hudi that allows you to simplify the process of applying changes to Hudi data sets. DeltaStreamer is a CLI tool that can operate against three sources: Amazon S3, Apache Kafka, and Apache Hive incremental pull. (Incremental pull refers to the ability to pull only the data that changed between two actions.)
+
+- Spark Datasource API allows you to write your own code to ingest data from a custom source using the Spark datasource API and use a Hudi datasource to write as a Hudi dataset.
+
+Table: Hudi write mechanisms
+
+| DeltaStreamer | Datasource API |
+|----|----|
+| Use DeltaStreamer when you want a simple, self-managed ingestion tool that automates data compaction and provides automated checkpointing without the need to write any code. | Use DataSource API when you are working with several varied data sources and want to create consolidated or derived tables, for example if you have existing Spark-based ETL pipelines. |
+| Need to perform transformations on ingested data, for example dropping columns, casting or filtering data. DeltaStreamer supports passing a SQL query template for SQL-based transformations. | You have existing data pipelines that need to work with both Hudi-managed and non-Hudi-managed datasets you can use the DataSource API. |
+| DeltaStreamer is also a good choice if you are ingesting data from Kafka, or using AWS DMS to land files in S3 and you do not want to write any code to apply those updates. | Use Data Source API with Spark/Structured Streaming, allowing you to stream events into your Hudi dataset. |
+
+#### *Choosing the table type for workload*
+
+Hudi provides two storage options to choose from depending on whether your workload is read heavy (Copy on Write) or write heavy (Merge on Read). Use Copy On Write when:
+
+- Your job is rewriting an entire table/partition to deal with updates
+
+- Your workload is fairly steady and does not have sudden bursts
+
+- You are already using Parquet files for your tables
+
+- You want to keep things operationally simple, replace your existing Parquet files, and have no need for real-time views
+
+Use Merge on Read when:
+
+- You want ingested data available for query as soon as possible
+
+- Your workload can have sudden spikes or changes in pattern
+
+- You want to collect the stream of changes and compact them periodically to help reduce write amplification (overhead)
+
+Table: Comparison of Hudi table types
+
+| Table Type    | Compactions | Write Throughput | Data Freshness SLA |
+|---------------|-------------|------------------|--------------------|
+| Copy on Write | N/A         | Medium           | Low                |
+| Merge on Read | Inline      | Low              | High               |
+| Merge on Read | Offline     | High             | High               |
+
+#### *Querying Hudi datasets*
+
+During Hudi write operations with either DeltaStreamer or Datasource API, if Hive Sync is enabled, the dataset is available either as a Hive table or AWS Glue Data Catalog (depending on which one you specified when you launched your EMR cluster). The Hive table or AWS Glue Data Catalog that is created can be read using Hive QL, Spark SQL, Presto, or Trino. Hudi provides different logical views on the tables created.
+
+Table: Use cases for engines
+
+| Engine | Views | When to use? |
+|----|----|----|
+| Spark SQL | Read Optimized, Real time, Incremental | Notebooks & Data Science, Machine Learning, Custom data pipelines, Best support for incremental & streaming ETL |
+| Hive | Read Optimized, Real time, Incremental | Data warehousing ETL, Incremental ETL pipelines |
+| Presto/Trino | Read Optimized, Real time | Interactive & ad hoc queries |
+| Flink | Read Optimized, Real time, Incremental | Streaming ETL, Real-time analytics pipelines |
+
+#### *Compaction*
+
+A compaction activity merges the log files with the base files to generate new compacted files written as a commit on Hudi timeline. Compaction applies to the Merge on Read table type. There are two ways to perform the compaction: synchronous and asynchronous.
+
+Synchronous (or inline) compaction is triggered at ingestion time after a commit or deltacommit as part of insert/upsert/bulk_insert operation. Use this compaction type when you want to quickly compact the recent N partitions and can wait for delta logs to accumulate to merge into older partitions. As a result, your data lake will have the most recent data which is likely to be queried often.
+
+Asynchronous compaction is run as a separate job that is either scheduled by an orchestrator or run manually. Use this compaction when you do not want to block the ingestion operation for compaction and require the compaction to be run as part of your workflow.
+
+#### *Deletes*
+
+Apache Hudi supports two types of record level deletes on data stored in Hudi datasets by specifying a different record payload implementation. Deletes can be performed using Hudi RDD API, Datasource API, and DeltaStreamer.
+
+- Soft Deletes: Soft deletes let you keep the record key and null the values for all other fields. You can implement this by ensuring the appropriate fields are nullable in the dataset schema and simply upserting the dataset after setting these fields to null.
+
+- Hard Deletes: Hard deletes are a stronger form of delete to physically remove any trace of the record from the dataset.
+
+#### *Performance and Tuning*
+
+Hudi is an Apache Spark based library. The general best practices for tuning Spark applications apply to Hudi workloads as well. Keep the following guidelines in mind when creating Hudi jobs on Amazon EMR.
+
+- EMR Cluster Size: Use memory intensive nodes for Hudi workloads. AWS Graviton-based instances (R6g, R7g) offer up to 30% better price-performance compared to equivalent x86 instances (R5, R6i) for Spark workloads on Amazon EMR and are recommended as the default choice for new deployments. For x86 workloads or where specific library compatibility requires it, R5 or R6i instances remain supported. Consider using Instance Fleets with a mix of Graviton and x86 instance types, combined with Spot Instances, to maximize cost efficiency and capacity availability. Aim to fit input data in memory if possible.
+
+- Input Parallelism: Determines the number of files in your table. Make the property proportional to target files desired. Hudi defaults to (1500) which may be too high in certain instances.
+
+- File Size: We recommend 128-512 MB file sizes by setting the limitFileSize (128 MB) property accordingly. The compactionSmallFileSize (100 MB) property defines size in MB that is considered as a small file size.
+
+- Off-heap memory: Increase spark.yarn.executor.memoryOverhead or spark.yarn.driver.memoryOverhead if needed.
+
+- Spark Memory: Reduce spark memory (spark.memory.fraction, spark.memory.storageFraction) conservatively if facing Out Of Memory errors allowing data to spill.
+
+- Kryo Serialization: For EMR 7.3+/Hudi 0.15+, set spark.kryo.registrator=org.apache.spark.HoodieSparkKryoRegistrar to reduce serialization overhead.
+
+Table: Key Hudi Properties
+
+| Properties | Description |
+|----|----|
+| hoodie.\[insert\|upsert\|bulkinsert\].shuffle.parallelism | Parallelism determines the initial number of files in your table. |
+| hoodie.parquet.max.file.size | Target size for parquet files produced by Hudi write phases. |
+| hoodie.parquet.small.file.limit | This should be less than maxFileSize. |
+| hoodie.parquet.compression.ratio | Expected compression of parquet data used by Hudi. |
