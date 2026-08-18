@@ -3,17 +3,832 @@
 <head>
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
-<title data-rh="true">Considerations for Implementing Multitenancy on Amazon EMR | AWS Open Data Analytics</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://aws.github.io/aws-emr-best-practices/img/AWS_logo_RGB.png"><meta data-rh="true" name="twitter:image" content="https://aws.github.io/aws-emr-best-practices/img/AWS_logo_RGB.png"><meta data-rh="true" property="og:url" content="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Considerations for Implementing Multitenancy on Amazon EMR | AWS Open Data Analytics"><meta data-rh="true" name="description" content="This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR."><meta data-rh="true" property="og:description" content="This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR."><link data-rh="true" rel="canonical" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"><link data-rh="true" rel="alternate" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations" hreflang="en"><link data-rh="true" rel="alternate" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Considerations","item":"https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"}]}</script><link rel="preconnect" href="https://www.google-analytics.com">
+<title data-rh="true">Implementing Multi-Tenancy: Considerations | AWS Open Data Analytics</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://aws.github.io/aws-emr-best-practices/img/AWS_logo_RGB.png"><meta data-rh="true" name="twitter:image" content="https://aws.github.io/aws-emr-best-practices/img/AWS_logo_RGB.png"><meta data-rh="true" property="og:url" content="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Implementing Multi-Tenancy: Considerations | AWS Open Data Analytics"><meta data-rh="true" name="description" content="EMR on EC2: Implementing Multi-Tenancy Considerations"><meta data-rh="true" property="og:description" content="EMR on EC2: Implementing Multi-Tenancy Considerations"><link data-rh="true" rel="canonical" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"><link data-rh="true" rel="alternate" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations" hreflang="en"><link data-rh="true" rel="alternate" href="https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Considerations","item":"https://aws.github.io/aws-emr-best-practices/docs/migration/multitenancy/considerations"}]}</script><link rel="preconnect" href="https://www.google-analytics.com">
 <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","G-MF59LKNSDN","auto"),ga("set","anonymizeIp",!0),ga("send","pageview")</script>
-<script async src="https://www.google-analytics.com/analytics.js"></script><link rel="stylesheet" href="/aws-emr-best-practices/assets/css/styles.1ddc0d2e.css">
-<script src="/aws-emr-best-practices/assets/js/runtime~main.bf6300fb.js" defer="defer"></script>
-<script src="/aws-emr-best-practices/assets/js/main.50ab665e.js" defer="defer"></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script><link rel="stylesheet" href="/aws-emr-best-practices/assets/css/styles.3b4ce579.css">
+<script src="/aws-emr-best-practices/assets/js/runtime~main.1a93a324.js" defer="defer"></script>
+<script src="/aws-emr-best-practices/assets/js/main.23df6508.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
 <symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
 </defs></svg>
-<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/aws-emr-best-practices/"><b class="navbar__title text--truncate">AWS Open Data Analytics</b></a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/bestpractices/introduction">Best Practices</a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/benchmarks/introduction">Benchmarks</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/aws-emr-best-practices/docs/migration/introduction">Migration</a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/utilities/introduction">Utilities</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input id="search_input_react" type="search" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/introduction"><span title="Migration" class="linkLabel_WmDU">Migration</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/Overview"><span title="Overview" class="linkLabel_WmDU">Overview</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/starting-your-journey/migration-approaches"><span title="Starting Your Journey" class="categoryLinkLabel_W154">Starting Your Journey</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/gathering-requirements/obtaining-on-premises-metrics"><span title="Gathering Requirements" class="categoryLinkLabel_W154">Gathering Requirements</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/cluster-segmentation/cluster-characteristics"><span title="Cluster Segmentation" class="categoryLinkLabel_W154">Cluster Segmentation</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/securing-resources/emr-security-best-practices"><span title="Securing Your Resources" class="categoryLinkLabel_W154">Securing Your Resources</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/data-migration/s3-central-data-repository"><span title="Data Migration" class="categoryLinkLabel_W154">Data Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/data-catalog-migration/hive-metastore-deployment-patterns"><span title="Data Catalog Migration" class="categoryLinkLabel_W154">Data Catalog Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/aws-emr-best-practices/docs/migration/multitenancy/silo-mode"><span title="Multitenancy on EMR" class="categoryLinkLabel_W154">Multitenancy on EMR</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/silo-mode"><span title="Silo Mode" class="linkLabel_WmDU">Silo Mode</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/shared-mode"><span title="Shared Mode" class="linkLabel_WmDU">Shared Mode</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/considerations"><span title="Considerations" class="linkLabel_WmDU">Considerations</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/etl/orchestration"><span title="ETL on Amazon EMR" class="categoryLinkLabel_W154">ETL on Amazon EMR</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/incremental-data-processing/apache-hudi-considerations"><span title="Incremental Data Processing" class="categoryLinkLabel_W154">Incremental Data Processing</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/ad-hoc-query/presto-considerations"><span title="Ad Hoc Query Capabilities" class="categoryLinkLabel_W154">Ad Hoc Query Capabilities</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/operational-excellence/upgrading-emr-versions"><span title="Operational Excellence" class="categoryLinkLabel_W154">Operational Excellence</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/testing-and-validation/data-quality-overview"><span title="Testing and Validation" class="categoryLinkLabel_W154">Testing and Validation</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/emr-on-outposts/limitations-and-considerations"><span title="EMR on AWS Outposts" class="categoryLinkLabel_W154">EMR on AWS Outposts</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/support/emr-migration-program"><span title="Support for Your Migration" class="categoryLinkLabel_W154">Support for Your Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/emr-serverless/introduction"><span title="EMR Serverless ✨" class="categoryLinkLabel_W154">EMR Serverless ✨</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/spark-agents/introduction"><span title="Spark Agents ✨" class="categoryLinkLabel_W154">Spark Agents ✨</span></a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/contributors"><span title="Contributors" class="linkLabel_WmDU">Contributors</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/additional-resources"><span title="Additional Resources" class="linkLabel_WmDU">Additional Resources</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/document-revisions"><span title="Document Revisions" class="linkLabel_WmDU">Document Revisions</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/emr-migration"><span title="EMR Migration Step by Step" class="linkLabel_WmDU">EMR Migration Step by Step</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/appendix/questionnaire-requirements-gathering"><span title="Appendix" class="categoryLinkLabel_W154">Appendix</span></a></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/aws-emr-best-practices/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Multitenancy on EMR</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Considerations</span></li></ul></nav><div class="theme-doc-markdown markdown"><header><h1>Considerations for Implementing Multitenancy on Amazon EMR</h1></header>
-<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>Contribution Needed</div><div class="admonitionContent_BuS1"><p>This page is a placeholder. If you are the assigned contributor, please replace this content with your draft and submit a PR.</p></div></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/aws/aws-emr-best-practices/edit/main/website/docs/migration/multitenancy/considerations.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/aws-emr-best-practices/docs/migration/multitenancy/shared-mode"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Shared Mode</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/aws-emr-best-practices/docs/migration/etl/orchestration"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Orchestration</div></a></nav></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contributing</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/aws/aws-emr-best-practices/tree/main" target="_blank" rel="noopener noreferrer" class="footer__link-item">Github<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Built with ❤️ at AWS  <br> © 2026 Amazon.com, Inc. or its affiliates. All Rights Reserved</div></div></div></footer></div>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_rrYi" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/aws-emr-best-practices/"><b class="navbar__title text--truncate">AWS Open Data Analytics</b></a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/bestpractices/introduction">Best Practices</a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/benchmarks/introduction">Benchmarks</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/aws-emr-best-practices/docs/migration/introduction">Migration</a><a class="navbar__item navbar__link" href="/aws-emr-best-practices/docs/utilities/introduction">Utilities</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="toggle_jE3b colorModeToggle_r37O"><button class="clean-btn toggleButton_va3u toggleButtonDisabled_ER8u" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_mQz2 lightToggleIcon_jJYQ"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_mQz2 darkToggleIcon_yvs8"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_mQz2 systemToggleIcon_vTm2"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_KzqC"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input id="search_input_react" type="search" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_Joq7"><div class="docsWrapper_f9tr"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_nf7E" type="button"></button><div class="docRoot_Uox5"><aside class="theme-doc-sidebar-container docSidebarContainer_Q2KV"><div class="sidebarViewport_BqqN"><div class="sidebar_c4_v"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_zdzW"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/introduction"><span title="Migration" class="linkLabel_ZwG3">Migration</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/Overview"><span title="Overview" class="linkLabel_ZwG3">Overview</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/starting-your-journey/migration-approaches"><span title="Starting Your Journey" class="categoryLinkLabel_PVDz">Starting Your Journey</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/gathering-requirements/obtaining-on-premises-metrics"><span title="Gathering Requirements" class="categoryLinkLabel_PVDz">Gathering Requirements</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/cluster-segmentation/cluster-characteristics"><span title="Cluster Segmentation" class="categoryLinkLabel_PVDz">Cluster Segmentation</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/securing-resources/emr-security-best-practices"><span title="Securing Your Resources" class="categoryLinkLabel_PVDz">Securing Your Resources</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/data-migration/s3-central-data-repository"><span title="Data Migration" class="categoryLinkLabel_PVDz">Data Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/data-catalog-migration/choosing-a-catalog-strategy"><span title="Data Catalog Migration" class="categoryLinkLabel_PVDz">Data Catalog Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/aws-emr-best-practices/docs/migration/multitenancy/multi-tenancy-models"><span title="Multitenancy on EMR" class="categoryLinkLabel_PVDz">Multitenancy on EMR</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/multi-tenancy-models"><span title="EMR on EC2: Multi-Tenancy Models" class="linkLabel_ZwG3">EMR on EC2: Multi-Tenancy Models</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/silo-mode"><span title="Silo Mode" class="linkLabel_ZwG3">Silo Mode</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/shared-mode"><span title="Shared Mode" class="linkLabel_ZwG3">Shared Mode</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/hybrid-mode"><span title="Hybrid Mode" class="linkLabel_ZwG3">Hybrid Mode</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/aws-emr-best-practices/docs/migration/multitenancy/considerations"><span title="Considerations" class="linkLabel_ZwG3">Considerations</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/etl/orchestration"><span title="ETL on Amazon EMR" class="categoryLinkLabel_PVDz">ETL on Amazon EMR</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/incremental-data-processing/choosing-a-table-format"><span title="Incremental Data Processing" class="categoryLinkLabel_PVDz">Incremental Data Processing</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/ad-hoc-query/presto-considerations"><span title="Ad Hoc Query Capabilities" class="categoryLinkLabel_PVDz">Ad Hoc Query Capabilities</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/operational-excellence/upgrading-emr-versions"><span title="Operational Excellence" class="categoryLinkLabel_PVDz">Operational Excellence</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/testing-and-validation/cluster-level-validation"><span title="Testing and Validation" class="categoryLinkLabel_PVDz">Testing and Validation</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/emr-on-outposts/limitations-and-considerations"><span title="EMR on AWS Outposts" class="categoryLinkLabel_PVDz">EMR on AWS Outposts</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/observability/cloudwatch-monitoring"><span title="EMR Observability" class="categoryLinkLabel_PVDz">EMR Observability</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/support/emr-migration-program"><span title="Support for Your Migration" class="categoryLinkLabel_PVDz">Support for Your Migration</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/emr-serverless/introduction"><span title="EMR Serverless ✨" class="categoryLinkLabel_PVDz">EMR Serverless ✨</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/spark-agents/introduction"><span title="Spark Agents ✨" class="categoryLinkLabel_PVDz">Spark Agents ✨</span></a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/contributors"><span title="Contributors" class="linkLabel_ZwG3">Contributors</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/additional-resources"><span title="Additional Resources" class="linkLabel_ZwG3">Additional Resources</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/document-revisions"><span title="Document Revisions" class="linkLabel_ZwG3">Document Revisions</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/aws-emr-best-practices/docs/migration/emr-migration"><span title="EMR Migration Step by Step" class="linkLabel_ZwG3">EMR Migration Step by Step</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_dw7p menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/aws-emr-best-practices/docs/migration/appendix/questionnaire-requirements-gathering"><span title="Appendix" class="categoryLinkLabel_PVDz">Appendix</span></a></div></li></ul></nav></div></div></aside><main class="docMainContainer_dRx3"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_ev7u"><div class="docItemContainer_WZSs"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Yhrg" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/aws-emr-best-practices/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_yRaK"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Multitenancy on EMR</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Considerations</span></li></ul></nav><div class="tocCollapsible_WMZO theme-doc-toc-mobile tocMobile_phXN"><button type="button" class="clean-btn tocCollapsibleButton_p95d">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Implementing Multi-Tenancy: Considerations</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Se2_" id="emr-on-ec2-implementing-multi-tenancy-considerations">EMR on EC2: Implementing Multi-Tenancy Considerations<a href="#emr-on-ec2-implementing-multi-tenancy-considerations" class="hash-link" aria-label="Direct link to EMR on EC2: Implementing Multi-Tenancy Considerations" title="Direct link to EMR on EC2: Implementing Multi-Tenancy Considerations" translate="no">​</a></h2>
+<p>Multitenant architecture with Amazon EMR on EC2 requires careful thought and planning along critical dimensions, including user, data, and resource isolation.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Se2_" id="user-isolation">User Isolation<a href="#user-isolation" class="hash-link" aria-label="Direct link to User Isolation" title="Direct link to User Isolation" translate="no">​</a></h3>
+<p><strong>Authentication</strong></p>
+<p>Authentication of users is a critical piece in securing cluster resources and preventing unauthorized access to data. Amazon EMR on EC2 provides flexibility for users to implement various authentication mechanisms based on their preferences such as IAM, IAM Identity Center (single sign-on), Kerberos and LDAP. For detailed implementation, refer to the security section of this migration guide.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Se2_" id="data-isolation">Data Isolation<a href="#data-isolation" class="hash-link" aria-label="Direct link to Data Isolation" title="Direct link to Data Isolation" translate="no">​</a></h3>
+<p><strong>Authorization</strong></p>
+<p>After users are authenticated, you must consider what data assets they are authorized to use. You can choose to implement authorization on Amazon EMR at the storage layer or server layer. Amazon EMR on EC2 supports IAM Role based access control, S3 Grants, and AWS Lake Formation for fine grained access control. For detailed implementation, refer to the security section of this migration guide.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Se2_" id="resource-isolation">Resource Isolation<a href="#resource-isolation" class="hash-link" aria-label="Direct link to Resource Isolation" title="Direct link to Resource Isolation" translate="no">​</a></h3>
+<p><strong>YARN Queue Management</strong></p>
+<p>On Amazon EMR, you can use different YARN queues to submit jobs. Each YARN queue may have a different resource capacity and be associated with specific users and groups on the Amazon EMR cluster. The YARN Capacity Scheduler enables a hierarchy of queues to partition cluster resources among tenants.</p>
+<p>For detailed implementation guidance, refer to <a href="https://aws.amazon.com/blogs/big-data/configure-hadoop-yarn-capacityscheduler-on-amazon-emr-on-amazon-ec2-for-multi-tenant-heterogeneous-workloads/" target="_blank" rel="noopener noreferrer" class="">Configure Hadoop YARN CapacityScheduler on Amazon EMR on Amazon EC2 for Multi-Tenant Heterogeneous Workloads</a>.</p>
+<p><img decoding="async" loading="lazy" src="/aws-emr-best-practices/assets/images/image25-38729e0a7acad517c4bb9475c3729549.png" width="993" height="419" class="img_Oker"></p>
+<blockquote>
+<p><em>Figure 37: YARN Resource Manager UI</em></p>
+</blockquote>
+<p>For example, a user from the engineers group can log in to the EMR primary node and submit jobs to the engineers YARN queue:</p>
+<p>ssh -l engineer &lt;&lt;emr-dns&gt;&gt;</p>
+<p>[engineer@ 10-10-1-222 ~] spark-submit \</p>
+<p>--queue engineers \</p>
+<p>--class org.apache.spark.examples.SparkPi \</p>
+<p>--master yarn \</p>
+<p>/usr/lib/spark/examples/jars/spark-examples.jar</p>
+<p><em>Figure 38: Spark History Server showing job submitted to engineers queue</em></p>
+<p><img decoding="async" loading="lazy" src="/aws-emr-best-practices/assets/images/image26-c94ce777fbf7673472ae936ec2429554.png" width="744" height="137" class="img_Oker"></p>
+<blockquote>
+<p><em>Figure 39: Example code on Amazon EMR</em></p>
+</blockquote>
+<p>In this previous example code, a user engineer is submitting a Spark job and passing a parameter — queue to reflect which queue it should use to run that Spark job. The YARN ResourceManager UI shows the same job being performed.</p>
+<p><img decoding="async" loading="lazy" src="/aws-emr-best-practices/assets/images/image27-f41bd866e9b0ca1927268f9cd37bea30.png" width="992" height="392" class="img_Oker"></p>
+<p><em>Figure 40: User engineer submitting Spark job in YARN</em></p>
+<blockquote>
+<p><strong>Note:</strong> <em>YARN queues apply only to applications that run on YARN. Trino (formerly Presto) applications do not use YARN queues and have their own resource management mechanisms.</em></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Se2_" id="key-considerations">Key Considerations:<a href="#key-considerations" class="hash-link" aria-label="Direct link to Key Considerations:" title="Direct link to Key Considerations:" translate="no">​</a></h3>
+<p>Amazon EMR on EC2&#x27;s multi-tenancy capabilities are built upon the foundational silo and shared mode paradigms, which remain well-suited for organizations with existing Hadoop workloads. These deployment patterns are now augmented with updated Lake Formation Fine-Grained Access Control (FGAC) capabilities, including table, row, column, and cell-level access, open table format support, and write operation enforcement available from EMR 7.12 onward.</p>
+<p>Additional security enhancements include Trusted Identity Propagation and S3 Access Grants for identity-aware data access. When designing a multi-tenant architecture on EMR on EC2, the primary consideration is whether workloads require HDFS, as this is the key driver for choosing EMR on EC2 over serverless alternatives.</p>
+<p>Organizations should align their authentication mechanism with their existing identity infrastructure, whether that is Active Directory/LDAP, a SAML IdP, or AWS IAM Identity Center. Lake Formation FGAC should be leveraged for data-level tenant isolation, taking advantage of write operation enforcement and open table format support to avoid the operational overhead of maintaining separate clusters per access pattern.</p>
+<p>Extract, Transform, Load (ETL) on Amazon EMR</p>
+<p><strong>Orchestration on Amazon EMR</strong></p>
+<p>Orchestration frameworks are heavily used in the Apache Hadoop ecosystem to integrate and monitor multiple applications centrally. They manage complex interdependent jobs, maintain each of the applications’ states and execute based on a pre-defined pattern. There are several orchestration engines that are available for Hadoop, among those <a href="https://oozie.apache.org/" target="_blank" rel="noopener noreferrer" class="">Apache Oozie</a> is a widely used workflow scheduler system. You can also use <a href="https://aws.amazon.com/step-functions/" target="_blank" rel="noopener noreferrer" class="">AWS Step Functions,</a> <a href="https://docs.aws.amazon.com/glue/latest/dg/trigger-job.html" target="_blank" rel="noopener noreferrer" class="">AWS Glue</a> or <a href="https://airflow.apache.org/" target="_blank" rel="noopener noreferrer" class="">Apache Airflow</a> to orchestrate and schedule multiple applications. When migrating workloads from an on-premises Hadoop cluster to Amazon EMR, in addition to the applications that are running on the Hadoop cluster, the orchestration tool must be migrated so that it can effectively orchestrate applications in the cloud. This section discusses the steps to migrate an orchestration application from an on-premises Hadoop cluster, provides other orchestration options available for Amazon EMR, and details recommended best practices for migration.</p>
+<p><strong>Migrating Apache Oozie to Amazon MWAA</strong></p>
+<p>AWS recommends migrating from Apache Oozie, as it is no longer under active open-source development and will be removed from an upcoming Amazon EMR release. For customers currently running Oozie workflows on Amazon EMR, the recommended migration path is to Amazon MWAA (Managed Workflows for Apache Airflow). Amazon MWAA provides a fully managed Apache Airflow environment that handles the underlying infrastructure, supports Apache Airflow 2.x, and integrates natively with Amazon EMR on EC2, Amazon EMR Serverless, and Amazon EMR on EKS.</p>
+<p>To assist with the migration, AWS provides the open-source utility <a href="https://github.com/dgghosalaws/oozie-to-airflow-emr" target="_blank" rel="noopener noreferrer" class="">oozie-to-airflow-emr on GitH</a>ub, which converts existing Oozie workflows into Apache Airflow DAGs compatible with Amazon MWAA.</p>
+<p><strong>Migration Steps</strong></p>
+<p><strong>Step 1: Inventory your Oozie workflows</strong></p>
+<p>Before beginning the migration, take stock of all existing Oozie workflows, coordinators, and bundles. Identify the following for each workflow:</p>
+<ul>
+<li class="">
+<p>The workflow.xml, coordinator.xml, and bundle files</p>
+</li>
+<li class="">
+<p>The job.properties files and any external parameter files</p>
+</li>
+<li class="">
+<p>All dependent libraries and custom actions</p>
+</li>
+<li class="">
+<p>Any external database connections or data sources referenced in the workflows</p>
+</li>
+<li class="">
+<p>The schedule or trigger mechanism used by each coordinator</p>
+</li>
+</ul>
+<p>This inventory helps you understand the scope of the migration and identify any workflows that may require additional attention during conversion.</p>
+<p><strong>Step 2: Set up Amazon MWAA</strong></p>
+<p>Create an Amazon MWAA environment in the same AWS region as your Amazon EMR clusters. When creating the environment, you will need an Amazon S3 bucket to store your DAG files, plugins, and requirements. The MWAA environment should be configured within a VPC that has connectivity to your EMR clusters and any other AWS services your workflows interact with.</p>
+<p>#Create an S3 bucket for your MWAA environment
+aws s3 mb s3://my-mwaa-environment-bucket</p>
+<p># Create the required folder structure
+aws s3api put-object --bucket my-mwaa-environment-bucket --key dags/
+aws s3api put-object --bucket my-mwaa-environment-bucket --key plugins/
+aws s3api put-object --bucket my-mwaa-environment-bucket --key requirements/</p>
+<p>When creating the MWAA environment, ensure the execution role has permissions to interact with Amazon EMR, Amazon S3, and any other AWS services your workflows require.</p>
+<p><strong>Step 3: Install and run the oozie-to-airflow-emr conversion utility</strong></p>
+<p>Clone the <a href="https://github.com/dgghosalaws/oozie-to-airflow-emr" target="_blank" rel="noopener noreferrer" class="">oozie-to-airflow-emr</a> utility from GitHub and use it to convert your existing Oozie workflow XML files into Apache Airflow DAGs. The utility handles the translation of common Oozie constructs including workflow actions, control flow nodes, and coordinator schedules into their Airflow equivalents.</p>
+<p><em># Clone the conversion utility</em>
+git clone <a href="https://github.com/dgghosalaws/oozie-to-airflow-emr.git" target="_blank" rel="noopener noreferrer" class="">https://github.com/dgghosalaws/oozie-to-airflow-emr.git</a>
+cd oozie-to-airflow-emr</p>
+<p><em># Install the required dependencies</em>
+pip install -r requirements.txt</p>
+<p><em># (Optional) Install from local folder</em>
+pip install -e.</p>
+<p><strong>Requirements</strong>: Python &gt;= 3.6 (tested with Python 3.9)</p>
+<p>Prepare your application directory structure</p>
+<p>Your input directory must follow this structure:</p>
+<p>&lt;APPLICATION&gt;/
+|- job.properties # Job properties used to run the job
+|- hdfs/ # Folder with application files
+| |- workflow.xml # Oozie workflow XML (1.0 schema)
+| |- ... # Additional folders required for HDFS
+|- configuration.template.properties # Template of configuration values
+|- configuration.properties # Generated properties for configuration</p>
+<p><strong>Why this structure matters</strong>: The utility expects this layout to properly parse your Oozie workflows and extract all necessary configuration parameters for the Airflow conversion.</p>
+<p>Configure your environment</p>
+<p>Copy configuration.template.properties to configuration.properties and fill in the required values:</p>
+<p>properties</p>
+<p><em># EMR cluster ID where jobs will run</em>
+emr_cluster=j-3JT1C4X61EFH</p>
+<p><em># AWS connection details for Airflow</em>
+aws_conn_id=aws_default
+aws_region=us-west-2
+check_interval=30</p>
+<p><em># S3 URI prefix where DAG files and scripts are stored</em>
+s3_uri_prefix=s3://your-bucket/dags</p>
+<p><strong>Why configuration matters</strong>: These values replace Oozie-specific parameters (like nameNode, resourceManager) with AWS-specific connection details that Airflow needs to interact with EMR.</p>
+<p>Run the conversion</p>
+<p>bash</p>
+<p><em># Basic conversion</em>
+o2a -i examples/hive -o output/hive</p>
+<p><em># With additional options</em>
+o2a -i &lt;INPUT_DIRECTORY_PATH&gt; \
+-o &lt;OUTPUT_DIRECTORY_PATH&gt; \
+-n &lt;DAG_NAME&gt; \
+-u &lt;USER&gt; \
+-s &lt;START_DAYS_AGO&gt; \
+-v &lt;SCHEDULE_INTERVAL&gt; \
+-x &lt;SCHEMA_VERSION&gt;</p>
+<p><strong>Available options</strong>:</p>
+<ul>
+<li class="">
+<p>-i / --input-directory-path: Path to input directory (required)</p>
+</li>
+<li class="">
+<p>-o / --output-directory-path: Desired output directory (required)</p>
+</li>
+<li class="">
+<p>-n / --dag-name: Desired DAG name (defaults to input directory name)</p>
+</li>
+<li class="">
+<p>-u / --user: User to replace all ${user.name} references (defaults to current user)</p>
+</li>
+<li class="">
+<p>-s / --start-days-ago: DAG start as number of days ago</p>
+</li>
+<li class="">
+<p>-x / --schema-version: Oozie schema version [1.0, 0.4, 0.5]</p>
+</li>
+<li class="">
+<p>-v / --schedule-interval: DAG schedule interval as number of days</p>
+</li>
+<li class="">
+<p>-d / --dot: Renders workflow files in DOT format</p>
+</li>
+</ul>
+<p>Examples for different schema versions</p>
+<p>bash</p>
+<p><em># For Oozie schema 0.4</em>
+o2a -i examples/order_header_item_stage \
+-o output/order_header_item_stage \
+-x 0.4</p>
+<p><em># For Oozie schema 0.5 (Sqoop/Java examples)</em>
+o2a -i examples/sqoop -o output/sqoop -x 0.5</p>
+<p><em># For Oozie schema 1.0 (default, Hive/Spark examples)</em>
+o2a -i examples/spark -o output/spark</p>
+<p><strong>Why schema version matters</strong>: Older Oozie workflows may use schema versions 0.4 or 0.5, which have different XML structures. Specifying the correct version ensures accurate parsing and conversion.</p>
+<p>Review the generated DAG</p>
+<p>Review each generated DAG carefully to ensure the conversion accurately reflects the intent of the original Oozie workflow. Pay particular attention to:</p>
+<ul>
+<li class="">
+<p><strong>Custom Oozie actions</strong>: May require manual refinement after automated conversion</p>
+</li>
+<li class="">
+<p><strong>Fork and join constructs</strong>: Verify parallel task execution is correctly mapped</p>
+</li>
+<li class="">
+<p><strong>Error handling logic</strong>: Ensure retry and failure callbacks match original behavior</p>
+</li>
+<li class="">
+<p><strong>Parameterization</strong>: Confirm all ${variables} are properly replaced with Airflow Variables or Connections</p>
+</li>
+<li class="">
+<p><strong>Scheduling</strong>: Validate that coordinator schedules are correctly translated to DAG schedule intervals</p>
+</li>
+</ul>
+<p><strong>Why manual review is critical</strong>: The automated conversion handles common patterns, but complex custom actions, heavily parameterized workflows, or non-standard Oozie constructs may require additional manual adjustments to ensure functional equivalence in Airflow.</p>
+<p><strong>Step 4: Map Oozie constructs to Airflow equivalents</strong></p>
+<p>The following table provides a reference for how common Oozie constructs map to their equivalents in Apache Airflow on Amazon MWAA:</p>
+<table><thead><tr><th><strong>Oozie Construct</strong></th><th><strong>Airflow Equivalent on MWAA</strong></th></tr></thead><tbody><tr><td>Workflow XML (sequential actions)</td><td>Airflow DAG with sequential task dependencies</td></tr><tr><td>Coordinator (time-based scheduling)</td><td>DAG schedule interval or Amazon EventBridge Scheduler</td></tr><tr><td>Bundle</td><td>Multiple DAGs or DAG with sub-DAGs</td></tr><tr><td>Fork / Join</td><td>Airflow TaskGroup with parallel tasks</td></tr><tr><td>Spark action</td><td>EmrServerlessStartJobOperator or EmrAddStepsOperator</td></tr><tr><td>Hive action</td><td>EmrAddStepsOperator or AWS Glue Job</td></tr><tr><td>Shell action</td><td>BashOperator or AWS Lambda via AwsLambdaInvokeFunctionOperator</td></tr><tr><td>Java action</td><td>EmrAddStepsOperator with custom JAR</td></tr><tr><td>Decision node</td><td>BranchPythonOperator</td></tr><tr><td>Kill node</td><td>DAG failure handling with on_failure_callback</td></tr></tbody></table>
+<p><strong>Step 5: Update job properties and connection references</strong></p>
+<p>Oozie job.properties files contain configuration values such as nameNode, resourceManager, and queue names that are specific to the on-premises or EMR on EC2 Hadoop environment. In Airflow, these values are managed through Airflow Connections and Variables, which can be configured in the MWAA environment.</p>
+<p># Example: Referencing EMR connection details using Airflow Variables
+from airflow.models import Variable
+from airflow.providers.amazon.aws.operators.emr import (
+EmrServerlessStartJobOperator
+)</p>
+<p>emr_serverless_app_id = Variable.get(&quot;emr_serverless_app_id&quot;)
+emr_execution_role = Variable.get(&quot;emr_execution_role_arn&quot;)</p>
+<p>start_job = EmrServerlessStartJobOperator(
+task_id=&#x27;run_spark_job&#x27;,
+application_id=emr_serverless_app_id,
+execution_role_arn=emr_execution_role,
+job_driver={
+&#x27;sparkSubmit&#x27;: {
+&#x27;entryPoint&#x27;: &#x27;s3://my-bucket/jobs/my_spark_job.py&#x27;,
+&#x27;sparkSubmitParameters&#x27;: (
+&#x27;--conf spark.executor.memory=8g &#x27;
+&#x27;--conf spark.executor.cores=4&#x27;
+)
+}
+}
+)</p>
+<p><strong>Step 6: Upload DAGs to the MWAA S3 bucket</strong></p>
+<p><strong>For MWAA deployment:</strong></p>
+<ol>
+<li class="">
+<p><strong>Create the required structure:</strong></p>
+<ol>
+<li class="">
+<p>Create a dag.zip containing:</p>
+</li>
+<li class="">
+<p>The o2a directory (utility library)</p>
+</li>
+<li class="">
+<p>Your generated dag.py file</p>
+</li>
+</ol>
+</li>
+<li class="">
+<p><strong>Upload to MWAA:</strong></p>
+</li>
+</ol>
+<p>bash</p>
+<p><em># Upload the o2a library directory</em>
+aws s3 cp o2a/ \
+s3://my-mwaa-environment-bucket/dags/o2a/ \
+--recursive</p>
+<p><em># Upload the generated DAG file</em>
+aws s3 cp output/hive/hive.py \
+s3://my-mwaa-environment-bucket/dags/</p>
+<p><em># Create .airflowignore to exclude .o2a files</em>
+echo &quot;.o2a&quot; &gt; .airflowignore
+aws s3 cp .airflowignore \
+s3://my-mwaa-environment-bucket/dags/</p>
+<p><strong>Final MWAA structure:</strong></p>
+<p>&lt;airflow-bucket/dags&gt;/
+|- .airflowignore # Contains .o2a to be ignored
+|- o2a/ # Utility library
+|- dag.py # Generated DAG after conversion</p>
+<p><strong>For EC2-based Airflow (using Packaged DAG):</strong></p>
+<p>Copy the dag.zip to the DAG folder in your Airflow installation.</p>
+<p><strong>Step 7: Test and validate the migrated workflows</strong></p>
+<p>Before decommissioning your Oozie workflows, run the converted Airflow DAGs in parallel with the existing Oozie workflows to validate that the outputs match and that all dependencies are resolved correctly. Use the Airflow UI available in your MWAA environment to monitor DAG runs, inspect task logs, and troubleshoot any issues.</p>
+<p>When validating, pay particular attention to:</p>
+<ul>
+<li class="">
+<p>Output data written to Amazon S3 matches what the Oozie workflow produced</p>
+</li>
+<li class="">
+<p>Scheduling behavior matches the original coordinator configuration</p>
+</li>
+<li class="">
+<p>Error handling and retry logic behaves as expected</p>
+</li>
+<li class="">
+<p>Downstream dependencies receive data in the expected format and location</p>
+</li>
+</ul>
+<p><strong>Step 8: Decommission Oozie workflows</strong></p>
+<p>Once you have validated that the migrated Airflow DAGs produce the correct results consistently, you can disable the corresponding Oozie coordinators and workflows. Archive your Oozie workflow XML files to Amazon S3 for reference before removing them from active use.</p>
+<p># Archive Oozie workflow files to S3 before decommissioning
+aws s3 cp /path/to/oozie/workflows/ \
+s3://my-archive-bucket/oozie-archive/ \
+--recursive</p>
+<p><strong>Considerations</strong></p>
+<p>When migrating from Oozie to Amazon MWAA, keep the following points in mind:</p>
+<ul>
+<li class="">
+<p>The automated conversion utility handles the most common Oozie action types, but complex custom actions or heavily parameterized workflows may require additional manual effort to complete the conversion accurately.</p>
+</li>
+<li class="">
+<p>Oozie coordinators that rely on data availability triggers can be replicated in Airflow using sensors, such as the S3KeySensor, to wait for data to arrive before proceeding with downstream tasks.</p>
+</li>
+<li class="">
+<p>Amazon MWAA stores the Airflow metadata database on your behalf, so there is no need to manage an external database as was required with Oozie in production configurations.</p>
+</li>
+<li class="">
+<p>If your Oozie workflows currently target EMR on EC2 clusters, consider whether migrating the compute target to Amazon EMR Serverless makes sense at the same time, as this further reduces operational overhead alongside the orchestration migration.</p>
+</li>
+</ul>
+<p><strong>AWS Services for Orchestration</strong></p>
+<p>AWS services can be used to create orchestration for Hadoop-based jobs. The following services are some of the popular orchestration options on AWS.</p>
+<p><strong>AWS Step Functions</strong></p>
+<p>AWS Step Functions lets you coordinate multiple AWS services into serverless workflows so you can build and update applications quickly. Using Step Functions, you can design and run workflows that stitch together services. Workflows are made up of a series of steps, with the output of one step acting as input into the next. You can monitor each step of execution as it happens, which means you can identify and fix problems quickly. Step Functions automatically triggers and tracks each step, and retries when there are errors, so your application executes in order and as expected.</p>
+<p>You can connect to Amazon EMR from AWS Step Functions to build data processing and analytics workflows. With minimal code, you can orchestrate Amazon EMR provisioning using Step Functions. The integration between Amazon EMR and Step Functions depends on EMR Service Integration APIs. Using those APIs, a Step Functions state machine can:</p>
+<ul>
+<li class="">
+<p>Create or terminate your Amazon EMR cluster or submit jobs directly to an Amazon EMR Serverless application. You can reuse the same cluster or application in your workflow or create resources on demand based on your workflow.</p>
+</li>
+<li class="">
+<p>Add or cancel an EMR step. Each step is a unit of work that contains instructions to manipulate data for processing by software installed on the cluster. By using this you can submit Apache Spark, Apache Hive, or Trino jobs to an Amazon EMR cluster. You can also create dependencies between multiple steps or can design them to run in parallel.</p>
+</li>
+<li class="">
+<p>Modify the size of an EMR cluster. This allows you to scale your EMR programmatically depending on the requirements of each step of your workflow.</p>
+</li>
+<li class="">
+<p>Use Express Workflows for high-frequency, short-duration ETL tasks at significantly lower cost than Standard Workflows.</p>
+</li>
+<li class="">
+<p>The following image is an example of how AWS Step Functions orchestrate multiple Apache Spark jobs.</p>
+</li>
+</ul>
+<p><img decoding="async" loading="lazy" src="/aws-emr-best-practices/assets/images/image28-814d8c68abbc0a77b193092f89692ddb.png" width="612" height="717" class="img_Oker"></p>
+<p><em>Figure 41: Multiple Apache Spark jobs orchestrated with AWS Step Functions</em></p>
+<p>For more information on how to integrate AWS Step Functions to create orchestration for Hadoop-based jobs, see these blog posts:</p>
+<ul>
+<li class="">
+<p><a href="https://aws.amazon.com/blogs/aws/new-using-step-functions-to-orchestrate-amazon-emr-workloads/" target="_blank" rel="noopener noreferrer" class="">Using Step Functions to Orchestrate Amazon EMR Workloads</a></p>
+</li>
+<li class="">
+<p><a href="https://aws.amazon.com/blogs/big-data/orchestrate-apache-spark-applications-using-aws-step-functions-and-apache-livy/" target="_blank" rel="noopener noreferrer" class="">Orchestrate Apache Spark applications using AWS Step Functions and Apache Livy</a></p>
+</li>
+</ul>
+<p><strong>AWS Glue Workflows</strong></p>
+<p>AWS Glue Workflows provides a visual interface for building and monitoring ETL pipelines on AWS. It integrates natively with AWS Glue Jobs, AWS Glue Crawlers, and AWS Glue Data Quality, and can trigger Amazon EMR Serverless jobs through Amazon EventBridge integration. It is well suited for organizations already invested in the AWS Glue ecosystem who want straightforward, AWS-native orchestration without the complexity of a full workflow engine.</p>
+<p><strong>Other Orchestration Options</strong></p>
+<p>Some open-source applications for orchestration have gained popularity due to community adoption and a rich feature set. This section covers Apache Airflow how this application can be used on AWS to create orchestration for Hadoop-based jobs.</p>
+<p><strong>Apache Airflow and Amazon MWAA</strong></p>
+<p>Airflow is an open-sourced task scheduler that helps manage ETL tasks. Apache Airflow workflows can be scheduled and managed from one central location. With Airflow&#x27;s Configuration as Code approach, automating the generation of workflows, ETL tasks, and dependencies is easy. It helps developers shift their focus from building and debugging data pipelines to focusing on the business problems.</p>
+<p>Amazon MWAA (Managed Workflows for Apache Airflow) is a fully managed service that makes it easy to run Apache Airflow on AWS without the operational overhead of managing the underlying infrastructure. Amazon MWAA supports Apache Airflow 3.x and scales Airflow workers automatically. It comes with a variety of connectors that help integrate it with different AWS services, including Amazon EMR on EC2, Amazon EMR Serverless, and Amazon EMR on EKS.</p>
+<p>For more information on how Airflow can be used to build orchestration pipelines and how it can be integrated to run jobs on Amazon EMR, check the following posts on the AWS Big Data Blog:</p>
+<p><a href="https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/" target="_blank" rel="noopener noreferrer" class="">Build a Concurrent Data Orchestration Pipeline Using Amazon EMR and Apache Livy</a></p>
+<p><a href="https://aws.amazon.com/blogs/big-data/orchestrate-big-data-workflows-with-apache-airflow-genie-and-amazon-emr-part-1/" target="_blank" rel="noopener noreferrer" class="">Orchestrate big data workflows with Apache Airflow, Genie, and Amazon EMR</a></p>
+<p><a href="https://aws.amazon.com/blogs/big-data/best-practices-for-migrating-from-apache-airflow-2-x-to-apache-airflow-3-x-on-amazon-mwaa/" target="_blank" rel="noopener noreferrer" class="">Best practices for migrating from Apache Airflow 2.x to Apache Airflow 3.x on Amazon MWAA</a></p>
+<p><strong>Best Practices for Orchestration</strong></p>
+<ul>
+<li class="">
+<p>There are some points to consider when building robust and fault-tolerant orchestration for Apache Hadoop-based jobs. Like Hadoop, an orchestration tool should be scalable so that it can handle a massive number of jobs and can scale proportionally with Hadoop scaling. Here are some of the best practices to consider when creating orchestration for Hadoop jobs:</p>
+</li>
+<li class="">
+<p>Most orchestration applications use a default, embedded database to store job metadata. For production workloads, we recommend that you use a separate database for better performance and availability.</p>
+</li>
+<li class="">
+<p>When possible, use serverless or managed orchestration services to reduce ongoing manual involvement.</p>
+</li>
+<li class="">
+<p>Integrate with notification services, such as Amazon SNS and Amazon CloudWatch, so that appropriate parties are immediately notified upon failure and can be involved proactively.</p>
+</li>
+<li class="">
+<p>Make sure that the orchestration application can handle both asynchronous and synchronous job and task execution for better performance and reduced overhead.</p>
+</li>
+<li class="">
+<p>The orchestration application should monitor job execution and management so that developers can monitor everything centrally.</p>
+</li>
+<li class="">
+<p>The orchestration application should be able to handle failure gracefully.</p>
+</li>
+<li class="">
+<p>If you use Amazon MWAA, make sure to select the appropriate environment class and enable worker auto-scaling for production workloads.</p>
+</li>
+<li class="">
+<p>Tag all EMR resources with cost allocation tags to support chargeback and showback in multi-tenant environments.</p>
+</li>
+<li class="">
+<p>Store workflow definitions in a version-controlled repository and deploy them through a CI/CD pipeline for consistent and auditable changes.</p>
+</li>
+</ul>
+<p>Use the following table to determine the most appropriate orchestration application for your use case.</p>
+<p><em><strong>Table 5: Orchestration applications</strong></em></p>
+<table><thead><tr><th><strong>Factors/Use Cases</strong></th><th><strong>AWS Step Functions</strong></th><th><strong>Amazon MWAA (Airflow)</strong></th><th><strong>AWS Glue Workflows</strong></th><th><strong>Apache Oozie</strong></th></tr></thead><tbody><tr><td><strong>Serverless</strong></td><td>Yes</td><td>No (managed)</td><td>Yes</td><td>No</td></tr><tr><td><strong>Spark-based jobs</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td><strong>Rich UI &amp; troubleshooting tools</strong></td><td>Yes</td><td>Yes</td><td>Limited</td><td>No</td></tr><tr><td><strong>Integration with other monitoring tools</strong></td><td>Yes</td><td>Yes</td><td>Limited</td><td>No</td></tr><tr><td><strong>Interacting with AWS Services</strong></td><td>Extensive</td><td>Good</td><td>Deep AWS native</td><td>Very Limited</td></tr><tr><td><strong>EMR Serverless support</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr><tr><td><strong>Administrative responsibilities</strong></td><td>Serverless</td><td>Medium</td><td>Serverless</td><td>High</td></tr><tr><td><strong>Hybrid environment – AWS and non-AWS services</strong></td><td>Only in the cloud</td><td>Broad coverage</td><td>AWS only</td><td>Hadoop only</td></tr></tbody></table>
+<p><strong>MIGRATING APACHE SPARK</strong></p>
+<p>Apache Spark applications are a common workload on Amazon EMR. Because Amazon EMR clusters can be configured to use specific instance types and can easily scale out to many workloads, Apache Spark is effective for optimizing compute resources for both performance and cost.</p>
+<p>Use Cases for Migrating Apache Spark</p>
+<p>There are several use cases to consider when migrating Apache Spark applications to Amazon EMR. In many cases, the existing environment is one large cluster that has a specific number of resources dedicated to processing Spark jobs. With Amazon EMR, you can continue to use one large, shared cluster, use On-Demand Instance clusters to isolate resources on a per-job basis, or take advantage of Amazon EMR Serverless to run Spark jobs without managing clusters at all. The On-Demand Instance approach allows you to take advantage of different instance types in addition to ensuring that Spark is fully using the resources of each cluster. However, this approach does require more planning and automation around the creation of Amazon EMR clusters before running a Spark job.</p>
+<p><strong>Shared Cluster</strong></p>
+<p>In a shared cluster, be aware of how many concurrent jobs you expect to run at any given time. By default, EMR configures executors to use the maximum number of resources possible on each node through the usage of the maximizeResourceAllocation property. On a shared cluster, you will likely need to configure Spark cores, memory, and executors. For details, see Best practices for successfully managing memory for Apache Spark applications on Amazon EMR on the AWS Big Data Blog. The shared cluster is appropriate for interactive use cases, such as when you are using SageMaker Unified Studio or EMR Studio with JupyterLab notebooks. Note: The maximizeResourceAllocation setting is deprecated in EMR 7.x — use Spark&#x27;s dynamic resource allocation or configure executor resources explicitly instead.</p>
+<p>When using a shared cluster, we recommend that you use the dynamic allocation setting in Amazon EMR to both automatically calculate the default executor size and to allow resources to be given back to the cluster if they are no longer used. Dynamic allocation is enabled by default on Amazon EMR.</p>
+<p><strong>Dedicated Clusters per Job</strong></p>
+<p>Using a separate cluster per each Spark job is beneficial for scheduled Spark jobs. This approach helps isolate the Spark job to prevent resource contention, allows for optimization of the job depending on if it is a CPU-, GPU-, or memory-intensive workload, and ensures that you only pay for the resources you use during the duration of the job. The Amazon EMR maximizeResourceAllocation setting helps ensure that the entire cluster&#x27;s resources are dedicated to the job. For more information, see Using maximizeResourceAllocation in the Amazon EMR Release Guide.</p>
+<p><strong>Amazon EMR Serverless</strong></p>
+<p>For scheduled or event-driven Spark jobs, Amazon EMR Serverless removes the need to provision, configure, or manage clusters entirely. With EMR Serverless, you submit Spark jobs directly to a serverless application and Amazon EMR automatically provisions the resources needed to run the job, scales them as the job progresses, and releases them when the job completes. This makes EMR Serverless well suited for ETL pipelines, batch processing, and any workload where cluster lifecycle management adds operational overhead without adding value.</p>
+<p>bash</p>
+<p><em># Submit a Spark job to EMR Serverless</em>
+aws emr-serverless start-job-run \
+--application-id &lt;&lt;application-id&gt;&gt; \
+--execution-role-arn arn:aws:iam::123456789<!-- -->:role<!-- -->/EMRServerlessRole \
+--job-driver &#x27;{
+&quot;sparkSubmit&quot;: {
+&quot;entryPoint&quot;: &quot;s3://my-bucket/etl/spark-job.py&quot;,
+&quot;entryPointArguments&quot;: [&quot;--input&quot;, &quot;s3://my-bucket/raw/&quot;,
+&quot;--output&quot;, &quot;s3://my-bucket/processed/&quot;],
+&quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.cores=4
+--conf spark.executor.memory=16g
+--conf spark.dynamicAllocation.enabled=true&quot;
+}
+}&#x27;</p>
+<p>Amazon EMR Spark Runtime</p>
+<p>Amazon EMR runtime for Apache Spark is a performance-optimized runtime environment that is active by default on Amazon EMR clusters. The EMR runtime for Spark delivers significant performance improvements over open-source Spark with 100% API compatibility, meaning your existing Spark applications run faster without any code changes. Based on <a href="https://aws.amazon.com/blogs/big-data/run-apache-spark-3-5-1-workloads-4-5-times-faster-with-amazon-emr-runtime-for-apache-spark/" target="_blank" rel="noopener noreferrer" class="">TPC-DS benchmarks at 3TB scale</a>, the EMR runtime runs Apache Spark workloads up to 4.5 times faster than open-source Apache Spark 3.5.1, with 2.8 times better price performance on current-generation instance types with data stored in Amazon S3. These improvements mean that your workloads run faster, saving you compute costs without making any changes to your applications.</p>
+<p>Optimize Cost with Amazon EC2 Spot Instances</p>
+<p>A common way to decrease cost with Spark jobs on EMR is by using EC2 Spot Instances. Amazon EMR release version 5.9.0 and later includes built-in node decommissioning features at the EMR level that help ensure Spark gracefully handles node termination during manual resizes or automatic scaling events. Starting with Amazon EMR 5.11.0, the spark.decommissioning.timeout.threshold setting further improves Spark&#x27;s resiliency on Spot Instances. Therefore, if you use Spot Instances, make sure that you are using Amazon EMR release version 5.11.0 or later.</p>
+<p>When using Spot Instances, we recommend using Instance Fleets with multiple instance types across multiple Availability Zones to maximize the availability of Spot capacity. You can also configure the Spot allocation strategy to use capacity-optimized selection, which chooses instance pools with the highest available capacity to reduce the likelihood of interruption.</p>
+<p>Use Instance Fleets</p>
+<p>Instance fleets are a feature of Amazon EMR that allows you to specify target capacity based on a specific set of units. These units could represent cores, memory, or any arbitrary reference. Instance fleets are useful if you know that your Spark job requires a certain amount of resources, and you want to mix and match capacity across both EC2 instance type and Availability Zone. With instance fleets, you select a VPC network and a set of EC2 subnets, and the feature searches Availability Zones in the subnets you selected until it finds the desired capacity.</p>
+<p>Instance fleets support Managed Scaling, which continuously evaluates cluster utilization and automatically adds or removes instances to optimize cost and performance. If you have a dynamic workload that requires fine-grained autoscaling control, you can also use Instance Groups with custom scaling policies. For more information on configuring your cluster, see Cluster Configuration Guidelines and Best Practices in the Amazon EMR Management Guide.</p>
+<p>Apache Spark File Write Performance</p>
+<p>In Amazon EMR 5.14.0, the default FileOutputCommitter algorithm was updated to use version 2 instead of version 1. This update reduces the number of renames, which improves application performance. Any Spark applications being migrated to EMR should use the most recent available Amazon EMR version to take advantage of this update and other performance improvements. Starting with Amazon EMR version 5.20.0, the EMRFS S3-optimized committer is enabled by default. This committer is an alternative Output Committer implementation optimized for writing parquet files to Amazon S3 when using EMRFS, improving both performance and reliability by avoiding the rename operations that are costly on S3. (Note: Starting with EMR 7.10, EMR S3A replaces EMRFS as the default S3 connector.)</p>
+<p>For Amazon EMR 5.19.0, the EMRFS S3-optimized committer is available but not enabled by default. You can manually enable it by setting spark.sql.parquet.fs.optimized.committer.optimization-enabled to true — either through the spark-defaults configuration classification when creating a cluster, or at runtime via --conf in spark-submit, spark-sql, or the Spark shell. Any Spark applications being migrated to EMR should use the most recent available Amazon EMR version to take advantage of these and other performance improvements. (Note: Starting with EMR 7.10, EMR S3A replaces EMRFS as the default S3 connector.)</p>
+<p>Amazon S3 Select with Apache Spark</p>
+<p>In certain scenarios, using S3 Select with Spark can result in both increased performance and decreased amount of data transferred between Amazon EMR and Amazon S3. S3 Select allows applications to retrieve only a subset of data from an object. As of EMR 5.17.0, S3 Select is supported with CSV and JSON files. If your query filters out more than half of the original dataset and your network connection between Amazon S3 and EMR has good transfer speed, S3 Select may be suitable for your application. For workloads that require more advanced filtering, consider using columnar file formats such as Parquet or ORC combined with Apache Iceberg, which provides partition pruning and column statistics to minimize data scanned without relying on S3 Select.</p>
+<p>AWS Glue Data Catalog</p>
+<p>For Amazon EMR 5.8.0 and later, Spark supports using the AWS Glue Data Catalog as the metastore for Spark SQL. If you plan to migrate to Spark on EMR, first determine if you can migrate your existing metastore to AWS Glue. Using AWS Glue Data Catalog has the benefit of not just being a managed metadata catalog, but it also integrates with several different AWS products, including Apache Trino and Apache Hive on EMR, Amazon Athena, Amazon Redshift Spectrum, Amazon SageMaker, and Amazon Data Firehose. In combination with AWS Glue crawlers, the Data Catalog can generate schema and partitions and provide fine-grained access control to databases and tables. The AWS Glue Data Catalog also supports Apache Iceberg, Apache Hudi, and Delta Lake table formats natively, making it a central metadata store for multi-engine lakehouse architectures.</p>
+<p>Amazon EMR provides two conversational AI agents — the Spark Upgrade Agent and the Spark Troubleshooting Agent — that accelerate Spark version upgrades and simplify failure diagnosis. The Upgrade Agent converts complex upgrades (Spark 2.4 → 3.5/4.x) from months to weeks through automated code analysis and validation. The Troubleshooting Agent reduces debugging time from hours to minutes by analyzing logs, metrics, and configurations. Both agents are available at no additional cost with Amazon EMR. For full details including architecture, setup instructions, and migration workflow integration, see the dedicated Spark Agents chapter.</p>
+<p><strong>Other ways of troubleshooting Apache Spark Jobs on an Amazon EMR Cluster</strong></p>
+<p>To debug common issues, view the history and log files of these applications:</p>
+<ul>
+<li class="">
+<p>For Spark Web UIs, access the Spark HistoryServer UI at port 18080 of the EMR cluster&#x27;s primary node. For Amazon EMR Serverless, the Spark History Server is available directly in the EMR Studio console without requiring SSH or port forwarding. For more information, see Accessing the Spark Web UI.</p>
+</li>
+<li class="">
+<p>For YARN applications, including Spark jobs, access the Application history tab in the Amazon EMR console. Application history is retained for up to 30 days, including details on task and stage completion for Spark. For more information, see View Application History.</p>
+</li>
+<li class="">
+<p>By default, Amazon EMR clusters launched via the console automatically archive log files to Amazon S3. You can find raw container logs in Amazon S3 and view them while the cluster is active and after it has been terminated. For Amazon EMR Serverless, logs can be directed to both Amazon S3 and Amazon CloudWatch Logs. For more information, see View Log Files</p>
+</li>
+</ul>
+<p><strong>Migrating Apache Hive to Amazon EMR</strong></p>
+<p>Apache Hive is one of the popular applications used by Amazon EMR customers as a data warehouse. As with any migration, you have several considerations to make.</p>
+<p>This guide covers key migration topics, updated through Amazon EMR 7.12.0, and incorporates the latest improvements in metastore management, execution engines, storage, high availability, and encryption.</p>
+<p><strong>Hive Metastore</strong></p>
+<p>By default, Amazon EMR clusters are configured to use a local instance of MySQL as the Hive metastore. To allow for the most effective use of Amazon EMR, you should use a shared Hive metastore, such as Amazon RDS, Amazon Aurora, or AWS Glue Data Catalog. If you require a persistent metastore, or if you have a metastore shared by different clusters, services, applications, or AWS accounts, we recommend that you use an AWS Glue Data Catalog as a metastore for Hive. For more information, see Configuring an External Metastore for Hive.</p>
+<p><strong>Upgrading</strong></p>
+<p>Hive upgrades coupled with Hive metastore updates. The Hive metadata database should be backed up and isolated from production instances because Hive upgrades may change the Hive schema, which can cause compatibility issues and problems in production. You can perform upgrades using the upgradeSchema command in the Hive Schema Tool. You can also use this tool to upgrade the schema from an older version to the current version</p>
+<p><strong>Upgrading the Hive Metastore Across EMR Major Versions</strong></p>
+<p>When upgrading across Amazon EMR major versions, the Hive metastore schema must be updated to match the version of Hive shipped with the target EMR release. This applies to both <strong>EMR 5.x → 6.x</strong> and <strong>EMR 6.x → 7.x</strong> upgrades. You have two primary options:</p>
+<p><strong>Option 1: Using the Hive Schema Tool</strong></p>
+<p>Run the upgradeSchema command to migrate your existing metastore database schema to the version required by Hive on the target EMR release. Before running the upgrade, back up your metastore database and validate the upgrade against a staging environment. The schema upgrade is not reversible.</p>
+<p>To upgrade using the Hive Schema Tool:</p>
+<p>/usr/lib/hive/bin/schematool -dbType mysql -upgradeSchemaFrom &lt;source-version&gt; -upgradeSchema</p>
+<p><strong>Note:</strong> Both EMR 6.x and EMR 7.x ship with Hive 3.1.3. If you are upgrading from EMR 6.x to 7.x and your metastore schema is already at the Hive 3.1.3 schema version, a schema upgrade may not be required. However, you should still validate your metastore compatibility in a staging environment before migrating production workloads.</p>
+<p><strong>Option 2: Migrating to AWS Glue Data Catalog</strong></p>
+<p>An alternative approach is to migrate the metastore to <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hive-metastore-glue.html" target="_blank" rel="noopener noreferrer" class="">AWS Glue Data Catalog</a>, which eliminates the need to manage metastore schema upgrades across EMR versions and provides a fully managed, serverless metadata catalog. AWS Glue Data Catalog is compatible with the Apache Hive metastore and can be used as a drop-in replacement. To configure Hive to use AWS Glue Data Catalog, set hive.metastore.client.factory.class to com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory in the hive-site classification when creating the cluster.</p>
+<p><strong>Additional Considerations for EMR 7.x</strong></p>
+<p>When upgrading to EMR 7.x, be aware of the following changes beyond the metastore schema :</p>
+<ul>
+<li class="">
+<p><strong>Default filesystem change (EMR 7.10.0+):</strong> Starting with EMR 7.10.0, <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-s3a-migrate.html" target="_blank" rel="noopener noreferrer" class="">S3A replaces EMRFS as the default S3 connector</a>. This means Hive operations will no longer create _$folder$ marker objects in S3, and intermediate manifest files will be stored differently. Review the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-s3a-migrate.html" target="_blank" rel="noopener noreferrer" class="">EMRFS to S3A migration guide</a> for detailed considerations.</p>
+</li>
+<li class="">
+<p><strong>Java runtime:</strong> Amazon EMR 7.0 and higher use Amazon Corretto 17 (OpenJDK 17) by default, which may affect custom UDFs or Hive extensions compiled against older Java versions.</p>
+</li>
+<li class="">
+<p><strong>Amazon Linux 2023:</strong> EMR 7.x clusters run on Amazon Linux 2023, which removed Python 2.7.</p>
+</li>
+</ul>
+<p><strong>Design Patterns for Hive Metastore on EMR on EKS</strong></p>
+<p>For customers running Hive workloads on Amazon EMR on EKS, the Hive Metastore Service (HMS) can be deployed using three design patterns, each with different trade-offs for isolation, resource efficiency, and operational complexity:</p>
+<ol>
+<li class="">
+<p>Sidecar Container Pattern: The HMS runs as a sidecar container within the same Kubernetes pod as the Hive application. This pattern is suitable for development or small workloads where isolation between the HMS and Hive engine is acceptable. Resources are shared within the pod, reducing overhead, but the HMS lifecycle is tied to the application pod.</p>
+</li>
+<li class="">
+<p>Cluster-Dedicated Pattern: A dedicated HMS instance is deployed for each EMR on EKS virtual cluster. The HMS runs as a separate Kubernetes deployment within the cluster namespace, providing isolation between different virtual clusters. This pattern is recommended for production workloads where each team or environment requires its own metastore with independent scaling.</p>
+</li>
+<li class="">
+<p>External HMS Pattern: A centralized, external HMS instance is deployed outside the EKS cluster and shared across multiple EMR on EKS virtual clusters or other compute environments. This pattern is recommended for organizations with multiple clusters that need to share metadata across different execution engines (Hive, Spark, Trino). The external HMS can be backed by Amazon RDS or Amazon Aurora for high availability. Configure Hive to connect to the external HMS by specifying the hive.metastore.uris property.</p>
+</li>
+</ol>
+<p><em>Note: For production deployments on EMR on EKS, AWS recommends the External HMS pattern backed by Amazon Aurora or Amazon RDS, combined with AWS Glue Data Catalog for catalog synchronization where cross-service metadata sharing is required.</em></p>
+<p><strong>Hive Execution Engine</strong></p>
+<p>Apache Tez is the supported and default execution engine for Hive clusters on Amazon EMR. In most cases, Tez provides improved performance. However, if you are migrating from the older version of Hive that used the MapReduce execution (MR) engine, certain jobs may require changes.</p>
+<p>Hive 3.1.3 added support for Apache Spark as an execution engine, but this setup is not supported on Amazon EMR without changes to the underlying Hive jars in Spark. This is not a supported configuration on Amazon EMR.</p>
+<p><strong>Tez Container Size</strong></p>
+<p>If you have large input files that cannot be split, or if the map portion of a job exceeds the default memory limits of a container, you will require a larger Tez container size. On Amazon EMR, the default container setting is hive.tez.container.size and is set to -1. This means that the value of mapreduce.map.memory.mb is used for the memory limit. The default values of mapreduce.map.memory.mb depend on the specific instance type selected for your EMR cluster. For this setting and other default values, see Task Configuration.</p>
+<p>The desired value of the Tez container size depends upon the specifics of your job. It must be at least the same value as the mapreduce.map.memory.mb setting.</p>
+<p>If the Tez container runs out of memory, the following error message appears:</p>
+<p>Error: GC overhead limit exceeded</p>
+<p>To increase the memory, set hive.tez.container.size to a value greater than what is required for the job. The memory value required for the job can be found in the error message. In addition to container size, increase the Tez Java Heap size. In general, the Tez Java Heap size should be 80% of the Tez Container size. You can adjust the value of the Tez Java Heap size with the setting hive.tez.java.opts.</p>
+<p><strong>Recent Tez Release Improvements</strong></p>
+<p>Amazon EMR has shipped several Tez-related improvements in recent releases. The following improvements were added in the respective releases:</p>
+<p><strong>Amazon EMR 7.4.0</strong></p>
+<ol>
+<li class="">
+<p>Upgraded Hadoop to version 3.4.0, bringing improved stability and performance for HDFS and YARN operations.</p>
+</li>
+<li class="">
+<p>Enabled short-circuit mechanism in Tez DAG for simple SELECT queries with LIMIT, reducing unnecessary DAG stages and improving query latency for these query patterns.</p>
+</li>
+<li class="">
+<p>Allowed flattening of table subdirectories when using the Tez execution engine with UNION clause, improving write performance and simplifying output directory structure for UNION ALL queries.</p>
+</li>
+</ol>
+<p><strong>Amazon EMR 7.5.0</strong></p>
+<ol>
+<li class="">
+<p>Increased the maximum wait time for the Tez session to 10 seconds, reducing timeout failures in scenarios with high cluster load or slow session initialization.</p>
+</li>
+<li class="">
+<p>Tuned configuration parameters for improved performance in simple SELECT queries with LIMIT, reducing overhead for these common interactive query patterns.</p>
+</li>
+</ol>
+<p><strong>Amazon EMR 7.6.0</strong></p>
+<ol>
+<li class="">Added fast Amazon S3 partition discovery via the hive.exec.fast.s3.partition.discovery.enabled configuration property. When enabled, this feature significantly reduces partition discovery time for large tables stored on Amazon S3 by using optimized directory listing.</li>
+</ol>
+<p>&quot;hive.exec.fast.s3.partition.discovery.enabled&quot;: &quot;true&quot;</p>
+<ol start="2">
+<li class="">Magic Committer in-memory tracking improvements: Enhanced the Magic Committer to reduce memory pressure during large write operations, improving reliability for high-throughput Hive jobs writing to Amazon S3.</li>
+</ol>
+<p><strong>HDFS vs Amazon S3 Considerations</strong></p>
+<p>A benefit of Amazon EMR is the ability to separate storage and compute requirements with Amazon S3 as your primary data store. This approach allows you to save costs compared to HDFS by scaling your storage and compute needs up or down independently. Amazon S3 provides infinite scalability, high durability and availability, and additional functionality such as data encryption and lifecycle management. That said, Hadoop was designed with the expectation that the underlying filesystem would support atomic renames and be consistent. There are several options to consider if you require immediate list and read-after-write consistency as part of your workflow.</p>
+<p><strong>Amazon S3 Strong Consistency</strong></p>
+<p>As of December 2020, Amazon S3 delivers strong read-after-write consistency for all GET, PUT, and LIST operations. This eliminates the eventual-consistency scenarios that previously required EMRFS Consistent View (deprecated June 2023, not available in EMR 7.x). No additional configuration is required. For details on the EMRFS to S3A transition starting with EMR 7.10, see the Data Migration chapter.</p>
+<p><strong>Hive Tez Merge Files</strong></p>
+<p>When using the EMRFS S3-Optimized Committer (zero-rename committer), enabling Hive to merge small files automatically (hive.merge.tezfiles) is not supported. When merge is enabled, the default Hive commit logic will be used even when the optimized committer is enabled, bypassing the write performance benefits of the committer. If small file merging is required, an alternative would also be performing any INSERT OVERWRITE or ALTER CONCATENATE statements on transient HDFS-backed Amazon EMR clusters and copying the results back to Amazon S3 using s3-dist-cp.</p>
+<p>Other ways that Amazon EMR customers have solved large-scale consistency issues include implementing a custom manifest file approach to their jobs instead of using Amazon S3 list operations to retrieve data, or by building their own metadata stores, such as Apache Iceberg.</p>
+<p><strong>Hive Blobstore Optimization</strong></p>
+<p>Hive blobstore optimizations are intended to increase the performance of intermediate MapReduce jobs on Hive. However, when performing simple Hive queries with Amazon S3-backed tables, such as INSERT OVERWRITE or ALTER TABLE CONCATENATE, this setting can sometimes result in increased execution times and missing data. This issue is caused by implementing that feature on queries that are not multi-staged MapReduce jobs. This scenario results in Hive using Amazon S3 as the scratch directory during the job. As a result, the number of renames on Amazon S3 increases as the job progresses through writing scratch data, copying to another Amazon S3 temporary location, and finally copying to the final Amazon S3 location.</p>
+<p>If you disable this setting, the scratch directory for the job is relocated to HDFS. If you prefer this scenario, make sure to allocate enough space on the Amazon EMR cluster to accommodate this change. By default, the distcp job that occurs at the end of the process is limited to a maximum of 20 mappers. If you find this job is taking too long, particularly if you are processing terabytes of data, you can manually set the number of max mappers using the following setting in your Hive job:</p>
+<p>set hive.exec.copyfile.maxnummaps=100;</p>
+<p><strong>EMRFS S3-Optimized Committer (Zero-Rename)</strong></p>
+<p>Available from Amazon EMR 6.5.0 and Amazon EMR 5.34.0+, the EMRFS S3-Optimized Committer (also referred to as the zero-rename committer) delivers up to 15x improvement in Hive write performance by eliminating the expensive rename operations that standard Hadoop output committers perform when writing to Amazon S3.</p>
+<p>Traditional Hadoop output committers write data to a temporary location on Amazon S3 and then rename the files to their final location upon job completion. Because Amazon S3 does not natively support atomic renames, this rename operation is implemented as a copy-then-delete, which is slow and resource-intensive for large datasets. The EMRFS S3-Optimized Committer avoids this by writing data directly to the final output location, using a manifest-based approach to track output files and ensure job completion atomicity.</p>
+<p>To enable the EMRFS S3-Optimized Committer for Hive workloads:</p>
+<p>&quot;hive.blobstore.use.blobstore.as.scratchdir&quot;: &quot;false&quot;,</p>
+<p>&quot;hive.exec.stagingdir&quot;: &quot;/tmp/hive-staging&quot;</p>
+<p>Note: The EMRFS S3-Optimized Committer is enabled by default for new clusters running Amazon EMR 6.5.0 and later. For Amazon EMR 5.x clusters, you need to explicitly configure it using the emrfs-site classification. (Note: Starting with EMR 7.10, EMR S3A replaces EMRFS as the default S3 connector.)</p>
+<p>The official blog post with performance benchmarks is:</p>
+<p>🔗 <a href="https://aws.amazon.com/blogs/big-data/up-to-15-times-improvement-in-hive-write-performance-with-the-amazon-emr-hive-zero-rename-feature/" target="_blank" rel="noopener noreferrer" class="">Up to 15 times improvement in Hive write performance with the Amazon EMR Hive zero-rename feature</a></p>
+<p><a href="https://aws.amazon.com/blogs/big-data/accelerate-apache-hive-read-and-write-on-amazon-emr-using-enhanced-s3a/" target="_blank" rel="noopener noreferrer" class="">Accelerate Apache Hive read and write on Amazon EMR using enhanced S3A</a></p>
+<p><strong>MSCK Optimization</strong></p>
+<p>The hive.emr.optimize.msck.fs.check configuration property was introduced in Amazon EMR 6.5.0 and is enabled by default starting in Amazon EMR 6.8.0. This optimization significantly improves partition repair performance on large tables with hundreds or thousands of partitions stored on Amazon S3.</p>
+<p>The standard MSCK REPAIR TABLE command performs a full filesystem check by listing all directories under the table location on Amazon S3. For large tables with many partitions, this can be extremely slow due to the volume of Amazon S3 LIST API calls required. The hive.emr.optimize.msck.fs.check optimization reduces the number of filesystem operations by using a more efficient partition discovery mechanism that leverages Amazon S3 metadata and listing optimizations.</p>
+<p>Configuration:</p>
+<p>&quot;hive.emr.optimize.msck.fs.check&quot;: &quot;true&quot;</p>
+<p>For Amazon EMR 6.5.0 through 6.7.x, explicitly set this property. For Amazon EMR 6.8.0 and later, this optimization is enabled by default.</p>
+<p><strong>Amazon S3 Express One Zone Considerations</strong></p>
+<p>Starting in Amazon EMR 7.6.0, support was added for Amazon S3 Express One Zone with Hive Insert Overwrite queries. Amazon S3 Express One Zone is a high-performance storage class designed for latency-sensitive applications, offering single-digit millisecond request latency and higher request throughput compared to standard Amazon S3.</p>
+<p>When using Amazon S3 Express One Zone as the target storage for Hive Insert Overwrite queries, consider the following:</p>
+<ol>
+<li class="">
+<p>Amazon S3 Express One Zone directory buckets use a different namespace and endpoint than standard Amazon S3 buckets. Hive configurations and output paths must use the s3a://.</p>
+</li>
+<li class="">
+<p>The EMRFS S3-Optimized Committer is compatible with Amazon S3 Express One Zone and is recommended for optimal performance.</p>
+</li>
+<li class="">
+<p>Amazon S3 Express One Zone is a single-AZ storage class. For workloads requiring multi-AZ durability, use standard Amazon S3 or Amazon S3 Standard-IA.</p>
+</li>
+</ol>
+<p><strong>Job Throughput and Scheduling</strong></p>
+<p>By default, Amazon EMR uses the Hadoop CapacityScheduler to allocate resources in the cluster. The CapacityScheduler allows for large cluster sharing and provides capacity guarantees for each organization. The CapacityScheduler supports queues that can allow an organization to grant capacity in a multitenant cluster. You can configure the CapacityScheduler by modifying the capacity-scheduler classification during Amazon EMR cluster creation.</p>
+<p>In some cases, the FairScheduler may be more desirable for clusters where it is acceptable for a job to consume unused resources. In FairScheduler, resources are shared between queues.</p>
+<p><strong>Configure FairScheduler</strong></p>
+<p>You can configure FairScheduler in a couple ways when creating an Amazon EMR cluster.</p>
+<p>Method 1: Modify the yarn-config.json file. Use the following configuration in the yarn-config.json file:</p>
+<p>[</p>
+<p>{</p>
+<p>&quot;Classification&quot;: &quot;yarn-site&quot;,</p>
+<p>&quot;Properties&quot;: {</p>
+<p>&quot;yarn.resourcemanager.scheduler.class&quot;: &quot;org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler&quot;</p>
+<p>}</p>
+<p>}</p>
+<p>]</p>
+<p>Method 2: Edit software settings in the AWS Management Console:</p>
+<ol>
+<li class="">
+<p>Sign in to the AWS Management Console and open the Amazon EMR console at <a href="https://console.aws.amazon.com/elasticmapreduce/" target="_blank" rel="noopener noreferrer" class="">https://console.aws.amazon.com/elasticmapreduce/</a>.</p>
+</li>
+<li class="">
+<p>Choose Create cluster, Go to advanced options.</p>
+</li>
+<li class="">
+<p>Under Edit software settings, leave Enter configuration selected and enter the FairScheduler configuration.</p>
+</li>
+<li class="">
+<p>Choose Create cluster.</p>
+</li>
+</ol>
+<p><strong>Maintaining a Highly Available Hive-Based Cluster</strong></p>
+<p>Hive clusters are often long running due to the nature of ad hoc queries that can come in at any time. There are several approaches to maintaining a highly available Hive-based cluster.</p>
+<p><strong>Warm Failover</strong></p>
+<p>In a warm failover scenario, a secondary, smaller cluster is kept running in addition to the primary cluster. If a failure occurs, clients can be redirected to the new cluster, either manually or by updating an entry in Amazon Route 53. You can configure the secondary cluster with a small number of nodes, and then if it becomes the primary cluster, use automatic scaling to increase the number of nodes.</p>
+<p><strong>Multi-Cluster Configuration</strong></p>
+<p>Because all data is stored on Amazon S3, all clients do not need to go through the same cluster. You can configure multiple clusters with a load balancer or expose a job submission framework to consumers of the environment. These clusters can be shared among all clients or shared on a per-team basis depending on internal requirements. One of the benefits of this approach is that in the event of a cluster failure, the impact to your users is limited to just those queries executing on the single cluster that fails. In addition, you can configure automatic scaling so that each cluster scales independently of each other. If the clusters are segmented on a per-team basis, this approach ensures that any one team&#x27;s jobs don&#x27;t impact the performance of another team&#x27;s jobs.</p>
+<p>However, using multiple clusters means using multiple master nodes, one each for a cluster. Therefore, you need additional EC2 instances that you wouldn&#x27;t have to pay for if you used only a single cluster.</p>
+<p>With the EC2 instance pricing model of pay-per-second with a one-minute minimum, in the case of multiple clusters, you can save costs by choosing to activate only the cluster needed to perform the tasks rather than running one single cluster all the time. You can configure the logic for this setup inside an AWS Lambda function that calls the activation on the pipeline. Then, you can start up or take down a cluster without impacting another cluster&#x27;s activities.</p>
+<p><strong>Transient Design</strong></p>
+<p>Transient clusters can mitigate the cost and operational requirements of having a single, long-running cluster. This approach is useful if you have predictable short-lived jobs, but may not be appropriate if you have consumers that are constantly querying data on an ongoing basis.</p>
+<p><strong>Single-Click High Availability</strong></p>
+<p>Amazon EMR now supports single-click high availability for multi-master configurations, providing automatic failover capabilities without the manual complexity of managing warm failover setups. This feature is available when you create a cluster with three master nodes.</p>
+<p>With single-click HA, the following services support automatic failover to a standby master node:</p>
+<ol>
+<li class="">
+<p>YARN ResourceManager: Automatic failover is handled by ZooKeeper-based leader election between the active and standby ResourceManagers. In the event of an active master node failure, the standby ResourceManager becomes active within seconds.</p>
+</li>
+<li class="">
+<p>HDFS NameNode: HDFS high availability is provided through an active-standby NameNode configuration with shared edit logs stored in JournalNodes. Automatic failover is coordinated via ZooKeeper.</p>
+</li>
+<li class="">
+<p>Apache Spark: Spark history server and driver recovery are supported in the multi-master configuration.</p>
+</li>
+<li class="">
+<p>Apache HBase: HBase Master failover is automatic, with a standby HBase Master ready to take over in the event of a primary Master failure.</p>
+</li>
+<li class="">
+<p>Apache Hive: The HiveServer2 (HS2) instances can be configured for high availability using ZooKeeper-based service discovery. Clients connect to a ZooKeeper ensemble that routes connections to an available HS2 instance, enabling transparent failover without client reconfiguration.</p>
+</li>
+</ol>
+<p>To create a multi-master cluster with single-click HA:</p>
+<p>aws emr create-cluster \</p>
+<p>--release-label emr-7.10.0 \</p>
+<p>--instance-groups InstanceGroupType=MASTER,InstanceCount=3,InstanceType=m5.xlarge \</p>
+<p>--applications Name=Hive Name=Spark Name=HBase \</p>
+<p>--multi-master-enabled</p>
+<p><em>Note: Multi-master clusters require at least three master nodes for ZooKeeper quorum. The cluster must use Amazon S3 as the primary storage backend, as HDFS data must be accessible from any master node. This configuration is supported on Amazon EMR 5.23.0 and later, with automatic failover fully supported on Amazon EMR 6.x and 7.x.</em></p>
+<p><strong>Frequently Asked Questions</strong></p>
+<p><strong>How do I implement transactions and compactions on Amazon EMR?</strong></p>
+<p>Transactions and compactions on Amazon EMR can be implemented by using Apache Hudi starting in Amazon EMR release 5.28.0. Apache Hudi is an open-source data management framework used to simplify incremental data processing and data pipeline development. For more information, see the Incremental Data Processing section in this guide.</p>
+<p><strong>How do I troubleshoot loading data from Amazon S3?</strong></p>
+<p>A common mistake is using Amazon S3 like a typical file system. There are certain differences that you must consider if you&#x27;re moving from HDFS to Amazon S3. For details, see the Amazon EMR documentation for troubleshooting S3 data loading issues.</p>
+<p><strong>Does Amazon EMR support Hive LLAP?</strong></p>
+<p>Amazon EMR release 6.0.0 and later supports the Live Long and Process (LLAP) functionality for Hive. Hive LLAP uses persistent daemons with intelligent in-memory caching to improve query performance compared to the previous default Tez container execution mode. For more details on using Hive LLAP, see Amazon EMR Hive LLAP.</p>
+<p>The Hive LLAP daemons are managed and run as a YARN service. Since a YARN service can be considered a long-running YARN application, some of your cluster resources are dedicated to Hive LLAP and cannot be used for other workloads. For more information, see LLAP and YARN Service API.</p>
+<p><strong>Magic Committer Integration in Hive LLAP (EMR 7.6.0)</strong></p>
+<p>Starting in Amazon EMR 7.6.0, the Magic Committer integration for Hive LLAP has been updated with a new configuration property to improve compatibility with Amazon S3 write operations from LLAP daemons:</p>
+<p>&quot;hive.blobstore.output-committer.magic.disable.fs.cache.for.llap&quot;: &quot;true&quot;</p>
+<p>This property disables the filesystem cache for the Magic Committer when running with Hive LLAP. In LLAP mode, multiple LLAP daemons may attempt to write to Amazon S3 simultaneously using shared filesystem client instances, which can cause stale cache entries and incomplete writes. By disabling the filesystem cache for the committer, each write operation uses a fresh filesystem client, ensuring correct and complete output.</p>
+<p>This configuration is recommended for all Amazon EMR 7.6.0+ clusters running Hive workloads with LLAP enabled and writing to Amazon S3.</p>
+<p><strong>Table Format Selection for Multi-Tenant Environments</strong></p>
+<p>When implementing multi-tenancy on Amazon EMR, selecting the right open table format is critical for ensuring data isolation, concurrent access, and operational simplicity across tenants.</p>
+<p>For multi-tenant architectures on Amazon EMR, Apache Iceberg is the recommended table format. Iceberg provides snapshot isolation, branch-based write isolation (WAP patterns), row-level access control via AWS Lake Formation (EMR 6.15.0+), concurrent writers with optimistic concurrency control, partition evolution without data rewrites, and catalog-level governance through AWS Glue Data Catalog.</p>
+<p>Apache Hudi remains appropriate for specific multi-tenant scenarios requiring high-frequency upsert workloads, near-real-time streaming ingestion via Apache Flink, or workloads already built on Hudi with established operational runbooks.</p>
+<p>For a detailed comparison of Apache Iceberg, Apache Hudi, and Delta Lake — including version compatibility, feature matrices, and migration guidance — see the Incremental Data Processing chapter.</p>
+<table><thead><tr><th><strong>EMR Series</strong></th><th><strong>Latest EMR Release</strong></th><th><strong>Hudi Version</strong></th></tr></thead><tbody><tr><td><strong>EMR 7.x</strong></td><td>emr-7.10.0 (latest)</td><td>Hudi 1.0.2-amzn-1 (emr-7.12.0)</td></tr><tr><td><strong>EMR 6.x</strong></td><td>emr-6.15.0 (latest)</td><td>Hudi 0.14.0-amzn-0 (emr-6.15.0)</td></tr><tr><td><strong>EMR 5.x</strong></td><td>emr-5.36.2 (latest)</td><td>Hudi 0.10.1-amzn-1 (emr-5.36.2)</td></tr></tbody></table>
+<p><strong>Encryption</strong></p>
+<p>Amazon EMR provides multiple encryption options for Hive workloads, including encryption of data at rest and in transit. The following subsections describe Parquet modular encryption for data written by Hive and in-transit encryption for HiveServer2 (HS2) connections.</p>
+<p><strong>Parquet Modular Encryption in Hive</strong></p>
+<p>Parquet Modular Encryption (PME) enables column-level encryption of Parquet files written by Hive. This allows sensitive columns within a Parquet file to be encrypted independently, while non-sensitive columns remain readable without decryption. PME is particularly useful for compliance scenarios where different users or roles have access to different subsets of columns in the same dataset.</p>
+<p>Parquet Modular Encryption on Amazon EMR uses the Apache Parquet encryption specification and integrates with AWS Key Management Service (AWS KMS) for key management. Key features include:</p>
+<ol>
+<li class="">
+<p>Column-level encryption: Individual columns within a Parquet file can be encrypted with different encryption keys.</p>
+</li>
+<li class="">
+<p>Footer encryption: The Parquet file footer (which contains schema and column statistics) can optionally be encrypted to prevent schema exposure.</p>
+</li>
+<li class="">
+<p>Key management via AWS KMS: Encryption master keys are stored and managed in AWS KMS. Column encryption keys are wrapped using the master key, enabling fine-grained access control via AWS KMS key policies and IAM permissions.</p>
+</li>
+<li class="">
+<p>Transparent read access: Readers with access to the appropriate KMS key can read encrypted columns transparently, without changes to query syntax.</p>
+<p>To enable Parquet Modular Encryption for Hive tables, configure the following properties in hive-site.xml or via the hive-site classification:</p>
+</li>
+</ol>
+<p>&quot;parquet.encryption.kms.client.class&quot;: &quot;org.apache.parquet.crypto.keytools.mrcrypto.MREncryptionClient&quot;,</p>
+<p>&quot;parquet.encryption.key.list&quot;: &quot;keyA: &lt;base64-encoded-key&gt;, keyB: &lt;base64-encoded-key&gt;&quot;,</p>
+<p>&quot;parquet.encryption.column.keys&quot;: &quot;keyA: SSN, CreditCardNumber; keyB: Salary&quot;</p>
+<p>Note: Parquet Modular Encryption requires that all Parquet readers (including Spark and Trino on the same cluster) be configured with compatible encryption settings and have access to the required KMS keys. Ensure that the EMR instance profile has the appropriate AWS KMS permissions (kms<!-- -->:GenerateDataKey<!-- -->, kms<!-- -->:Decrypt<!-- -->) for the configured master keys.</p>
+<p><strong>In-Transit Encryption in HiveServer2 (HS2)</strong></p>
+<p>HiveServer2 (HS2) supports in-transit encryption for client connections using TLS/SSL. Encrypting HS2 traffic protects data in transit between Hive clients (such as JDBC/ODBC applications, Beeline, and data visualization tools) and the HS2 server on the Amazon EMR master node.</p>
+<p>Amazon EMR provides two approaches for configuring HS2 in-transit encryption:</p>
+<p><strong>Using EMR Security Configurations</strong></p>
+<p>The recommended approach for configuring HS2 in-transit encryption is to use Amazon EMR Security Configurations. When you enable in-transit encryption in a security configuration, Amazon EMR automatically configures HS2 to use TLS with a certificate managed by the security configuration. This approach simplifies certificate management and ensures consistent encryption configuration across all services.</p>
+<p>To create a security configuration with in-transit encryption:</p>
+<p>aws emr create-security-configuration \</p>
+<p>--name &quot;hive-encryption-config&quot; \</p>
+<p>--security-configuration &#x27;{</p>
+<p>&quot;EnableInTransitEncryption&quot;: true,</p>
+<p>&quot;InTransitEncryptionConfiguration&quot;: {</p>
+<p>&quot;TLSCertificateConfiguration&quot;: {</p>
+<p>&quot;CertificateProviderType&quot;: &quot;PEM&quot;,</p>
+<p>&quot;S3Object&quot;: &quot;s3://your-bucket/certs/my-cert.zip&quot;</p>
+<p>}</p>
+<p>}</p>
+<p>}&#x27;</p>
+<p><strong>Manual TLS Configuration for HS2</strong></p>
+<p>For more granular control, you can manually configure TLS for HiveServer2 using the hive-site classification. This approach requires you to manage the TLS certificates and keystore/truststore files on the cluster:</p>
+<p>&quot;hive.server2.use.SSL&quot;: &quot;true&quot;,</p>
+<p>&quot;hive.server2.keystore.path&quot;: &quot;/etc/pki/tls/keystore.jks&quot;,</p>
+<p>&quot;hive.server2.keystore.password&quot;: &quot;&lt;keystore-password&gt;&quot;,</p>
+<p>&quot;hive.server2.truststore.path&quot;: &quot;/etc/pki/tls/truststore.jks&quot;,</p>
+<p>&quot;hive.server2.truststore.password&quot;: &quot;&lt;truststore-password&gt;&quot;</p>
+<p>When HS2 TLS is enabled, Beeline clients must connect using the ssl=true parameter and provide the truststore location:</p>
+<p>beeline -u &quot;jdbc:hive2://master-node:10000/default;ssl=true;sslTrustStore=/path/to/truststore.jks;trustStorePassword=&lt;password&gt;&quot;</p>
+<p><em>Note: In-transit encryption for HS2 adds a small overhead to connection establishment due to TLS handshake. For high-throughput JDBC/ODBC workloads, consider using connection pooling to minimize the impact of TLS handshake latency. In-transit encryption is strongly recommended for all production clusters and is required for compliance with most security frameworks (SOC 2, PCI DSS, HIPAA).</em></p>
+<p><strong>Amazon EMR Version Coverage</strong></p>
+<p>This document covers Amazon EMR Hive features and release notes through Amazon EMR 7.12.0 (November 2025). The following table summarizes the major Hive-related milestones across Amazon EMR versions referenced in this document:</p>
+<table><thead><tr><th>EMR Version</th><th>Key Hive Feature</th><th>Section Reference</th></tr></thead><tbody><tr><td>5.28.0+</td><td>Apache Hudi introduced</td><td>Apache Hudi</td></tr><tr><td>5.34.0+</td><td>EMRFS S3-Optimized Committer</td><td>EMRFS S3-Optimized Committer</td></tr><tr><td>6.0.0+</td><td>Hive LLAP support</td><td>Hive LLAP (FAQ)</td></tr><tr><td>6.1.0+</td><td>Hudi + Trino integration</td><td>Apache Hudi</td></tr><tr><td>6.5.0+</td><td>EMRFS S3-Optimized Committer; MSCK Optimization</td><td>Storage Considerations (Amazon S3)</td></tr><tr><td>6.8.0+</td><td>MSCK Optimization enabled by default</td><td>Storage Considerations (Amazon S3)</td></tr><tr><td>7.4.0</td><td>Tez DAG improvements; Hadoop 3.4.0</td><td>Execution Engine (Tez)</td></tr><tr><td>7.5.0</td><td>Tez session wait time; performance tuning</td><td>Execution Engine (Tez)</td></tr><tr><td>7.6.0</td><td>Fast S3 partition discovery; S3 Express One Zone; LLAP Magic Committer</td><td>Execution Engine; Storage; LLAP</td></tr><tr><td>7.10.0</td><td>Coverage through this version</td><td>All sections</td></tr></tbody></table>
+<p>Amazon EMR Notebooks (now integrated into EMR Studio Workspaces)</p>
+<p><strong>Note:</strong> <em>For new migrations, SageMaker Unified Studio (SMUS) is the recommended notebook and IDE environment. The EMR Studio Workspaces content below remains relevant for organizations with existing EMR Studio deployments or requirements not yet supported in SMUS (see the Phase 5 advisory in the Security chapter for selection guidance).</em></p>
+<p>Amazon EMR Notebooks provide capability for SQL developers and data engineers to run ad-hoc queries using managed Jupyter notebooks within the Amazon EMR console. Unlike a traditional notebook, the contents of an EMR notebook — equations, queries, models, code, and narrative text within notebook cells — run in a client, with commands executed using a kernel on the EMR cluster. The notebook contents are saved to Amazon S3 separately from cluster data for durability and flexible re-use.</p>
+<p>This approach provides the flexibility to detach a notebook from a running cluster and attach the EMR notebook to a different cluster that is, one notebook is not locked to a single cluster and can at any time be linked to a cluster with different configurations if the cluster meets the requirements mentioned here.</p>
+<p>Several EMR notebooks can be attached to the same cluster, and multiple users can attach notebooks to the same cluster simultaneously and share notebook files in Amazon S3 with each other. These features let you run clusters on demand to save cost, and reduce the time spent re-configuring notebooks for different clusters and datasets. this multi-tenant capability is based on the memory constraints of the master node instance type.</p>
+<p>You can configure AWS IAM roles so that the notebook of one IAM user cannot be seen or accessed by another user in the same account. EMR Notebooks also provide seamless Git and BitBucket integration – users can link their Git repositories (GitHub, CodeCommit, Bitbucket, or any Git provider via URL) to an EMR notebook and check in their code to one or more linked repositories.</p>
+<p><strong>HEADLESS (PROGRAMMATIC) EXECUTION</strong></p>
+<p>EMR Notebooks also support headless (programmatic) execution via the Amazon EMR API — without needing to interact with the console. To enable this, include a cell in the notebook with a parameters tag, which allows a script to pass new input values. Parameterized notebooks can be reused with different sets of input values without making copies. Amazon EMR creates and saves the output notebook on S3 for each run.</p>
+<p>VERSION REQUIREMENT: EMR Notebooks support clusters using Amazon EMR releases 5.18.0 and higher. AWS recommends using the latest EMR version, or at least 5.30.0, 5.32.0+, or 6.2.0+. with these releases, Jupyter kernels run on the attached cluster rather than on a Jupyter instance, improving performance and enhancing your ability to customize kernels and libraries.</p>
+<p><strong>ADVANCED AI-POWERED FEATURES</strong></p>
+<p>Amazon EMR now includes AI-powered features that automate code upgrades and simplify troubleshooting for modern data engineering workloads, alongside new security and session management capabilities.</p>
+<p><strong>AI-Powered Features</strong></p>
+<p><strong>Spark Upgrade Agent</strong></p>
+<p>The Spark Upgrade Agent automates PySpark and Scala code upgrades using natural language prompts. It handles API changes, resolves dependency conflicts, validates compatibility, and supports migrations from Spark 2.4 through 3.5/4.x — significantly reducing manual effort across EMR versions.</p>
+<p><strong>Spark Troubleshooting Agent</strong></p>
+<p>The Spark Troubleshooting Agent analyzes failed Spark jobs, pinpoints performance bottlenecks, and suggests targeted code fixes for EMR, AWS Glue, and Amazon SageMaker workloads. It delivers actionable recommendations derived from job logs and execution context, streamlining the debugging process.</p>
+<p><strong>Security and Session Management</strong></p>
+<p><strong>IAM Identity Center Background Sessions</strong></p>
+<p>EMR Studio supports running long Spark workloads after logoff via trusted identity propagation through IAM Identity Center. Users can disconnect from the console without interrupting active jobs, enabling uninterrupted execution of extended data processing tasks.</p>
+<p><strong>Fine-Grained Access Control</strong></p>
+<p>EMR now enforces table-level permissions for Apache Hudi, Apache Iceberg, and Delta Lake tables through AWS Lake Formation. This ensures users can only access data they are authorized to query or modify. The feature is available from EMR 6.15.0+, with full IAM Identity Center integration from EMR 7.2.0+.</p>
+<p><strong>EMR STUDIO INTEGRATION</strong></p>
+<p>EMR Studio provides a unified, web-based integrated development environment for Jupyter notebooks running on Amazon EMR clusters. the following features are available through EMR Studio integration:</p>
+<p><strong>UNIFIED CONSOLE ACCESS</strong></p>
+<p>EMR Studio provides a single console experience for creating, managing, and running notebooks. users can access all workspaces, attached clusters, and job history from a centralized interface within the Amazon EMR console.</p>
+<p><strong>ENHANCED CLUSTER MANAGEMENT</strong></p>
+<p>EMR Studio enables seamless cluster attachment and detachment directly from the notebook workspace. users can switch between clusters without losing notebook state and can monitor cluster health and resource utilization in real time.</p>
+<p><strong>SQL EXPLORER</strong></p>
+<p>SQL Explorer feature allows users to browse and query data using SQL-based exploration tools directly within EMR Studio. users can discover tables, preview data, and run ad-hoc queries against Glue Data Catalog and self-hosted Hive Metastore (v3.1). Requires a Presto or Trino cluster.</p>
+<p><strong>SERVICE CATALOG INTEGRATION</strong></p>
+<p>EMR Studio integrates with AWS Service Catalog to allow governed cluster creation. administrators can define pre-approved cluster templates, and users can provision EMR clusters from those templates directly within EMR Studio without requiring direct AWS console access.</p>
+<p><strong>REAL-TIME COLLABORATION</strong></p>
+<p>EMR Studio supports real-time collaboration on notebooks, enabling multiple users to co-edit a notebook simultaneously. this feature improves team productivity and enables interactive data exploration across distributed teams.</p>
+<p><strong>Important:</strong> Workspace collaboration is NOT supported when Trusted Identity Propagation (TIP) is enabled, or with EMR Serverless interactive applications. If your migration uses TIP (recommended for fine-grained access control), real-time collaboration is not available in EMR Studio.</p>
+<p><strong>PIPELINE INTEGRATION</strong></p>
+<p>EMR Studio supports integration with data pipeline orchestration tools, enabling notebooks to be scheduled and executed as part of larger data workflows. parameterized notebooks can be triggered programmatically via the Amazon EMR API.</p>
+<p><strong>SIMPLIFIED DEBUGGING</strong></p>
+<p>EMR Studio includes built-in access to Spark UI, YARN Timeline Service, and job logs for diagnosing and resolving issues with Spark jobs. users can navigate directly from a notebook to the relevant diagnostic views without leaving the EMR Studio interface.</p>
+<p><strong>CLUSTER REQUIREMENTS</strong></p>
+<p>Before attaching a cluster to an EMR notebook, ensure the cluster meets all the following requirements:</p>
+<p><strong>SUPPORTED EMR RELEASES</strong></p>
+<ol>
+<li class="">
+<p>supported: Amazon EMR 5.18.0 and higher</p>
+</li>
+<li class="">
+<p>recommended: EMR 6.2.0+ or 7.0.0+</p>
+</li>
+</ol>
+<p><strong>REQUIRED APPLICATIONS</strong></p>
+<ol>
+<li class="">
+<p>Hadoop must be installed on the cluster</p>
+</li>
+<li class="">
+<p>Spark must be installed on the cluster</p>
+</li>
+<li class="">
+<p>Livy must be installed on the cluster</p>
+</li>
+<li class="">
+<p>Jupyter Enterprise Gateway is required for EMR 5.32.0+ and 6.2.0+</p>
+</li>
+</ol>
+<p><strong>UNSUPPORTED INSTANCE TYPES</strong></p>
+<ol>
+<li class="">
+<p>AMD EPYC processor-based instances (m5a.*, r5a.*).</p>
+</li>
+<li class="">
+<p><strong>GRAVITON SUPPORT</strong></p>
+</li>
+</ol>
+<p>AWS Graviton instances ARE supported with JupyterEnterpriseGateway on EMR 6.9.0+ and 5.31.1+. Graviton is recommended for better price-performance (see Compute Optimization in the Operational Excellence chapter).</p>
+<p><strong>NETWORK AND SECURITY CONFIGURATION</strong></p>
+<ol>
+<li class="">VisibleToAllUsers must be set to true</li>
+</ol>
+<p>Clusters with multiple primary nodes (HA clusters) are not supported for EMR Notebooks/Studio Workspaces.</p>
+<ol start="2">
+<li class="">
+<p>clusters must be launched in EC2-VPC (both public and private subnets are supported; EC2-Classic is not supported)</p>
+</li>
+<li class="">
+<p>Kerberos authentication is not supported</p>
+</li>
+<li class="">
+<p>Amazon EMR Block Public Access must be enabled</p>
+</li>
+<li class="">
+<p>Lake Formation integration: supported clusters can install notebook-scoped libraries only</p>
+</li>
+</ol>
+<p><strong>COMPARISON OF JUPYTERHUB ON EMR VS. AMAZON EMR NOTEBOOKS</strong></p>
+<p>The following table provides a comparison of JupyterHub on EMR versus Amazon EMR Managed Notebooks (EMR Studio Workspaces).</p>
+<table><thead><tr><th>ATTRIBUTE</th><th>JUPYTERHUB ON EMR</th><th>EMR MANAGED NOTEBOOKS (EMR STUDIO WORKSPACES)</th></tr></thead><tbody><tr><td>Custom Packages</td><td>for Python kernel, custom packages need to be installed manually within the Docker container JupyterHub is running on. for PySpark kernel, from EMR &gt;= 5.26.0, custom packages can be installed through notebook-scoped libraries on the Spark context. on EMR &lt; 5.26.0, packages need to be installed on all nodes using EMR bootstrap action or at the AMI level.</td><td>for Python kernel, tar installation file should be uploaded manually after which conda offline installation should be performed. for PySpark kernel, from EMR &gt;= 5.26.0, custom packages can be installed through notebook-scoped libraries on the Spark context. on EMR &lt; 5.26.0, packages need to be installed on all nodes using EMR bootstrap action or at the AMI level.</td></tr><tr><td>Git Integration</td><td>currently JupyterLab and Git integration is not supported natively. a JupyterLab plugin with git extension can be installed through docker commands.</td><td>Git and BitBucket integration is supported natively and can be used to check out code through JupyterLab.</td></tr><tr><td>Notebook Storage</td><td>notebooks are stored locally in the cluster. they need to be saved manually and uploaded to S3 or JupyterHub must be configured to automatically save files to S3 during cluster launch.</td><td>notebooks are saved in the S3 base location specified during notebook creation.</td></tr><tr><td>Flexibility</td><td>JupyterHub instance is locked to a single EMR cluster. if the cluster is terminated, the notebooks are deleted as well if not backed up in S3.</td><td>notebook is not locked to one cluster. since the notebooks are automatically stored in S3, upon cluster termination, it can be re-attached to a different running cluster without losing any data.</td></tr><tr><td>Multi-tenancy</td><td>all the users share the same JupyterHub instance. PAM, LDAP or SAML authentication must be set up to segregate notebooks for each user.</td><td>many notebooks can be attached to a single cluster based on the master node instance type. a notebook can be created per-user and access to another user&#x27;s notebook can be restricted using IAM policies. multiple users can attach notebooks simultaneously and share notebook files in S3.</td></tr><tr><td>Authentication</td><td>LDAP, Kerberos and SAML can be custom configured. only one of these authentication mechanisms can be applied at a time.</td><td>supports IAM users, SAML authentication through AWS Lake Formation, and IAM Identity Center for long-running workloads. Kerberized EMR clusters without Lake Formation are not supported.</td></tr><tr><td>Programmatic Execution</td><td>not supported natively.</td><td>supported via the Amazon EMR API (headless execution). parameterized notebooks can be re-used with different input values; output is saved to S3 for each run.</td></tr><tr><td>AI-Powered Tools</td><td>not available.</td><td>Spark Upgrade Agent and Spark Troubleshooting Agent for automated code upgrades and job debugging.</td></tr><tr><td>Access Control</td><td>basic user-level access control.</td><td>fine-grained table-level permissions for Apache Hudi, Apache Iceberg, and Delta Lake tables via AWS Lake Formation. available from EMR 6.15.0+, with full Identity Center integration from EMR 7.2.0+.</td></tr><tr><td>SQL Explorer</td><td>not available.</td><td>browse and query data using SQL-based exploration tools directly within EMR Studio.</td></tr><tr><td>Service Catalog Integration</td><td>not available.</td><td>provision EMR clusters using AWS Service Catalog for governed, pre-approved cluster creation.</td></tr></tbody></table>
+<p><strong>MIGRATING JUPYTER NOTEBOOKS TO AMAZON EMR NOTEBOOKS</strong></p>
+<p>To migrate your Jupyter notebooks from your previous installation to EMR Notebooks, export and copy your notebook files to an S3 location used by your EMR notebook. if required, you can convert your Python/PySpark files to notebook format and upload the files to the S3 location.</p>
+<p>you can export your Jupyter notebook using one of two methods:</p>
+<p><strong>METHOD 1 — MANUAL EXPORT (SMALL NUMBER OF NOTEBOOKS)</strong></p>
+<p>if you have a small number of notebooks, export the notebooks by manually downloading each notebook (File &gt; Download As &gt; Notebook [.ipynb]). downloaded notebook file(s) are in the ipynb file format. To copy these files to S3, use the AWS Management Console or the AWS S3 CLI command. for example:</p>
+<p>aws s3 cp SharedNotebook.ipynb s3://MyBucket/MyNotebooksFolder/e-12A3BCDEFGHIJKLMNO45PQRST/MyNotebook.ipynb</p>
+<p><strong>METHOD 2 — BULK EXPORT (MULTIPLE NOTEBOOKS)</strong></p>
+<p>if you have several notebooks, you can copy the notebooks directly from the Jupyter installation to S3. SSH into the node that holds the Jupyter installation and go to where the notebooks are being saved, for example /mnt/var/lib/jupyter/home/jovyan/ and then copy the files by running the following command:</p>
+<p>aws s3 cp /mnt/var/lib/jupyter/home/jovyan/ s3://MyBucket/MyNotebooksFolder/e-12A3BCDEFGHIJKLMNO45PQRST/ --recursive</p>
+<p><strong>CONVERTING PYTHON/PYSPARK FILES TO NOTEBOOK FORMAT</strong></p>
+<p>If your Python/PySpark programs are stored in .py format, you must first convert them to. ipynb file format before working with them in an EMR notebook. You can use an open-source python package called jupytext that can convert python files into notebook files.</p>
+<p>the following code is an example command that converts a .py file to .ipynb file which can then be imported to EMR Notebooks:</p>
+<p>jupytext --to notebook myscript.py</p>
+<p>NOTE: jupytext is the recommended tool for converting .py files to .ipynb format. it is specifically designed for bi-directional conversion between Python scripts and Jupyter notebooks. install with: pip install jupytext</p>
+<p><strong>KEY UPDATES FROM PREVIOUS VERSION</strong></p>
+<ol>
+<li class="">
+<p>EMR STUDIO WORKSPACES: EMR Notebooks are now surfaced as Workspaces in the EMR console with a Create Workspace button. Users need additional IAM role permissions to access or create Workspaces.</p>
+</li>
+<li class="">
+<p>ARCHITECTURE CLARIFICATION: notebook contents run in a client with commands executed using a kernel on the EMR cluster, rather than running directly on a Jupyter instance.</p>
+</li>
+<li class="">
+<p>PROGRAMMATIC EXECUTION: Added support for headless execution via Amazon EMR API with parameterized notebooks. output notebooks are saved to S3 for each execution run.</p>
+</li>
+<li class="">
+<p>VERSION REQUIREMENTS: EMR Notebooks support clusters using Amazon. EMR releases 5.18.0 and higher. Recommended versions: 5.30.0, 5.32.0+, or 6.2.0+.</p>
+</li>
+<li class="">
+<p>NEW AI-POWERED FEATURES (2025): added Spark Upgrade Agent (automated PySpark/Scala upgrades from Spark 2.4 to 4.x) and Spark Troubleshooting Agent (automated job failure analysis and code fix suggestions).</p>
+</li>
+<li class="">
+<p>IAM IDENTITY CENTER BACKGROUND SESSIONS: added support for running long Spark workloads post-logoff using trusted identity propagation.</p>
+</li>
+<li class="">
+<p>FINE-GRAINED ACCESS CONTROL: table-level permissions for Hudi, Iceberg, and Delta Lake via Lake Formation, available from EMR 6.15.0+.</p>
+</li>
+<li class="">
+<p>EMR STUDIO INTEGRATION SECTION: new section covering unified console access, enhanced cluster management, SQL Explorer, Service Catalog integration, real-time collaboration, pipeline integration, and simplified debugging.</p>
+</li>
+</ol></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_oncD"><a href="https://github.com/aws/aws-emr-best-practices/edit/main/website/docs/migration/multitenancy/considerations.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_K8NV" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_lysQ"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/aws-emr-best-practices/docs/migration/multitenancy/hybrid-mode"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Hybrid Mode</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/aws-emr-best-practices/docs/migration/etl/orchestration"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Orchestration</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_QCYH thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#emr-on-ec2-implementing-multi-tenancy-considerations" class="table-of-contents__link toc-highlight">EMR on EC2: Implementing Multi-Tenancy Considerations</a><ul><li><a href="#user-isolation" class="table-of-contents__link toc-highlight">User Isolation</a></li><li><a href="#data-isolation" class="table-of-contents__link toc-highlight">Data Isolation</a></li><li><a href="#resource-isolation" class="table-of-contents__link toc-highlight">Resource Isolation</a></li><li><a href="#key-considerations" class="table-of-contents__link toc-highlight">Key Considerations:</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contributing</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/aws/aws-emr-best-practices/tree/main" target="_blank" rel="noopener noreferrer" class="footer__link-item">Github<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_NtN8"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Built with ❤️ at AWS  <br> © 2026 Amazon.com, Inc. or its affiliates. All Rights Reserved</div></div></div></footer></div>
 </body>
 </html>
