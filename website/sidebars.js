@@ -134,7 +134,10 @@ const sidebars = {
       type: 'category',
       label: 'Incremental Data Processing',
       items: [
+        'migration/incremental-data-processing/choosing-a-table-format',
         'migration/incremental-data-processing/apache-hudi-considerations',
+        'migration/incremental-data-processing/delta-lake',
+        'migration/incremental-data-processing/apache-iceberg',
         'migration/incremental-data-processing/sample-architecture',
       ],
     },
