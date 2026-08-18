@@ -170,6 +170,7 @@ const sidebars = {
       type: 'category',
       label: 'Testing and Validation',
       items: [
+        'migration/testing-and-validation/cluster-level-validation',
         'migration/testing-and-validation/data-quality-overview',
         'migration/testing-and-validation/check-ingestion-pipeline',
         'migration/testing-and-validation/data-quality-policy',
