@@ -6,6 +6,11 @@
 
 import { themes as prismThemes } from 'prism-react-renderer';
 
+// LEGAL-REVIEW-HOLD: Migration guide temporarily unpublished pending legal
+// review. Set SHOW_MIGRATION = true here and in sidebars.js to restore it.
+// The docs content under docs/migration/ is untouched.
+const SHOW_MIGRATION = false;
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'AWS Open Data Analytics',
@@ -39,6 +44,9 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
+          // LEGAL-REVIEW-HOLD: removes migration pages (incl. direct URLs)
+          // from the published site while SHOW_MIGRATION is false.
+          ...(SHOW_MIGRATION ? {} : { exclude: ['migration/**'] }),
           editUrl:
             'https://github.com/aws/aws-emr-best-practices/edit/main/website/',
         },
@@ -73,12 +81,18 @@ const config = {
             position: 'left',
             label: 'Benchmarks'
           },
-          {
-            type: 'doc',
-            docId: 'migration/introduction',
-            position: 'left',
-            label: 'Migration'
-          },
+          // LEGAL-REVIEW-HOLD: Migration navbar entry hidden while
+          // SHOW_MIGRATION is false.
+          ...(SHOW_MIGRATION
+            ? [
+                {
+                  type: 'doc',
+                  docId: 'migration/introduction',
+                  position: 'left',
+                  label: 'Migration',
+                },
+              ]
+            : []),
           {
             type: 'doc',
             docId: 'utilities/introduction',
