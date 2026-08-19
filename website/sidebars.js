@@ -248,4 +248,12 @@ const sidebars = {
 
 };
 
+// LEGAL-REVIEW-HOLD: Migration guide temporarily unpublished pending legal
+// review. Set SHOW_MIGRATION = true here and in docusaurus.config.js to
+// restore it. The docs content under docs/migration/ is untouched.
+const SHOW_MIGRATION = false;
+if (!SHOW_MIGRATION) {
+  delete sidebars.migration;
+}
+
 export default sidebars;
