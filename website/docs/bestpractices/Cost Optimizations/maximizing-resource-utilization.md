@@ -108,7 +108,7 @@ In use cases with distinct peak and non-peak hours, a uniform configuration for 
 
 #### 2) Use Cases with Spiky Workloads
 
-In scenarios with spiky workloads (characterized by sudden spikes in resource requirements for a short time), clusters frequently scale to their maximum capacity, even when the job may not need all the provisioned resources. This inefficiency arises because instances are provisioned after a substantial portion of the job is already completed. By the time these instances are up and running, the job no longer requires the new scaled-up resources. Use the MS Dampener script for a gradual and configurable scaling approach, ensuring more efficient resource utilization.
+In scenarios with spiky workloads (characterized by sudden spikes in resource requirements for a short time), clusters frequently scale to their maximum capacity, even when the job may not need all the provisioned resources. This inefficiency arises because instances are provisioned after a substantial portion of the job is already completed. By the time these instances are up and running, the job no longer requires the new scaled-up resources. Use the [Managed Scaling Dampener script](https://github.com/aws-samples/aws-emr-utilities/tree/main/utilities/managed-scaling-dampener) for a gradual and configurable scaling approach, ensuring more efficient resource utilization.
 
 #### 3) Use Cases with Recurring Jobs
 
