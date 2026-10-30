@@ -238,3 +238,56 @@ Calculating required HDFS utilization: (https://docs.aws.amazon.com/emr/latest/M
  
 
 
+## Avoid non-deterministic expressions in shuffle keys
+
+Spark recovers from lost shuffle output by recomputing it from lineage. This happens when an executor is lost, a Spot Instance is reclaimed, a node is decommissioned, or a reducer gets a `FetchFailedException`. Spark only re-runs the map tasks whose output is missing, and it assumes a re-run task produces the same rows in the same partitions as the first attempt. If a column used to route rows across a shuffle (a `repartition`, `join`, or `groupBy` key) is computed non-deterministically, that assumption breaks. Reducers that already finished keep the first attempt's routing, re-run reducers use the new routing, and the job **succeeds while silently writing duplicate rows and dropping others**.
+
+Common sources of non-determinism:
+
+* Random or unique-ID functions: `rand()`, `randn()`, `uuid()`, `shuffle()`, `monotonically_increasing_id()`. A seed does not help. `rand(seed)` seeds each partition with `seed + partitionIndex` and assigns values by row position, and after a shuffle the order of rows within a partition depends on the order shuffle blocks are fetched, which changes between attempts.
+* Floating-point aggregates: floating-point addition is not associative, so `sum` or `avg` over `DOUBLE`/`FLOAT` columns can differ in the last bits depending on the order rows are combined. Using such a value as a join key, partition key, hash or bucket input, equality filter, or window ordering column makes routing order-dependent.
+* Order-dependent functions over non-unique ordering: `row_number()` with ties in `ORDER BY`, `first()`/`last()`/`collect_list()` without an explicit ordering, or `dropDuplicates()` when the surviving row matters downstream.
+
+### Example: duplicate and lost rows after a retry
+
+Input rows `[W, X, Y, Z]` are shuffled into two partitions, then each row gets a key `rand(seed)` that is used to shuffle again (for example, a salted join), and the result is written to Amazon S3.
+
+| | Stage 1 partition 1 input order | Keys from `rand(seed)` | Reducer 1 receives (keys 0.45, 0.67) | Written to S3 |
+|---|---|---|---|---|
+| Happy path (no retry) | X, Y, Z | X→0.45, Y→0.67, Z→0.87 | X, Y | Reducer 0: W, Z. Reducer 1: X, Y |
+| Stage 1 task 1 retried | Z, X, Y | Z→0.45, X→0.67, Y→0.87 | Z, X | Reducer 0 (first attempt): W, Z. Reducer 1 (after retry): Z, X |
+
+Reducer 0 (keys 0.12 and 0.87) finished on the first attempt and wrote `W, Z`. Reducer 1 failed with a fetch failure, so Spark re-ran Stage 1 task 1. The retry generated the same sequence of random values but received its input in a different order, so the values were assigned to different rows. Final output: `W, Z, Z, X`. Row `Z` is duplicated and row `Y` is lost, with no error.
+
+Spark already protects some cases. Round-robin `repartition(n)` sorts rows before partitioning (`spark.sql.execution.sortBeforeRepartition`, enabled by default) and is marked as an indeterminate stage, so Spark re-runs all downstream stages or fails the job with `A shuffle map stage with indeterminate output was failed and retried`. User-defined shuffle keys built from `rand()` or floating-point values are not detected the same way ([SPARK-38160](https://issues.apache.org/jira/browse/SPARK-38160)). Starting with Apache Spark 4.2, order-independent shuffle checksums are enabled by default (`spark.sql.shuffle.orderIndependentChecksum.enabled`). When a retried shuffle stage produces different output, Spark rolls back and re-runs all dependent stages, or fails the job if it cannot roll back (for example, after output has been committed). This turns silent data corruption into a retry or a job failure, but deterministic shuffle keys still avoid the extra recomputation. On earlier Spark versions, handle this in code.
+
+### Recommendations
+
+* Derive shuffle keys from row content, not position or randomness. For salting, hash a unique business key instead of calling `rand()`:
+
+```python
+from pyspark.sql import functions as F
+
+n = 100
+# Not retry-safe: value depends on row order within the partition
+# salted_df = df.withColumn("salt", (F.rand() * n).cast("int"))
+
+# Retry-safe: same row always gets the same salt
+salted_df = df.withColumn("salt", F.pmod(F.xxhash64("order_id", "line_id"), F.lit(n)))
+```
+
+* If you must use randomness, materialize it before the shuffle so retries read the stored values instead of recomputing them. Write the DataFrame to Amazon S3 and read it back, or use a reliable `df.checkpoint()` with a checkpoint directory on S3 or HDFS. `cache()`, `persist()`, and `localCheckpoint()` do not help, because the cached blocks are lost along with the executor.
+* Use `DECIMAL` instead of `DOUBLE`/`FLOAT` for monetary values and for any value used as a key. If a floating-point value has to be a key, `round()` it to a fixed precision first.
+* Make window and dedup ordering total by adding a unique tie-breaker column to `ORDER BY`, for example `ORDER BY event_ts, event_id`.
+* Reduce shuffle retries in the first place by running core nodes on On-Demand Instances, using graceful decommissioning for Spot task nodes, and sizing executors and disks to avoid lost executors. This lowers the likelihood but does not remove the risk.
+* Validate output. Check stages with more than one attempt in the Spark UI or event logs, and reconcile row counts and distinct key counts between source and target for critical pipelines.
+
+For more information, see:
+
+(https://issues.apache.org/jira/browse/SPARK-38160)
+
+(https://issues.apache.org/jira/browse/SPARK-23207)
+
+(https://spark.apache.org/docs/latest/sql-migration-guide.html)
+
+See also the salting techniques in [Data Skew](../Applications/Spark/data_skew.md), and apply the deterministic salt shown above when using them for jobs that write to persistent storage.
