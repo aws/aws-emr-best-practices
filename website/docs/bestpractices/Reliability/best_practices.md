@@ -252,14 +252,14 @@ Common sources of non-determinism:
 
 Input rows `[W, X, Y, Z]` are shuffled into two partitions, then each row gets a key `rand(seed)` that is used to shuffle again (for example, a salted join), and the result is written to Amazon S3.
 
-| | Stage 1 partition 1 input order | Keys from `rand(seed)` | Reducer 1 receives (keys -0.45, -0.67) | Written to S3 |
+| | Stage 1 partition 1 input order | Keys from `rand(seed)` | Reducer 1 receives (keys 0.45, 0.67) | Written to S3 |
 |---|---|---|---|---|
-| Happy path (no retry) | X, Y, Z | X→-0.45, Y→-0.67, Z→-0.87 | X, Y | Reducer 0: W, Z. Reducer 1: X, Y |
-| Stage 1 task 1 retried | Z, X, Y | Z→-0.45, X→-0.67, Y→-0.87 | Z, X | Reducer 0 (first attempt): W, Z. Reducer 1 (after retry): Z, X |
+| Happy path (no retry) | X, Y, Z | X→0.45, Y→0.67, Z→0.87 | X, Y | Reducer 0: W, Z. Reducer 1: X, Y |
+| Stage 1 task 1 retried | Z, X, Y | Z→0.45, X→0.67, Y→0.87 | Z, X | Reducer 0 (first attempt): W, Z. Reducer 1 (after retry): Z, X |
 
-Reducer 0 (keys -0.12 and -0.87) finished on the first attempt and wrote `W, Z`. Reducer 1 failed with a fetch failure, so Spark re-ran Stage 1 task 1. The retry generated the same sequence of random values but received its input in a different order, so the values were assigned to different rows. Final output: `W, Z, Z, X`. Row `Z` is duplicated and row `Y` is lost, with no error.
+Reducer 0 (keys 0.12 and 0.87) finished on the first attempt and wrote `W, Z`. Reducer 1 failed with a fetch failure, so Spark re-ran Stage 1 task 1. The retry generated the same sequence of random values but received its input in a different order, so the values were assigned to different rows. Final output: `W, Z, Z, X`. Row `Z` is duplicated and row `Y` is lost, with no error.
 
-Spark already protects some cases. Round-robin `repartition(n)` sorts rows before partitioning (`spark.sql.execution.sortBeforeRepartition`, enabled by default) and is marked as an indeterminate stage, so Spark re-runs all downstream stages or fails the job with `A shuffle map stage with indeterminate output was failed and retried`. User-defined shuffle keys built from `rand()` or floating-point values are not detected the same way ([SPARK-38160](https://issues.apache.org/jira/browse/SPARK-38160)). Apache Spark 4.2 adds order-independent shuffle checksums (`spark.sql.shuffle.orderIndependentChecksum.enabled`) to detect these mismatches during retries. Until your EMR release includes this, handle it in code.
+Spark already protects some cases. Round-robin `repartition(n)` sorts rows before partitioning (`spark.sql.execution.sortBeforeRepartition`, enabled by default) and is marked as an indeterminate stage, so Spark re-runs all downstream stages or fails the job with `A shuffle map stage with indeterminate output was failed and retried`. User-defined shuffle keys built from `rand()` or floating-point values are not detected the same way ([SPARK-38160](https://issues.apache.org/jira/browse/SPARK-38160)). Starting with Apache Spark 4.2, order-independent shuffle checksums are enabled by default (`spark.sql.shuffle.orderIndependentChecksum.enabled`). When a retried shuffle stage produces different output, Spark rolls back and re-runs all dependent stages, or fails the job if it cannot roll back (for example, after output has been committed). This turns silent data corruption into a retry or a job failure, but deterministic shuffle keys still avoid the extra recomputation. On earlier Spark versions, handle this in code.
 
 ### Recommendations
 
