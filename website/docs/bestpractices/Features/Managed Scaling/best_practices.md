@@ -38,7 +38,7 @@ To restrict drivers to CORE (EMR 7.0 and later), add these properties to the `ya
 ]
 ```
 
-Shrinking CORE capacity is more conservative than shrinking TASK. While applications are running, CORE is only reduced after a sustained quiet period: no pending containers anywhere in the cluster, no pending applications, and enough free YARN memory. Pending executor requests count as pending containers here, even though they will never run on CORE. On clusters where applications keep requesting executors, that quiet period may not come, and CORE capacity will maintain its recent high for as long as work keeps arriving even if there are idle core nodes (see [CORE not scaling down while applications run](./troubleshooting#core-not-scaling-down-while-applications-run)).
+Shrinking CORE capacity is more conservative than shrinking TASK. While applications are running, CORE is only reduced after a sustained quiet period with no pending containers in the cluster. Pending executor requests count as pending containers here, even though they will never run on CORE. On clusters where applications keep requesting executors, that quiet period may not come, and CORE capacity will maintain its recent high for as long as work keeps arriving even if there are idle core nodes (see [CORE not scaling down while applications run](./troubleshooting#core-not-scaling-down-while-applications-run)).
 
 Letting CORE flex with driver demand is worth considering when all of these are true:
 
