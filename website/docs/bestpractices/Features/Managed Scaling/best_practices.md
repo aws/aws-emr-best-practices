@@ -20,6 +20,65 @@ Below is a managed scaling configuration example where the cluster will scale on
 
 ![BP - 1](images/bp-1.png)
 
+### With node labels: drivers on CORE, executors on TASK
+
+With Amazon EMR 7.2 and later, when a cluster uses Managed Scaling with node labels, Managed Scaling scales application process (driver/ApplicationMaster) demand and executor demand independently ([Understand node types in Amazon EMR](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html#emr-plan-task), [Understanding node allocation strategy and scenarios](https://docs.aws.amazon.com/emr/latest/ManagementGuide/managed-scaling-allocation-strategy.html)). If drivers are restricted to CORE and executors run on TASK, CORE grows with driver demand and TASK grows with executor demand.
+
+To restrict drivers to CORE (EMR 7.0 and later), add these properties to the `yarn-site` configuration classification:
+
+```json
+[
+  {
+    "Classification": "yarn-site",
+    "Properties": {
+      "yarn.node-labels.enabled": "true",
+      "yarn.node-labels.am.default-node-label-expression": "CORE"
+    }
+  }
+]
+```
+
+Shrinking CORE capacity is more conservative than shrinking TASK. While applications are running, CORE is only reduced after a sustained quiet period with no pending containers in the cluster. Pending executor requests count as pending containers here, even though they will never run on CORE. On clusters where applications keep requesting executors, that quiet period may not come, and CORE capacity will maintain its recent high for as long as work keeps arriving even if there are idle core nodes (see [CORE not scaling down while applications run](./troubleshooting#core-not-scaling-down-while-applications-run)).
+
+Letting CORE flex with driver demand is worth considering when all of these are true:
+
+- Concurrency varies significantly (for example 2 applications at night and 60 during working hours).
+- The workload has regular quiet periods of at least 10 minutes, during which applications have finished and no new executors are requested.
+- You can accept CORE staying at its high-water mark while any work keeps arriving.
+- HDFS usage on CORE is small. Removing a CORE node means decommissioning its HDFS DataNode as well as its YARN NodeManager, and its blocks have to be re-replicated to the remaining CORE nodes before it can leave. With a large amount of HDFS data this makes CORE scale-down slow, and heavy HDFS write I/O delays it further. If the remaining nodes don't have room for the data, EMR decommissions only some of the nodes, and nodes that pass 90% disk utilization are marked unhealthy and stop running YARN containers. CORE can also never shrink below `dfs.replication` nodes ([Cluster scale-down options](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scaledown-behavior.html)).
+
+Good fits are scheduled batch clusters that drain between windows, short-lived clusters, and interactive or notebook clusters with predictable downtime (e.g., overnight when most sessions are idle or closed). Poor fits are clusters that combine long-running jobs, such as streaming or always-on pipelines, with any other workload: in this case the long-running jobs keep requesting executors, and that will stop CORE capacity from scaling in.
+
+For multi-user clusters (say 20 to 100+ concurrent users or applications) without regular downtime, the suggestion would be to keep CORE fixed and put the elasticity on TASK:
+
+1. Set `MaximumCoreCapacityUnits` to the CORE capacity you launch with, and `MinimumCapacityUnits` at least that large, so Managed Scaling never needs to shrink CORE. If `MaximumCoreCapacityUnits` is unset it defaults to `MaximumCapacityUnits`, so CORE can grow to the size of the whole cluster and then be held there.
+
+2. Size CORE from the driver (ApplicationMaster) container:
+
+   ```
+   CORE nodes = ceil( D / drivers_per_node ) + H
+   drivers_per_node = floor( min( M_node / M_AM , V_node / V_AM ) )
+   ```
+
+   - `D` is the number of concurrent drivers you want to start without waiting. Each running YARN application has one ApplicationMaster, so the `AppsRunning` CloudWatch metric is a direct count of concurrent drivers. Plot its Maximum at a 1-minute period over a representative week (include your busiest day), and add `AppsPending` if applications were already queuing. Use the peak of that line if every driver must start immediately. If you can accept some applications waiting for a driver slot at busy times, use the p90 (or the average) of `AppsRunning` instead: applications above that level wait in ACCEPTED until a running application finishes and frees its slot.
+   - `M_node` and `V_node` are `yarn.nodemanager.resource.memory-mb` and `yarn.nodemanager.resource.cpu-vcores` on the CORE instance type. `M_AM` and `V_AM` are the ApplicationMaster container's memory (including overhead) and vCores: the driver in cluster mode, or `spark.yarn.am.memory`/`spark.yarn.am.cores` in client mode. The vCore term only applies if the Capacity Scheduler uses the DominantResourceCalculator; otherwise you only need to use memory values.
+   - `H` is headroom you choose, for example to cover a CORE node being replaced or ApplicationMaster retries. Set it from how much queueing you can tolerate; there is no fixed rule of thumb here.
+3. Right-size drivers so that two or more fit on a CORE node where you can. This is the most powerful lever to reduce the CORE capacity you need.
+4. Run executors on TASK (labelled TASK, or unlabelled with an exclusive CORE label), on Spot where the workload tolerates potential node loss, with dynamic allocation enabled.
+5. If CORE must flex, cap `MaximumCoreCapacityUnits` near the peak driver need. CORE will still be held at its recent high while busy, but no higher than the cap.
+
+Example for an r7g.xlarge CORE (`yarn.nodemanager.resource.memory-mb` 23424, the [default without HBase](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html#emr-hadoop-task-config-r7g)) with a 5632 MB driver container (4 drivers per node), one unit per node, and `H = 2`:
+
+| Peak concurrent drivers | CORE nodes | Policy |
+|---|---|---|
+| 20 | 7 | Min 7, MaxCore 7 |
+| 50 | 15 | Min 15, MaxCore 15 |
+| 100 | 27 | Min 27, MaxCore 27 |
+
+In each case, set `MaximumCapacityUnits` high enough to cover CORE plus your peak TASK capacity.
+
+With an 11712 MB driver container (2 per node), the same peaks need 12, 27 and 52 CORE nodes.
+
 ## Monitor Managed Scaling with Cloudwatch Metrics
 
 You can monitor your managed scaling cluster with CloudWatch metrics. This is useful if you want to better understand how your cluster is resizing to the change in job load/usage. Lets looks at an example:

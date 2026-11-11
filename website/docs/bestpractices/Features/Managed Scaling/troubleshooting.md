@@ -149,6 +149,38 @@ The troubleshooting portion of this runbook frequently requests that Cloudwatch 
     * Check whether maximum or minimum node/unit count is being hit, and change the configuration if required by the workload.
 
 
+### CORE NOT SCALING DOWN WHILE APPLICATIONS RUN
+
+* **Definition**: On a cluster that uses node labels to run drivers on CORE and executors on TASK (EMR 7.2+, see [Understand node types in Amazon EMR](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html#emr-plan-task)), CORE stays at its recent high (often at or near `MaximumCoreCapacityUnits`) while applications are running, even though CORE nodes are idle. TASK keeps scaling up and down.
+* **Symptoms**: `CoreUnitsRequested` (or `CoreNodesRequested`) stays flat for hours while TASK changes. CORE nodes run no containers, or only ApplicationMasters. `ContainerPending` keeps returning above zero within a few minutes. CORE comes down only when the applications stop, or after a lull in executor requests.
+* **Potential Root Cause/s**:
+    * **Conservative CORE scale-down while applications run**: CORE is only reduced after a sustained quiet period with no pending containers in the cluster. Even when CORE nodes are exclusive to ApplicationMasters (they will not run executors), pending executor requests still count as pending containers. Exclusivity of the CORE label is not considered.
+    * **Executor churn**: Spark dynamic allocation releases executors that have been idle for `spark.dynamicAllocation.executorIdleTimeout` ([60 seconds by default](https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation)) and requests new ones as soon as tasks queue. With many applications this keeps `ContainerPending` above zero, so the quiet period never arrives.
+    * **Re-growth after a lull**: if CORE starts to shrink during a short gap and a new wave of applications arrives, the next scale-up can take CORE straight back up, as far as `MaximumCoreCapacityUnits`. CORE nodes also usually take longer than TASK nodes to leave, because HDFS blocks must be re-replicated and the DataNode and NodeManager are decommissioned gracefully. From metrics alone (for example `CoreUnitsRunning`) this can look like no scaling activity, while the cluster's scaling events show a scale-down in progress.
+    * **Nodes that can't be removed anyway**: Managed Scaling avoids nodes running a Spark ApplicationMaster (see [Scale-down Strategy](#scale-down-strategy)), and CORE can't go below `dfs.replication` nodes.
+* **Validate**:
+    * Plot `ContainerPending`, `AppsPending`, `YARNMemoryAvailablePercentage`, `AppsRunning` and `CoreUnitsRequested` over the busy period. The most likely blocker is pending containers: if `CoreUnitsRequested` is flat while `ContainerPending` never stays at zero for long, this is the expected behaviour. Any managed scaling CORE reduction will follow a stretch with `ContainerPending` at zero.
+    * Check the Events tab (*EMR Cluster → Events Tab*) for CORE resize events, as well as the metrics.
+* **Actions**:
+    * For multi-user and interactive clusters without any anticipated regular downtime, keep CORE fixed and scale only TASK, as described in [With node labels: drivers on CORE, executors on TASK](./best_practices#with-node-labels-drivers-on-core-executors-on-task). Letting CORE scale is a good fit when there are regular quiet periods (e.g., overnight) in which it can scale down.
+    * If CORE must flex, cap `MaximumCoreCapacityUnits` near the peak driver need so the held size is bounded.
+* **Related Links**:
+    * [Understanding node allocation strategy and scenarios](https://docs.aws.amazon.com/emr/latest/ManagementGuide/managed-scaling-allocation-strategy.html)
+    * [Cluster scale-down options](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-scaledown-behavior.html)
+    * [Enhance Amazon EMR scaling capabilities with Application Master Placement](https://aws.amazon.com/blogs/big-data/enhance-amazon-emr-scaling-capabilities-with-application-master-placement/)
+    * [Apache Hadoop YARN Node Labels](https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/NodeLabel.html)
+
+#### Common settings that don't help
+
+| Setting or idea | What actually happens |
+|---|---|
+| Making CORE exclusive so idle CORE is "obviously removable" | Exclusivity is not considered by CORE scale-down. Exclusive and non-exclusive CORE are held the same way. |
+| CORE non-exclusive with unlabelled executors, to use idle CORE | Executors do use idle CORE, but once CORE is full of executors a new application has to wait for its driver: either for new CORE capacity to provision, or for executors to be released from CORE nodes. By default YARN does not [preempt](https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/CapacityScheduler.html#Capacity_Scheduler_container_preemption) running containers to make room for new ApplicationMasters. |
+| Smaller executors or `spark.dynamicAllocation.maxExecutors` | Smooths spikes in pending containers, but may not create the sustained quiet period CORE scale-down needs on clusters with many applications. |
+| Disabling dynamic allocation | Not recommended with Managed Scaling: it can scale the cluster up to the maximum ([Using managed scaling](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html)). |
+| Custom automatic scaling by partition ([YARN scaling with custom labels](../../Applications/Hadoop/yarn_labels_scaling)) | Works, but instance groups only. Alarm periods and cooldowns make it slower and could be prone to overshoot. |
+
+
 ### STUCK SCALING
 
 * **Definition**: A scale-up or scale-down event is initiated but does not complete.
